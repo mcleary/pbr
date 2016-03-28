@@ -11,7 +11,11 @@ add_subdirectory(deps/glbinding)
 include_directories(deps/glfw/include)
 include_directories(deps/glbinding/source/glbinding/include)
 
-add_executable(pbr main.cpp)
+add_executable(pbr
+    main.cpp
+    Timer.cpp
+    Timer.h
+)
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
 target_link_libraries(pbr glbinding ${GLBINDING_LIBRARIES})

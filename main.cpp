@@ -7,50 +7,7 @@ using namespace gl;
 
 #include <GLFW/glfw3.h>
 
-#include <chrono>
-
-class FPSCounter
-{
-public:
-    FPSCounter() :
-        m_RefreshRate(500),
-        m_CurrentTime(0),
-        m_FrameTime(0)
-    {
-    }
-    
-    void startFrame()
-    {
-        auto now = std::chrono::system_clock::now();
-        auto nowMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now).count();
-        
-    }
-    
-    bool update()
-    {
-        m_FrameCount++;
-        
-        if(m_CurrentTime > m_RefreshRate)
-        {
-            auto currentFPS = m_FrameCount / std::chrono::duration_cast<std::chrono::milliseconds>(m_CurrentTime).count();
-            
-            std::cout << currentFPS << std::endl;
-            
-            m_CurrentTime = std::chrono::milliseconds(0);
-            m_FrameCount = 0;
-            
-            return true;
-        }
-        
-        return false;
-    }
-    
-private:
-    std::chrono::milliseconds m_RefreshRate;
-    std::chrono::milliseconds m_CurrentTime;
-    std::chrono::milliseconds m_FrameTime;
-    int                       m_FrameCount    = 0;
-};
+#include "Timer.h"
 
 void draw()
 {
@@ -84,7 +41,7 @@ static void init()
 int main()
 {
     GLFWwindow* window;
-    int width, height;
+    int width = 800, height = 600;
     
     if(!glfwInit())
     {
@@ -101,7 +58,9 @@ int main()
     
     glbinding::Binding::initialize();
     
-    window = glfwCreateWindow( 800, 600, "Physically Based Rendering with OpenGL", NULL, NULL );
+    std::string windowTitleBase = "Physically Based Rendering with OpenGL ";
+    
+    window = glfwCreateWindow( width, height, windowTitleBase.data(), nullptr, nullptr );
     if (!window)
     {
         std::cerr << "Failed to open GLFW window" << std::endl;
@@ -119,9 +78,15 @@ int main()
     
     glfwGetFramebufferSize(window, &width, &height);
     reshape(window, width, height);
-    
-    // Parse command-line options
+
     init();
+    
+    int majorVersion;
+    int minorVersion;
+    glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+    glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+    
+    windowTitleBase += std::to_string(majorVersion) + "." + std::to_string(minorVersion);
     
     FPSCounter fpsCounter;
     
@@ -138,12 +103,16 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
         
-        fpsCounter.update();
+        if(fpsCounter.update())
+        {
+            auto windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsCounter.getFPS());
+            glfwSetWindowTitle(window, windowTitle.data());
+        }
     }
     
     // Terminate GLFW
     glfwTerminate();
     
     // Exit program
-    exit( EXIT_SUCCESS );
+    return EXIT_SUCCESS;
 }
