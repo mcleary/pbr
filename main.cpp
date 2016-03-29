@@ -9,6 +9,7 @@ using namespace gl;
 
 #include "Timer.h"
 #include "Sphere.h"
+#include "Shader.h"
 
 static bool s_bEnableVSync = true;
 
@@ -22,11 +23,30 @@ GLfloat vertices[] = {
 GLuint vbo;
 GLuint vao;
 
+const std::string vertexShaderSrc = "#version 330 core \
+layout(location = 0) in vec3 position; \
+void main() \
+{ \
+	gl_Position = vec4(position.x, position.y, position.z, 1.0); \
+}";
+
+const std::string fragShaderSrc = "#version 330 core \
+out vec4 color; \
+void main() \
+{ \
+	color = vec4(1.0f, 0.5f, 0.2f, 1.0f); \
+}";
+
+Shader* vertexShader = nullptr;
+Shader* fragShader = nullptr;
+Program* program = nullptr;
+
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//sphere->draw();
+
 
 	glBindVertexArray(vao);	
 	glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -75,6 +95,11 @@ static void init()
 		glEnableVertexAttribArray(0);
 	}
 	glBindVertexArray(0);
+
+	vertexShader = new Shader(ShaderType::ShaderType_VERTEX, vertexShaderSrc);
+	fragShader = new Shader(ShaderType::ShaderType_FRAGMENT, fragShaderSrc);
+
+	//program = new Program();	
 }
 
 int main()
@@ -95,9 +120,7 @@ int main()
     glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, 1);
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif
-    
-    glbinding::Binding::initialize();
+#endif    
     
     std::string windowTitleBase = "Physically Based Rendering with OpenGL ";
     
@@ -116,6 +139,8 @@ int main()
     glfwMakeContextCurrent(window);
 //    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval( s_bEnableVSync );
+
+	glbinding::Binding::initialize(false);
     
     glfwGetFramebufferSize(window, &width, &height);
     reshape(window, width, height);

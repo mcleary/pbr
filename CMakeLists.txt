@@ -16,6 +16,8 @@ add_executable(pbr
     main.cpp
     Sphere.h
     Sphere.cpp
+    Shader.h
+    Shader.cpp
     Timer.h
     Timer.cpp
 )
