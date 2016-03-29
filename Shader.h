@@ -16,7 +16,9 @@ enum class ShaderType
 class Shader
 {
 public:
-	Shader(ShaderType type, const std::string& source);		
+	Shader(ShaderType type, const std::string& source);
+    
+    GLuint shaderID();
 
 private:
 	bool _compileShader();
@@ -28,6 +30,15 @@ private:
 
 class Program
 {
+public:
+    Program();
+    
+    void attach(Shader* shader);
+    void link();
+    
+    void bind();
+    void unbind();
+    
 private:
 	GLuint m_ProgramID;
 };

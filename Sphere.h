@@ -34,5 +34,6 @@ private:
 	std::vector<Vertex>    m_Vertices;
 	std::vector<int>       m_Indices;
 
+    GLuint m_VAO;
 	GLuint m_VBO;
 };

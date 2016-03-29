@@ -23,18 +23,28 @@ GLfloat vertices[] = {
 GLuint vbo;
 GLuint vao;
 
-const std::string vertexShaderSrc = "#version 330 core \
+const std::string vertexShaderSrc = "\
+#version 330 core \
 layout(location = 0) in vec3 position; \
+layout(location = 1) in vec3 normal; \
+layout(location = 2) in vec2 uv; \
+smooth out vec3 v_normal; \
+smooth out vec2 v_uv; \
 void main() \
 { \
-	gl_Position = vec4(position.x, position.y, position.z, 1.0); \
+    v_normal = normal; \
+    v_uv = uv; \
+	gl_Position = vec4(position, 1.0); \
 }";
 
-const std::string fragShaderSrc = "#version 330 core \
+const std::string fragShaderSrc = "\
+#version 330 core \
+smooth in vec3 v_normal; \
+smooth in vec2 v_uv; \
 out vec4 color; \
 void main() \
 { \
-	color = vec4(1.0f, 0.5f, 0.2f, 1.0f); \
+    color = vec4(normalize(v_uv.xy), 1.0, 1.0); \
 }";
 
 Shader* vertexShader = nullptr;
@@ -44,13 +54,16 @@ Program* program = nullptr;
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//sphere->draw();
-
-
-	glBindVertexArray(vao);	
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glBindVertexArray(0);
+    
+    program->bind();
+    
+	sphere->draw();
+    
+//	glBindVertexArray(vao);	
+//	glDrawArrays(GL_TRIANGLES, 0, 3);
+//	glBindVertexArray(0);
+    
+    program->unbind();
 }
 
 void key(GLFWwindow* /*window*/, int /*key*/, int /*s*/, int /*action*/, int /*mods*/)
@@ -82,7 +95,7 @@ static void init()
     
     glClearColor(0.0, 0.0, 0.0, 1.0);
 
-	sphere = new Sphere({ 0.0, 0.0, 0.0 }, 10.0, 4.0);
+	sphere = new Sphere({ 0.0, 0.0, 0.0 }, 1.0, 10.0);
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -99,7 +112,10 @@ static void init()
 	vertexShader = new Shader(ShaderType::ShaderType_VERTEX, vertexShaderSrc);
 	fragShader = new Shader(ShaderType::ShaderType_FRAGMENT, fragShaderSrc);
 
-	//program = new Program();	
+	program = new Program;
+    program->attach(vertexShader);
+    program->attach(fragShader);
+    program->link();
 }
 
 int main()
@@ -116,11 +132,11 @@ int main()
     
 #ifdef __APPLE__
     glfwWindowHint(GLFW_DEPTH_BITS, 24);
-    glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, 1);
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif    
+#endif
     
     std::string windowTitleBase = "Physically Based Rendering with OpenGL ";
     
