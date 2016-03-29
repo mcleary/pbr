@@ -4,3 +4,6 @@
 [submodule "deps/glbinding"]
 	path = deps/glbinding
 	url = git@github.com:mcleary/glbinding.git
+[submodule "deps/glm"]
+	path = deps/glm
+	url = git@github.com:mcleary/glm.git
