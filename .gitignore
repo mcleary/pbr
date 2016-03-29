@@ -28,4 +28,3 @@
 *.app
 
 build/
-deps/
