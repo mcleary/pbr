@@ -34,12 +34,12 @@ double Timer::elapsedSeconds()
     return elapsedMilliseconds() / 1000.0;
 }
 
-FPSCounter::FPSCounter()
+FPSTimer::FPSTimer()
 {
     m_Timer.start();
 }
 
-bool FPSCounter::update()
+bool FPSTimer::update()
 {
     m_FrameCount++;
     

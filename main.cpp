@@ -32,10 +32,9 @@ static void init()
     cout << "OpenGL Version: " << endl;
     cout << "\tGL_RENDERER: " << glGetString(GL_RENDERER) << endl;
     cout << "\tGL_VERSION:  " << glGetString(GL_VERSION) << endl;
-    cout << "\tGL_VENDO: " << glGetString(GL_VENDOR) << endl;
-    //cout << "\tGL_EXTENSIONS: " << glGetString(GL_EXTENSIONS) << endl;
+    cout << "\tGL_VENDO: " << glGetString(GL_VENDOR) << endl;    
     
-    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
 }
 
 int main()
@@ -50,11 +49,13 @@ int main()
         
     }
     
+#ifdef __APPLE__
     glfwWindowHint(GLFW_DEPTH_BITS, 24);
     glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, 1);
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
     
     glbinding::Binding::initialize();
     
@@ -74,7 +75,7 @@ int main()
     
     glfwMakeContextCurrent(window);
 //    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
-    glfwSwapInterval( 1 );
+    glfwSwapInterval( 0 );
     
     glfwGetFramebufferSize(window, &width, &height);
     reshape(window, width, height);
@@ -88,7 +89,7 @@ int main()
     
     windowTitleBase += std::to_string(majorVersion) + "." + std::to_string(minorVersion);
     
-    FPSCounter fpsCounter;
+    FPSTimer fpsTimer;
     
     // Main loop
     while( !glfwWindowShouldClose(window) )
@@ -103,9 +104,9 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
         
-        if(fpsCounter.update())
+        if(fpsTimer.update())
         {
-            auto windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsCounter.getFPS());
+            auto windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsTimer.getFPS());
             glfwSetWindowTitle(window, windowTitle.data());
         }
     }

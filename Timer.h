@@ -17,10 +17,10 @@ private:
     bool                                               m_bRunning = false;
 };
 
-class FPSCounter
+class FPSTimer
 {
 public:
-    FPSCounter();
+	FPSTimer();
     
     bool update();
     
