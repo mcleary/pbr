@@ -8,20 +8,46 @@ using namespace gl;
 #include <GLFW/glfw3.h>
 
 #include "Timer.h"
+#include "Sphere.h"
+
+static bool s_bEnableVSync = true;
+
+Sphere* sphere = nullptr;
+
+GLfloat vertices[] = {
+	-0.5f, -0.5f, 0.0f,
+	0.5f, -0.5f, 0.0f,
+	0.0f,  0.5f, 0.0f
+};
+GLuint vbo;
+GLuint vao;
 
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//sphere->draw();
+
+	glBindVertexArray(vao);	
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
 }
 
-void key(GLFWwindow* window, int key, int s, int action, int mods)
+void key(GLFWwindow* /*window*/, int /*key*/, int /*s*/, int /*action*/, int /*mods*/)
 {
     
 }
 
 void reshape(GLFWwindow* window, int width, int height)
 {
-    
+	/*GLfloat h = (GLfloat)height / (GLfloat)width;
+	GLfloat xmax, znear, zfar;
+
+	znear = 1.0f;
+	zfar = 300.0f;
+	xmax = znear * 0.5f;*/
+
+	glViewport(0, 0, (GLint)width, (GLint)height);	
 }
 
 static void init()
@@ -35,6 +61,20 @@ static void init()
     cout << "\tGL_VENDO: " << glGetString(GL_VENDOR) << endl;    
     
     glClearColor(0.0, 0.0, 0.0, 1.0);
+
+	sphere = new Sphere({ 0.0, 0.0, 0.0 }, 10.0, 4.0);
+
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+
+	glBindVertexArray(vao);
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+	}
+	glBindVertexArray(0);
 }
 
 int main()
@@ -75,7 +115,7 @@ int main()
     
     glfwMakeContextCurrent(window);
 //    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
-    glfwSwapInterval( 0 );
+    glfwSwapInterval( s_bEnableVSync );
     
     glfwGetFramebufferSize(window, &width, &height);
     reshape(window, width, height);

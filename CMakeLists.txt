@@ -10,11 +10,14 @@ add_subdirectory(deps/glbinding)
 
 include_directories(deps/glfw/include)
 include_directories(deps/glbinding/source/glbinding/include)
+include_directories(deps/glm)
 
 add_executable(pbr
     main.cpp
-    Timer.cpp
+    Sphere.h
+    Sphere.cpp
     Timer.h
+    Timer.cpp
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
