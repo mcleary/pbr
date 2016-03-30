@@ -13,6 +13,13 @@ struct Vertex
 	glm::vec2 uv;
 };
 
+struct Triangle
+{
+	GLuint p0;
+	GLuint p1;
+	GLuint p2;
+};
+
 class Drawable
 {
 public:
@@ -32,8 +39,9 @@ private:
 	int			m_Resolution;
 
 	std::vector<Vertex>    m_Vertices;
-	std::vector<int>       m_Indices;
+	std::vector<Triangle>  m_Indices;
 
     GLuint m_VAO;
 	GLuint m_VBO;
+	GLuint m_EBO;
 };

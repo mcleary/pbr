@@ -18,12 +18,12 @@ static bool s_bEnableVSync = true;
 Sphere* sphere = nullptr;
 
 const std::string vertexShaderSrc = "\
-#version 330 core \
+#version 330 core \n\
 layout(location = 0) in vec3 position; \
 layout(location = 1) in vec3 normal; \
 layout(location = 2) in vec2 uv; \
-smooth out vec3 v_normal; \
-smooth out vec2 v_uv; \
+out vec3 v_normal; \
+out vec2 v_uv; \
 void main() \
 { \
     v_normal = normal; \
@@ -32,13 +32,13 @@ void main() \
 }";
 
 const std::string fragShaderSrc = "\
-#version 330 core \
-smooth in vec3 v_normal; \
-smooth in vec2 v_uv; \
+#version 330 core \n\
+in vec3 v_normal; \
+in vec2 v_uv; \
 out vec4 color; \
 void main() \
 { \
-    color = vec4(normalize(v_uv.xy), 1.0, 1.0); \
+    color = vec4(normalize(v_uv), 0.0, 1.0); \
 }";
 
 Shader* vertexShader = nullptr;
@@ -83,7 +83,7 @@ static void init()
     
     glClearColor(0.0, 0.0, 0.0, 1.0);
 
-	sphere = new Sphere({ 0.0, 0.0, 0.0 }, 1.0, 10.0);
+	sphere = new Sphere({ 0.0, 0.0, 0.0 }, 1.0, 20.0);
 
 	vertexShader = new Shader(ShaderType::ShaderType_VERTEX, vertexShaderSrc);
 	fragShader = new Shader(ShaderType::ShaderType_FRAGMENT, fragShaderSrc);
@@ -106,8 +106,9 @@ int main()
         
     }
     
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_DEPTH_BITS, 24);
+	glfwWindowHint(GLFW_DEPTH_BITS, 24);
+
+#ifdef __APPLE__    
     glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, 1);
