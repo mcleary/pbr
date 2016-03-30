@@ -10,47 +10,25 @@ using namespace gl;
 #include <GLFW/glfw3.h>
 
 #include "Timer.h"
-#include "Sphere.h"
+#include "Drawables.h"
 #include "Shader.h"
 
 static bool s_bEnableVSync = true;
-
-Sphere* sphere = nullptr;
-
-const std::string vertexShaderSrc = "\
-#version 330 core \n\
-layout(location = 0) in vec3 position; \
-layout(location = 1) in vec3 normal; \
-layout(location = 2) in vec2 uv; \
-out vec3 v_normal; \
-out vec2 v_uv; \
-void main() \
-{ \
-    v_normal = normal; \
-    v_uv = uv; \
-	gl_Position = vec4(position, 1.0); \
-}";
-
-const std::string fragShaderSrc = "\
-#version 330 core \n\
-in vec3 v_normal; \
-in vec2 v_uv; \
-out vec4 color; \
-void main() \
-{ \
-    color = vec4(normalize(v_uv), 0.0, 1.0); \
-}";
+static int s_WindowWidth = 800;
+static int s_WindowHeight = 600;
 
 Shader* vertexShader = nullptr;
 Shader* fragShader = nullptr;
 Program* program = nullptr;
+
+Scene scene;
 
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     program->bind();
-	sphere->draw();
+	scene.draw();
     program->unbind();
 }
 
@@ -81,23 +59,22 @@ static void init()
     cout << "\tGL_VERSION : " << glbinding::ContextInfo::version() << endl;
     cout << "\tGL_VENDOR  : " << glbinding::ContextInfo::vendor() << endl;
     
-    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);	
 
-	sphere = new Sphere({ 0.0, 0.0, 0.0 }, 1.0, 20.0);
-
-	vertexShader = new Shader(ShaderType::ShaderType_VERTEX, vertexShaderSrc);
-	fragShader = new Shader(ShaderType::ShaderType_FRAGMENT, fragShaderSrc);
+	vertexShader = new Shader(ShaderType::ShaderType_VERTEX, "shaders/vertex.glsl");
+	fragShader = new Shader(ShaderType::ShaderType_FRAGMENT, "shaders/fragment.glsl");
 
 	program = new Program;
     program->attach(vertexShader);
     program->attach(fragShader);
     program->link();
+
+	scene.addDrawable(new Sphere({ 0.0, 0.0, 0.0 }, 1.0, 20.0));
 }
 
 int main()
 {
-    GLFWwindow* window;
-    int width = 800, height = 600;
+    GLFWwindow* window;    
     
     if(!glfwInit())
     {
@@ -117,7 +94,7 @@ int main()
     
     std::string windowTitleBase = "Physically Based Rendering with OpenGL ";
     
-    window = glfwCreateWindow( width, height, windowTitleBase.data(), nullptr, nullptr );
+    window = glfwCreateWindow( s_WindowWidth, s_WindowHeight, windowTitleBase.data(), nullptr, nullptr );
     if (!window)
     {
         std::cerr << "Failed to open GLFW window" << std::endl;
@@ -134,8 +111,8 @@ int main()
 
 	glbinding::Binding::initialize(false);
     
-    glfwGetFramebufferSize(window, &width, &height);
-    reshape(window, width, height);
+    glfwGetFramebufferSize(window, &s_WindowWidth, &s_WindowHeight);
+    reshape(window, s_WindowWidth, s_WindowHeight);
 
     init();
     

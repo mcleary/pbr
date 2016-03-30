@@ -1,6 +1,7 @@
 #include "Shader.h"
 
 #include <iostream>
+#include <fstream>
 
 void compile_info(const GLuint shader)
 {
@@ -42,10 +43,16 @@ void link_info(const GLuint program)
 	}
 }
 
-Shader::Shader(ShaderType type, const std::string & source) :
+Shader::Shader(ShaderType type, const std::string & sourceFile) :
 	m_ShaderType(type),
-	m_ShaderSource(source)
+	m_ShaderSourceFile(sourceFile)
 {
+	std::ifstream file(m_ShaderSourceFile);
+	if (file.is_open())
+	{
+		m_ShaderSource.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());		
+	}	
+
 	m_ShaderID = glCreateShader(static_cast<GLenum>(m_ShaderType));
 
 	const char* shaderSource = m_ShaderSource.data();

@@ -14,12 +14,14 @@ include_directories(deps/glm)
 
 add_executable(pbr
     main.cpp
-    Sphere.h
-    Sphere.cpp
+    Drawables.h
+    Drawables.cpp
     Shader.h
     Shader.cpp
     Timer.h
     Timer.cpp
+    shaders/vertex.glsl
+    shaders/fragment.glsl
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
