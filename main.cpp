@@ -13,28 +13,17 @@ using namespace gl;
 
 #include "Timer.h"
 #include "Drawables.h"
-#include "Shader.h"
-#include "Camera.h"
 
 static bool s_bEnableVSync = true;
 static int s_WindowWidth = 800;
 static int s_WindowHeight = 600;
 
-Shader* vertexShader = nullptr;
-Shader* fragShader = nullptr;
-Program* program = nullptr;
-
-Scene scene;
-Camera camera;
+Scene* scene = new Scene;
 
 void draw()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
-
-    program->bind();
-    camera.setShaderCameraMatrices(program);
-	scene.draw();
-    program->unbind();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	scene->draw();
 }
 
 void key(GLFWwindow* /*window*/, int /*key*/, int /*s*/, int /*action*/, int /*mods*/)
@@ -56,7 +45,7 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwGetCursorPos(window, &cursorX, &cursorY);
         
-        camera.mouseButtonEvent(cursorX, cursorY);
+        scene->camera()->mouseButtonEvent(cursorX, cursorY);
 	}
 	else
     {
@@ -68,18 +57,18 @@ void mouseMotionCallback(GLFWwindow* window, double x, double y)
 {
 	if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
 	{
-        camera.mouseMotionEvent(x, y);
+        scene->camera()->mouseMotionEvent(x, y);
     }
 }
 
 void mouseScrollCallback(GLFWwindow* /*window*/, double x, double y)
 {
-    camera.mouseScrollEvent(x, y);
+    scene->camera()->mouseScrollEvent(x, y);
 }
 
 void reshape(GLFWwindow* /*window*/, int width, int height)
 {
-    camera.setViewportSize(width, height);
+    scene->camera()->setViewportSize(width, height);
 	glViewport(0, 0, (GLint)width, (GLint)height);	
 }
 
@@ -94,31 +83,26 @@ static void init()
     cout << "\tGL_VENDOR  : " << glbinding::ContextInfo::vendor() << endl;
     
     glClearColor(0.2, 0.2, 0.2, 1.0);
-
-	vertexShader = new Shader(ShaderType::ShaderType_VERTEX, "shaders/vertex.glsl");
-	fragShader = new Shader(ShaderType::ShaderType_FRAGMENT, "shaders/fragment.glsl");
-
-	program = new Program;
-    program->attach(vertexShader);
-    program->attach(fragShader);
-    program->link();
     
-    SphereMesh* mesh = new SphereMesh(100);
+    auto mesh = new SphereMesh(100);
+    
+    auto simpleMaterial = new SimpleMaterial;
+    auto phongMaterial = new PhongMaterial;
 
-    scene.addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, program));
-	scene.addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, program));
-    scene.addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, program));
-    scene.addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, program));
+    scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phongMaterial));
+	scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simpleMaterial));
     
-    scene.addDrawable(new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, program));
-    scene.addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, program));
-    scene.addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, program));
-    scene.addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, program));
+    scene->addDrawable(new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simpleMaterial));
     
-    scene.addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, program));
-    scene.addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, program));
-    scene.addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, program));
-    scene.addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, program));
+    scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
     
 //    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

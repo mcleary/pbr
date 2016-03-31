@@ -90,6 +90,18 @@ void Program::setUniform(const std::string &name, const glm::mat4 &matrix)
     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void Program::setUniform(const std::string& name, const glm::vec3& vector)
+{
+    auto loc = glGetUniformLocation(m_ProgramID, name.data());
+    glUniform3fv(loc, 1, glm::value_ptr(vector));
+}
+
+void Program::setUniform(const std::string& name, float value)
+{
+    auto loc = glGetUniformLocation(m_ProgramID, name.data());
+    glUniform1f(loc, value);
+}
+
 void Program::bind()
 {
     glUseProgram(m_ProgramID);

@@ -15,8 +15,6 @@ public:
 
 	glm::mat4 viewMatrix();
     glm::mat4 projectionMatrix();
-    
-    void setShaderCameraMatrices(Program* program);
 
 private:
 	glm::vec3 m_Eye = { 0.0f, 0.0f, 3.0f };

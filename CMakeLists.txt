@@ -24,6 +24,15 @@ add_executable(pbr
     Camera.cpp
     shaders/vertex.glsl
     shaders/fragment.glsl
+    shaders/phong_vert.glsl
+    shaders/phong_frag.glsl
+)
+
+source_group("Shaders" FILES
+    shaders/vertex.glsl
+    shaders/fragment.glsl
+    shaders/phong_vert.glsl
+    shaders/phong_frag.glsl
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})

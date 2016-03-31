@@ -45,10 +45,3 @@ glm::mat4 Camera::projectionMatrix()
 {
     return glm::perspective(45.0f, m_Aspect, 0.01f, 100.0f);
 }
-
-void Camera::setShaderCameraMatrices(Program *program)
-{
-    program->setUniform("View", viewMatrix());
-    program->setUniform("Projection", projectionMatrix());
-    
-}

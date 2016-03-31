@@ -8,11 +8,11 @@ using namespace gl;
 
 enum class ShaderType
 {
-	ShaderType_VERTEX   = static_cast<GLuint>(GL_VERTEX_SHADER),
-	ShaderType_TESSCRTL = static_cast<GLuint>(GL_TESS_CONTROL_SHADER),
-	ShaderType_TESSEVAL = static_cast<GLuint>(GL_TESS_EVALUATION_SHADER),
-	ShaderType_GEOMETRY = static_cast<GLuint>(GL_GEOMETRY_SHADER),
-	ShaderType_FRAGMENT = static_cast<GLuint>(GL_FRAGMENT_SHADER),
+	VERTEX   = static_cast<GLuint>(GL_VERTEX_SHADER),
+	TESSCRTL = static_cast<GLuint>(GL_TESS_CONTROL_SHADER),
+	TESSEVAL = static_cast<GLuint>(GL_TESS_EVALUATION_SHADER),
+	GEOMETRY = static_cast<GLuint>(GL_GEOMETRY_SHADER),
+	FRAGMENT = static_cast<GLuint>(GL_FRAGMENT_SHADER),
 };
 
 class Shader
@@ -40,6 +40,8 @@ public:
     void link();
     
     void setUniform(const std::string& name, const glm::mat4& matrix);
+    void setUniform(const std::string& name, const glm::vec3& vector);
+    void setUniform(const std::string& name, float value);
 
     void bind();
     void unbind();
