@@ -7,5 +7,5 @@ out vec4 color;
 
 void main()
 {
-    color = vec4(normalize(v_normal.xyz), 0.5);
+    color = vec4(normalize(v_normal.xyz), 1.0);
 }

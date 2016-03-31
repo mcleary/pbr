@@ -5,6 +5,8 @@
 class Timer
 {
 public:
+    explicit Timer();
+
     void start();
     void stop();
     
@@ -17,7 +19,7 @@ private:
     bool                                               m_bRunning = false;
 };
 
-class FPSTimer
+class FPSTimer : public Timer
 {
 public:
 	FPSTimer();

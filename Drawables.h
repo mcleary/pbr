@@ -39,7 +39,7 @@ public:
     virtual void bind() override;
     
 private:
-    glm::vec3 m_AmbientColor  = {0.1f, 0.1f, 0.1f};
+    glm::vec3 m_AmbientColor  = {0.0f, 0.0f, 0.07f};
     glm::vec3 m_DiffuseColor  = {0.0f, 0.0f, 0.7f};
     glm::vec3 m_SpecularColor = {1.0f, 1.0f, 1.0f};
     GLfloat   m_Shininess     = 16.0f;
@@ -65,7 +65,7 @@ class Light
 public:
     Light(glm::vec3 position);
     
-    const glm::vec3& position() { return m_Position; }
+    glm::vec3& position() { return m_Position; }
 private:
     glm::vec3 m_Position;
 };
@@ -77,6 +77,7 @@ public:
     
 	void addDrawable(Drawable* drawable);
 	void draw();
+    void animate(float deltaTime);
     
     Camera* camera() { return m_Camera; }
     

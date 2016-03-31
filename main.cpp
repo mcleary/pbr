@@ -18,7 +18,7 @@ static bool s_bEnableVSync = true;
 static int s_WindowWidth = 800;
 static int s_WindowHeight = 600;
 
-Scene* scene = new Scene;
+static Scene* scene = new Scene;
 
 void draw()
 {
@@ -82,7 +82,7 @@ static void init()
     cout << "\tGL_VERSION : " << glbinding::ContextInfo::version() << endl;
     cout << "\tGL_VENDOR  : " << glbinding::ContextInfo::vendor() << endl;
     
-    glClearColor(0.2, 0.2, 0.2, 1.0);
+    glClearColor(0.1, 0.1, 0.1, 1.0);
     
     auto mesh = new SphereMesh(100);
     
@@ -104,7 +104,7 @@ static void init()
     scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
     scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
     
-//    glEnable(GL_BLEND);
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
@@ -114,7 +114,7 @@ static void init()
 
 int main()
 {
-    GLFWwindow* window;    
+    GLFWwindow* window = nullptr;
     
     if(!glfwInit())
     {
@@ -162,6 +162,7 @@ int main()
     windowTitleBase += std::to_string(openglVersion.majorVersion()) + "." + std::to_string(openglVersion.minorVersion());
     
     FPSTimer fpsTimer;
+    Timer frameTimer;
     
     // Main loop
     while( !glfwWindowShouldClose(window) )
@@ -170,7 +171,8 @@ int main()
         draw();
         
         // Update animation
-//        animate();
+        scene->animate(frameTimer.elapsedSeconds());
+        frameTimer.start();
         
         // Swap buffers
         glfwSwapBuffers(window);
@@ -180,7 +182,7 @@ int main()
         {
             auto windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsTimer.getFPS());
             glfwSetWindowTitle(window, windowTitle.data());
-        }	
+        }
     }
     
     // Terminate GLFW

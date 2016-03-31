@@ -1,6 +1,11 @@
 
 #include "Timer.h"
 
+Timer::Timer()
+{
+    start();
+}
+
 void Timer::start()
 {
     m_StartTime = std::chrono::system_clock::now();
@@ -34,21 +39,21 @@ double Timer::elapsedSeconds()
     return elapsedMilliseconds() / 1000.0;
 }
 
-FPSTimer::FPSTimer()
+FPSTimer::FPSTimer() :
+    Timer()
 {
-    m_Timer.start();
 }
 
 bool FPSTimer::update()
 {
     m_FrameCount++;
     
-    if(m_Timer.elapsedMilliseconds() >= m_RefreshRate)
+    if(elapsedMilliseconds() >= m_RefreshRate)
     {
-        m_CurrentFPS = static_cast<double>(m_FrameCount) / m_Timer.elapsedSeconds();
+        m_CurrentFPS = static_cast<double>(m_FrameCount) / elapsedSeconds();
         
         m_FrameCount = 0;
-        m_Timer.start();
+        start();
         
         return true;
     }

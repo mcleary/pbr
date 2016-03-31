@@ -34,5 +34,5 @@ void main()
     vec3 colorLinear = AmbientColor + lambertian * DiffuseColor + specular * SpecularColor;
     vec3 colorGammaCorrected = pow(colorLinear, vec3(1.0 / Gamma));
     
-    color = vec4(colorGammaCorrected, 1.0);
+    color = vec4(lambertian * DiffuseColor + AmbientColor, 1.0);
 }

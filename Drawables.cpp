@@ -66,7 +66,7 @@ Light::Light(glm::vec3 position) :
 }
 
 Scene::Scene() :
-    m_Light(new Light({0.0, 0.0, 10.0})),
+    m_Light(new Light({0.0, 0.0, 20.0})),
     m_Camera(new Camera)
 {
 }
@@ -95,6 +95,12 @@ void Scene::draw()
 		drawable->draw();
         drawable->material()->unbind();
 	}
+}
+
+void Scene::animate(float deltaTime)
+{
+    static float LightRotationSpeed = 0.0f;
+    m_Light->position() = glm::rotateY(m_Light->position(), LightRotationSpeed * deltaTime);
 }
 
 SphereMesh::SphereMesh(int resolution) :
