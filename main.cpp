@@ -27,23 +27,12 @@ Program* program = nullptr;
 Scene scene;
 Camera camera;
 
-GLfloat cameraZoom;
-GLfloat alpha = 210.f, beta = -70.f;
-double cursorX;
-double cursorY;
-
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 
     program->bind();
-
-	auto mvLoc = glGetUniformLocation(program->m_ProgramID, "ModelView");
-	auto projLoc = glGetUniformLocation(program->m_ProgramID, "Projection");
-	glm::mat4 proj = glm::perspective(60.0f, s_WindowWidth / (float)s_WindowHeight, 0.1f, 10.0f);
-	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(camera.getModelView()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
-
+    camera.setShaderCameraMatrices(program);
 	scene.draw();
     program->unbind();
 }
@@ -53,59 +42,44 @@ void key(GLFWwindow* /*window*/, int /*key*/, int /*s*/, int /*action*/, int /*m
     
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*/)
 {
 	if (button != GLFW_MOUSE_BUTTON_LEFT)
+    {
 		return;
+    }
 
 	if (action == GLFW_PRESS)
 	{
+        double cursorX, cursorY;
+        
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwGetCursorPos(window, &cursorX, &cursorY);
+        
+        camera.mouseButtonEvent(cursorX, cursorY);
 	}
 	else
+    {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 }
 
-void cursor_position_callback(GLFWwindow* window, double x, double y)
+void mouseMotionCallback(GLFWwindow* window, double x, double y)
 {
 	if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
 	{
-		alpha = (GLfloat)(x - cursorX) / 100.f;
-		beta = (GLfloat)(y - cursorY) / 100.f;
-
-		cursorX = x;
-		cursorY = y;
-
-		camera.setRotation(alpha, beta);
-	}
+        camera.mouseMotionEvent(x, y);
+    }
 }
 
-
-//========================================================================
-// Callback function for scroll events
-//========================================================================
-
-void scroll_callback(GLFWwindow* window, double x, double y)
+void mouseScrollCallback(GLFWwindow* /*window*/, double x, double y)
 {
-	cameraZoom -= (float) y / 4.f;
-	if (cameraZoom < 0)
-	{
-		cameraZoom = 0;
-	}		
-	camera.setZoom(cameraZoom);
+    camera.mouseScrollEvent(x, y);
 }
 
-
-void reshape(GLFWwindow* window, int width, int height)
+void reshape(GLFWwindow* /*window*/, int width, int height)
 {
-	/*GLfloat h = (GLfloat)height / (GLfloat)width;
-	GLfloat xmax, znear, zfar;
-
-	znear = 1.0f;
-	zfar = 300.0f;
-	xmax = znear * 0.5f;*/
-
+    camera.setViewportSize(width, height);
 	glViewport(0, 0, (GLint)width, (GLint)height);	
 }
 
@@ -119,7 +93,7 @@ static void init()
     cout << "\tGL_VERSION : " << glbinding::ContextInfo::version() << endl;
     cout << "\tGL_VENDOR  : " << glbinding::ContextInfo::vendor() << endl;
     
-    glClearColor(0.0, 0.0, 0.0, 1.0);	
+    glClearColor(0.2, 0.2, 0.2, 1.0);
 
 	vertexShader = new Shader(ShaderType::ShaderType_VERTEX, "shaders/vertex.glsl");
 	fragShader = new Shader(ShaderType::ShaderType_FRAGMENT, "shaders/fragment.glsl");
@@ -128,8 +102,30 @@ static void init()
     program->attach(vertexShader);
     program->attach(fragShader);
     program->link();
+    
+    SphereMesh* mesh = new SphereMesh(100);
 
-	scene.addDrawable(new Sphere({ 0.0, 0.0, 0.0 }, 1.0, 20.0));
+    scene.addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, program));
+	scene.addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, program));
+    scene.addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, program));
+    scene.addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, program));
+    
+    scene.addDrawable(new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, program));
+    scene.addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, program));
+    scene.addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, program));
+    scene.addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, program));
+    
+    scene.addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, program));
+    scene.addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, program));
+    scene.addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, program));
+    scene.addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, program));
+    
+//    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_CULL_FACE);
 }
 
 int main()
@@ -164,9 +160,9 @@ int main()
     // Set callback functions
     glfwSetFramebufferSizeCallback(window, reshape);
     glfwSetKeyCallback(window, key);
-	glfwSetMouseButtonCallback(window, mouse_button_callback);	
-	glfwSetCursorPosCallback(window, cursor_position_callback);
-	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetMouseButtonCallback(window, mouseButtonCallback);
+	glfwSetCursorPosCallback(window, mouseMotionCallback);
+	glfwSetScrollCallback(window, mouseScrollCallback);
     
     glfwMakeContextCurrent(window);
     glfwSwapInterval( s_bEnableVSync );

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <glm/ext.hpp>
+
 void compile_info(const GLuint shader)
 {
 	GLint status(0);
@@ -80,6 +82,12 @@ void Program::link()
 {
     glLinkProgram(m_ProgramID);
     link_info(m_ProgramID);
+}
+
+void Program::setUniform(const std::string &name, const glm::mat4 &matrix)
+{
+    auto loc = glGetUniformLocation(m_ProgramID, name.data());
+    glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void Program::bind()

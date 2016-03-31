@@ -6,6 +6,8 @@
 #include <glbinding/Binding.h>
 using namespace gl;
 
+#include "Shader.h"
+
 class Drawable
 {
 public:
@@ -35,22 +37,34 @@ struct Triangle
 	GLuint p2;
 };
 
+class SphereMesh : public Drawable
+{
+public:
+    SphereMesh(int resolution);
+    ~SphereMesh();
+    
+    virtual void draw() override;
+    
+private:
+    GLuint                 m_Resolution;
+    std::vector<Vertex>    m_Vertices;
+    std::vector<Triangle>  m_Indices;
+    
+    GLuint m_VAO;
+    GLuint m_VBO;
+    GLuint m_EBO;
+};
+
 class Sphere : public Drawable
 {
 public:
-	Sphere(glm::vec3 position, float radius, int resolution);
+	Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Program* shaderProgram);
 
 	virtual void draw() override;
 
 private:
 	glm::vec3	m_Position;
 	float		m_Radius;
-	int			m_Resolution;
-
-	std::vector<Vertex>    m_Vertices;
-	std::vector<Triangle>  m_Indices;
-
-    GLuint m_VAO;
-	GLuint m_VBO;
-	GLuint m_EBO;
+    SphereMesh* m_Mesh;
+    Program*    m_Program;
 };

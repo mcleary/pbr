@@ -4,6 +4,8 @@
 #include <glbinding/gl/gl.h>
 using namespace gl;
 
+#include <glm/glm.hpp>
+
 enum class ShaderType
 {
 	ShaderType_VERTEX   = static_cast<GLuint>(GL_VERTEX_SHADER),
@@ -36,6 +38,8 @@ public:
 
     void attach(Shader* shader);
     void link();
+    
+    void setUniform(const std::string& name, const glm::mat4& matrix);
 
     void bind();
     void unbind();
