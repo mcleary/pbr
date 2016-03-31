@@ -9,9 +9,12 @@ using namespace gl;
 
 #include <GLFW/glfw3.h>
 
+#include <glm/ext.hpp>
+
 #include "Timer.h"
 #include "Drawables.h"
 #include "Shader.h"
+#include "Camera.h"
 
 static bool s_bEnableVSync = true;
 static int s_WindowWidth = 800;
@@ -22,12 +25,25 @@ Shader* fragShader = nullptr;
 Program* program = nullptr;
 
 Scene scene;
+Camera camera;
+
+GLfloat cameraZoom;
+GLfloat alpha = 210.f, beta = -70.f;
+double cursorX;
+double cursorY;
 
 void draw()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+
     program->bind();
+
+	auto mvLoc = glGetUniformLocation(program->m_ProgramID, "ModelView");
+	auto projLoc = glGetUniformLocation(program->m_ProgramID, "Projection");
+	glm::mat4 proj = glm::perspective(60.0f, s_WindowWidth / (float)s_WindowHeight, 0.1f, 10.0f);
+	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(camera.getModelView()));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
 	scene.draw();
     program->unbind();
 }
@@ -36,6 +52,50 @@ void key(GLFWwindow* /*window*/, int /*key*/, int /*s*/, int /*action*/, int /*m
 {
     
 }
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button != GLFW_MOUSE_BUTTON_LEFT)
+		return;
+
+	if (action == GLFW_PRESS)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwGetCursorPos(window, &cursorX, &cursorY);
+	}
+	else
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+void cursor_position_callback(GLFWwindow* window, double x, double y)
+{
+	if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+	{
+		alpha = (GLfloat)(x - cursorX) / 100.f;
+		beta = (GLfloat)(y - cursorY) / 100.f;
+
+		cursorX = x;
+		cursorY = y;
+
+		camera.setRotation(alpha, beta);
+	}
+}
+
+
+//========================================================================
+// Callback function for scroll events
+//========================================================================
+
+void scroll_callback(GLFWwindow* window, double x, double y)
+{
+	cameraZoom -= (float) y / 4.f;
+	if (cameraZoom < 0)
+	{
+		cameraZoom = 0;
+	}		
+	camera.setZoom(cameraZoom);
+}
+
 
 void reshape(GLFWwindow* window, int width, int height)
 {
@@ -79,8 +139,7 @@ int main()
     if(!glfwInit())
     {
         std::cerr << "Failed to initialize GLFW" << std::endl;
-        fprintf( stderr, "Failed to initialize GLFW\n" );
-        
+		return EXIT_FAILURE;
     }
     
 	glfwWindowHint(GLFW_DEPTH_BITS, 24);
@@ -105,6 +164,9 @@ int main()
     // Set callback functions
     glfwSetFramebufferSizeCallback(window, reshape);
     glfwSetKeyCallback(window, key);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);	
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetScrollCallback(window, scroll_callback);
     
     glfwMakeContextCurrent(window);
     glfwSwapInterval( s_bEnableVSync );
@@ -138,7 +200,7 @@ int main()
         {
             auto windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsTimer.getFPS());
             glfwSetWindowTitle(window, windowTitle.data());
-        }
+        }	
     }
     
     // Terminate GLFW

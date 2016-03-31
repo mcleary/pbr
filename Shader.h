@@ -40,6 +40,6 @@ public:
     void bind();
     void unbind();
 
-private:
+public:
 	GLuint m_ProgramID;
 };

@@ -20,6 +20,8 @@ add_executable(pbr
     Shader.cpp
     Timer.h
     Timer.cpp
+    Camera.h
+    Camera.cpp
     shaders/vertex.glsl
     shaders/fragment.glsl
 )

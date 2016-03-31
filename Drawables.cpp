@@ -95,10 +95,11 @@ Sphere::Sphere(glm::vec3 position, float radius, int resolution) :
 
 void Sphere::draw()
 {
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     glBindVertexArray(m_VAO); 
-	glDrawElements(GL_TRIANGLES, m_Indices.size() * sizeof(Triangle), GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, m_Indices.size() * sizeof(Triangle), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_POINTS, 0, m_Vertices.size());
     glBindVertexArray(0);
 
 }
