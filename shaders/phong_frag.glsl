@@ -25,7 +25,6 @@ void main()
     if(lambertian > 0.0)
     {
         vec3 viewDir = normalize(-Position);
-        
         vec3 halfDir = normalize(lightDir + viewDir);
         float specAngle = max(dot(halfDir, normal), 0.0);
         specular = pow(specAngle, Shininess);
@@ -34,5 +33,5 @@ void main()
     vec3 colorLinear = AmbientColor + lambertian * DiffuseColor + specular * SpecularColor;
     vec3 colorGammaCorrected = pow(colorLinear, vec3(1.0 / Gamma));
     
-    color = vec4(lambertian * DiffuseColor + AmbientColor, 1.0);
+    color = vec4(colorGammaCorrected, 1.0);
 }

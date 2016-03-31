@@ -17,6 +17,7 @@ using namespace gl;
 static bool s_bEnableVSync = true;
 static int s_WindowWidth = 800;
 static int s_WindowHeight = 600;
+static bool s_bWireframe = false;
 
 static Scene* scene = new Scene;
 
@@ -26,9 +27,23 @@ void draw()
 	scene->draw();
 }
 
-void key(GLFWwindow* /*window*/, int /*key*/, int /*s*/, int /*action*/, int /*mods*/)
+void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 {
-    
+	if (action == GLFW_RELEASE)
+	{
+		switch (key)
+		{
+		case GLFW_KEY_L:
+			scene->toggleLightAnimation();
+			break;
+		case GLFW_KEY_W:
+			s_bWireframe = !s_bWireframe;
+			glPolygonMode(GL_FRONT_AND_BACK, s_bWireframe ? GL_LINE : GL_FILL);			
+			break;
+		default:
+			break;
+		}		
+	}
 }
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*/)
@@ -86,23 +101,23 @@ static void init()
     
     auto mesh = new SphereMesh(100);
     
-    auto simpleMaterial = new SimpleMaterial;
-    auto phongMaterial = new PhongMaterial;
+    auto simple = new SimpleMaterial;
+    auto phong = new PhongMaterial;
 
-    scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phongMaterial));
-	scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simpleMaterial));
-    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, simpleMaterial));
-    scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
+	scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
     
-    scene->addDrawable(new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simpleMaterial));
-    scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simpleMaterial));
-    scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simpleMaterial));
-    scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simple));
     
-    scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
-    scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
-    scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
-    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simpleMaterial));
+    scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

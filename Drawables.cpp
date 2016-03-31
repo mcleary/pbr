@@ -20,11 +20,8 @@ void Material::unbind()
 SimpleMaterial::SimpleMaterial() :
     Material()
 {
-    auto vert = new Shader(ShaderType::VERTEX, "shaders/vertex.glsl");
-    auto frag = new Shader(ShaderType::FRAGMENT, "shaders/fragment.glsl");
-    
-    m_Program->attach(vert);
-    m_Program->attach(frag);
+    m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/vertex.glsl"));
+    m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/fragment.glsl"));
     m_Program->link();
 };
 
@@ -36,11 +33,8 @@ void SimpleMaterial::bind()
 PhongMaterial::PhongMaterial() :
     Material()
 {
-    auto phongVert = new Shader(ShaderType::VERTEX, "shaders/phong_vert.glsl");
-    auto phongFrag = new Shader(ShaderType::FRAGMENT, "shaders/phong_frag.glsl");
-    
-    m_Program->attach(phongVert);
-    m_Program->attach(phongFrag);
+    m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/phong_vert.glsl"));
+    m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/phong_frag.glsl"));
     m_Program->link();
 }
 
@@ -99,8 +93,16 @@ void Scene::draw()
 
 void Scene::animate(float deltaTime)
 {
-    static float LightRotationSpeed = 0.0f;
-    m_Light->position() = glm::rotateY(m_Light->position(), LightRotationSpeed * deltaTime);
+    static float LightRotationSpeed = 0.5f;
+	if (m_bLightAnimationEnabled)
+	{
+		m_Light->position() = glm::rotateY(m_Light->position(), LightRotationSpeed * deltaTime);
+	}    
+}
+
+void Scene::toggleLightAnimation()
+{
+	m_bLightAnimationEnabled = !m_bLightAnimationEnabled;
 }
 
 SphereMesh::SphereMesh(int resolution) :

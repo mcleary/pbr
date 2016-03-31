@@ -26,7 +26,7 @@ protected:
 class SimpleMaterial : public Material
 {
 public:
-    SimpleMaterial();
+    explicit SimpleMaterial();
     
     virtual void bind() override;
 };
@@ -34,7 +34,7 @@ public:
 class PhongMaterial : public Material
 {
 public:
-    PhongMaterial();
+    explicit PhongMaterial();
     
     virtual void bind() override;
     
@@ -49,7 +49,7 @@ private:
 class Drawable
 {
 public:
-    Drawable(Material* material);
+    explicit Drawable(Material* material);
     
 	virtual void draw() = 0;
     virtual glm::mat4 modelMatrix() { return glm::mat4(); }
@@ -63,7 +63,7 @@ protected:
 class Light
 {
 public:
-    Light(glm::vec3 position);
+    explicit Light(glm::vec3 position);
     
     glm::vec3& position() { return m_Position; }
 private:
@@ -73,11 +73,13 @@ private:
 class Scene
 {
 public:
-    Scene();
+    explicit Scene();
     
 	void addDrawable(Drawable* drawable);
 	void draw();
     void animate(float deltaTime);
+
+	void toggleLightAnimation();	
     
     Camera* camera() { return m_Camera; }
     
@@ -85,6 +87,7 @@ private:
 	std::vector<Drawable*> m_Drawables;
     Light*                 m_Light;
     Camera*                m_Camera;
+	bool			       m_bLightAnimationEnabled = false;
 };
 
 struct Vertex
@@ -104,11 +107,9 @@ struct Triangle
 class SphereMesh
 {
 public:
-    SphereMesh(int resolution);
-    ~SphereMesh();
+    explicit SphereMesh(int resolution);  
     
-    virtual void draw();
-    
+    void draw();    
 private:
     GLuint                 m_Resolution;
     std::vector<Vertex>    m_Vertices;
