@@ -141,8 +141,7 @@ void Program::unbind()
 
 Texture::Texture(const std::string& filename)
 {
-    int width, height, n;
-    unsigned char *data = stbi_load(filename.data(), &width, &height, &n, 0);
+    unsigned char *data = stbi_load(filename.data(), &m_Width, &m_Height, &m_NumberOfComponents, 0);
     // ... process data if not NULL ...
     // ... x = width, y = height, n = # 8-bit components per pixel ...
     // ... replace '0' with '1'..'4' to force that many components per pixel
@@ -155,7 +154,16 @@ Texture::Texture(const std::string& filename)
     
     glGenTextures(1, &m_TextureID);
     glBindTexture(GL_TEXTURE_2D, m_TextureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, (GLint)GL_RGB, (GLsizei)width, (GLsizei)height, 0, GL_RGB, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(data));
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 static_cast<GLint>(GL_RGB),
+                 static_cast<GLsizei>(m_Width),
+                 static_cast<GLsizei>(m_Height),
+                 0,
+                 GL_RGB,
+                 GL_UNSIGNED_BYTE,
+                 reinterpret_cast<void*>(data)
+                 );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLint)GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLint)GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (GLint)GL_REPEAT);
@@ -167,7 +175,6 @@ Texture::Texture(const std::string& filename)
 
 void Texture::bind()
 {
-    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_TextureID);
 }
 

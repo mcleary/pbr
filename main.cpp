@@ -14,10 +14,10 @@ using namespace gl;
 #include "Timer.h"
 #include "Drawables.h"
 
+static int  s_WindowWidth  = 800;
+static int  s_WindowHeight = 600;
 static bool s_bEnableVSync = true;
-static int s_WindowWidth = 800;
-static int s_WindowHeight = 600;
-static bool s_bWireframe = false;
+static bool s_bWireframe   = false;
 
 static Scene* scene = new Scene;
 
@@ -87,7 +87,37 @@ void reshape(GLFWwindow* /*window*/, int width, int height)
 	glViewport(0, 0, (GLint)width, (GLint)height);	
 }
 
-static Sphere* s = nullptr;
+static void createScene()
+{
+    auto mesh = new SphereMesh(100);
+    
+    auto simple = new SimpleMaterial;
+    auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
+    auto phong = new PhongMaterial;
+    auto phongPBR = new PhongPBRMaterial;
+    
+    scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
+    scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phongPBR));
+    scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
+    
+    auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simpleTex);
+    earthNoShadingSphere->rotation() = glm::vec3{glm::radians(90.0f), 0.0f, glm::radians(10.0f)};
+    auto earthAnimator = new SphereAnimator(earthNoShadingSphere);
+    earthAnimator->setRotationVelocity({0.0f, 0.0f, glm::radians(10.0f)});
+    scene->addAnimator(earthAnimator);
+    
+    scene->addDrawable(earthNoShadingSphere);
+    scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simple));
+    
+    scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));
+    
+}
 
 static void init()
 {
@@ -101,36 +131,14 @@ static void init()
     
     glClearColor(0.1, 0.1, 0.1, 1.0);
     
-    auto mesh = new SphereMesh(100);
-    
-    auto simple = new SimpleMaterial;
-    auto simpleTexture = new SimpleTextureMaterial;
-    auto phong = new PhongMaterial;
-	auto phongBBR = new PhongPBRMaterial;
-    
-    s = new Sphere({ -1.5, 1.0, 0.0 }, {glm::radians(-90.0f), 0.0f, 0.0f}, 0.5, mesh, simpleTexture);
-
-    scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
-	scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phongBBR));
-    scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
-    
-    scene->addDrawable(s);
-    scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simple));
-    
-    scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
+    
+    createScene();
 }
 
 int main()
@@ -193,10 +201,6 @@ int main()
         
         // Update animation
         scene->animate(frameTimer.elapsedSeconds());
-        
-        static float currentRot = 0.0f;
-        currentRot += 0.4f * frameTimer.elapsedSeconds();
-        s->setRotation(glm::vec3(-(float)M_PI*0.5f, currentRot, glm::radians(10.0f)));
         
         frameTimer.start();
         

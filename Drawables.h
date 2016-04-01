@@ -36,7 +36,7 @@ public:
 class SimpleTextureMaterial : public Material
 {
 public:
-    explicit SimpleTextureMaterial();
+    explicit SimpleTextureMaterial(const std::string& filename);
     
     virtual void bind() override;
     virtual void unbind() override;
@@ -82,6 +82,12 @@ protected:
     Material* m_Material;
 };
 
+class Animator
+{
+public:
+    virtual void update(float deltaTime) = 0;
+};
+
 class Light
 {
 public:
@@ -98,6 +104,7 @@ public:
     explicit Scene();
     
 	void addDrawable(Drawable* drawable);
+    void addAnimator(Animator* animator);
 	void draw();
     void animate(float deltaTime);
 
@@ -107,6 +114,7 @@ public:
     
 private:
 	std::vector<Drawable*> m_Drawables;
+    std::vector<Animator*> m_Animators;
     Light*                 m_Light;
     Camera*                m_Camera;
 	bool			       m_bLightAnimationEnabled = false;
@@ -146,18 +154,37 @@ class Sphere : public Drawable
 {
 public:
     Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* material);
-    Sphere(glm::vec3 position, glm::vec3 rotation, float radius, SphereMesh* mesh, Material* material);
 
 	virtual void draw() override;
     
     virtual glm::mat4 modelMatrix() override;
     
-    void setPosition(const glm::vec3& position) { m_Position = position; }
+    glm::vec3& position() { return m_Position; }
+    glm::quat& rotation() { return m_Rotation; }
+    
     void setRotation(const glm::vec3& rotation);
+    void setRelativeRotation(const glm::vec3& deltaRotation);
 
 private:
 	glm::vec3	m_Position;
     glm::quat   m_Rotation;
 	float		m_Radius;
     SphereMesh* m_Mesh;
+};
+
+class SphereAnimator : public Animator
+{
+public:
+    SphereAnimator(Sphere* sphere);
+    
+    void setRotationVelocity(const glm::vec3& rotVel) { m_RotationVelocity = rotVel; }
+    void setTranslationVelocity(const glm::vec3& transVel) { m_TranslationVelocity = transVel; }
+    
+    virtual void update(float deltaTime) override;
+    
+private:
+    Sphere* m_Sphere;
+    
+    glm::vec3 m_RotationVelocity;
+    glm::vec3 m_TranslationVelocity;
 };

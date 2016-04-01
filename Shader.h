@@ -61,4 +61,7 @@ public:
     
 private:
     GLuint m_TextureID;
+    int    m_Width;
+    int    m_Height;
+    int    m_NumberOfComponents;
 };

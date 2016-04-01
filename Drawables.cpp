@@ -30,19 +30,19 @@ void SimpleMaterial::bind()
     m_Program->bind();
 }
 
-SimpleTextureMaterial::SimpleTextureMaterial() :
-    Material()
+SimpleTextureMaterial::SimpleTextureMaterial(const std::string& filename) :
+    Material(),
+    m_Texture(new Texture(filename))
 {
     m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/vertex_texture.glsl"));
     m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/fragment_texture.glsl"));
     m_Program->link();
-    
-    m_Texture = new Texture("textures/earth_8k.jpg");
 }
 
 void SimpleTextureMaterial::bind()
 {
     m_Program->bind();
+    glActiveTexture(GL_TEXTURE0);
     m_Texture->bind();
     m_Program->setUniform("Texture", 0);
 }
@@ -104,6 +104,11 @@ void Scene::addDrawable(Drawable* drawable)
 	m_Drawables.push_back(drawable);
 }
 
+void Scene::addAnimator(Animator* animator)
+{
+    m_Animators.push_back(animator);
+}
+
 void Scene::draw()
 {
     auto viewMatrix = m_Camera->viewMatrix();
@@ -115,7 +120,7 @@ void Scene::draw()
         lightSphere = new Sphere(m_Light->position(), 0.5f, new SphereMesh(10), new SimpleMaterial);
     }
     
-    lightSphere->setPosition(m_Light->position());
+    lightSphere->position() = m_Light->position();
     lightSphere->material()->bind();
     lightSphere->material()->program()->setUniform("ModelViewProjection", viewProjection * lightSphere->modelMatrix());
     lightSphere->material()->program()->setUniform("NormalMatrix", glm::transpose(glm::inverse(viewMatrix * lightSphere->modelMatrix())));
@@ -146,7 +151,12 @@ void Scene::animate(float deltaTime)
 	if (m_bLightAnimationEnabled)
 	{
 		m_Light->position() = glm::rotateY(m_Light->position(), LightRotationSpeed * deltaTime);
-	}    
+	}
+    
+    for(auto animator : m_Animators)
+    {
+        animator->update(deltaTime);
+    }
 }
 
 void Scene::toggleLightAnimation()
@@ -182,7 +192,7 @@ SphereMesh::SphereMesh(int resolution) :
             {
                 vertexPosition,
                 glm::normalize(vertexPosition),
-                { uAlpha, vAlpha }
+                { uAlpha, 1.0f - vAlpha }
             };
             
             m_Vertices.push_back(vertex);
@@ -248,12 +258,6 @@ Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* mat
 {
 }
 
-Sphere::Sphere(glm::vec3 position, glm::vec3 rotation, float radius, SphereMesh* mesh, Material* material) :
-    Sphere(position, radius, mesh, material)
-{
-    m_Rotation = glm::quat(rotation);
-}
-
 void Sphere::draw()
 {
     m_Mesh->draw();
@@ -264,7 +268,17 @@ glm::mat4 Sphere::modelMatrix()
     return glm::translate(m_Position) * glm::toMat4(m_Rotation) * glm::scale(glm::vec3(m_Radius));
 }
 
-void Sphere::setRotation(const glm::vec3 &rotation)
+SphereAnimator::SphereAnimator(Sphere* sphere) :
+    Animator(),
+    m_Sphere(sphere)
 {
-    m_Rotation = glm::quat(rotation);
+}
+
+void SphereAnimator::update(float deltaTime)
+{
+    auto& translation = m_Sphere->position();
+    auto& rotation = m_Sphere->rotation();
+    
+    translation += m_TranslationVelocity * deltaTime;
+    rotation *= glm::quat(m_RotationVelocity * deltaTime);
 }
