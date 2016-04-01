@@ -46,6 +46,14 @@ private:
     GLfloat   m_ScreenGamma   = 2.2f;
 };
 
+class PhongPBRMaterial : public Material
+{
+public:
+	explicit PhongPBRMaterial();
+
+	virtual void bind() override;
+};
+
 class Drawable
 {
 public:

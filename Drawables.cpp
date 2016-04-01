@@ -48,6 +48,18 @@ void PhongMaterial::bind()
     m_Program->setUniform("Gamma", m_ScreenGamma);
 }
 
+PhongPBRMaterial::PhongPBRMaterial() :
+	Material()
+{
+	m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/phong_pbr_vert.glsl"));
+	m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/phong_pbr_frag.glsl"));
+	m_Program->link();
+}
+
+void PhongPBRMaterial::bind()
+{
+	m_Program->bind();
+}
 
 Drawable::Drawable(Material* material) :
     m_Material(material)

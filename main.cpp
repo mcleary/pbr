@@ -103,10 +103,11 @@ static void init()
     
     auto simple = new SimpleMaterial;
     auto phong = new PhongMaterial;
+	auto phongBBR = new PhongPBRMaterial;
 
     scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
 	scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phongBBR));
     scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
     
     scene->addDrawable(new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simple));
