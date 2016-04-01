@@ -30,6 +30,28 @@ void SimpleMaterial::bind()
     m_Program->bind();
 }
 
+SimpleTextureMaterial::SimpleTextureMaterial() :
+    Material()
+{
+    m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/vertex_texture.glsl"));
+    m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/fragment_texture.glsl"));
+    m_Program->link();
+    
+    m_Texture = new Texture("textures/earth_8k.jpg");
+}
+
+void SimpleTextureMaterial::bind()
+{
+    m_Program->bind();
+    m_Texture->bind();
+    m_Program->setUniform("Texture", 0);
+}
+
+void SimpleTextureMaterial::unbind()
+{
+    m_Texture->unbind();
+}
+
 PhongMaterial::PhongMaterial() :
     Material()
 {
@@ -51,7 +73,7 @@ void PhongMaterial::bind()
 PhongPBRMaterial::PhongPBRMaterial() :
 	Material()
 {
-	m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/phong_pbr_vert.glsl"));
+	m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/phong_vert.glsl"));
 	m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/phong_pbr_frag.glsl"));
 	m_Program->link();
 }
@@ -72,7 +94,7 @@ Light::Light(glm::vec3 position) :
 }
 
 Scene::Scene() :
-    m_Light(new Light({0.0, 0.0, 20.0})),
+    m_Light(new Light({0.0, 0.0, 10.0})),
     m_Camera(new Camera)
 {
 }
@@ -87,17 +109,32 @@ void Scene::draw()
     auto viewMatrix = m_Camera->viewMatrix();
     auto viewProjection = m_Camera->projectionMatrix() * viewMatrix;
     
+    static Sphere* lightSphere = nullptr;
+    if(!lightSphere)
+    {
+        lightSphere = new Sphere(m_Light->position(), 0.5f, new SphereMesh(10), new SimpleMaterial);
+    }
+    
+    lightSphere->setPosition(m_Light->position());
+    lightSphere->material()->bind();
+    lightSphere->material()->program()->setUniform("ModelViewProjection", viewProjection * lightSphere->modelMatrix());
+    lightSphere->material()->program()->setUniform("NormalMatrix", glm::transpose(glm::inverse(viewMatrix * lightSphere->modelMatrix())));
+    lightSphere->draw();
+    lightSphere->material()->unbind();
+    
+    auto lightViewPos = glm::mat3(viewMatrix) * m_Light->position();
+    
 	for (auto drawable : m_Drawables)
 	{
-        drawable->material()->bind();
-        
         auto modelMatrix = drawable->modelMatrix();
-        auto normalMatrix = glm::inverse(glm::transpose(viewMatrix * modelMatrix));
+        auto normalMatrix = glm::transpose(glm::inverse(viewMatrix * modelMatrix));
         
+        drawable->material()->bind();
         drawable->material()->program()->setUniform("Model", modelMatrix);
+        drawable->material()->program()->setUniform("View", viewMatrix);
         drawable->material()->program()->setUniform("ModelViewProjection", viewProjection * modelMatrix);
         drawable->material()->program()->setUniform("NormalMatrix", normalMatrix);
-        drawable->material()->program()->setUniform("lightPos", m_Light->position());
+        drawable->material()->program()->setUniform("LightPos", lightViewPos);
 		drawable->draw();
         drawable->material()->unbind();
 	}
@@ -211,6 +248,12 @@ Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* mat
 {
 }
 
+Sphere::Sphere(glm::vec3 position, glm::vec3 rotation, float radius, SphereMesh* mesh, Material* material) :
+    Sphere(position, radius, mesh, material)
+{
+    m_Rotation = glm::quat(rotation);
+}
+
 void Sphere::draw()
 {
     m_Mesh->draw();
@@ -218,5 +261,10 @@ void Sphere::draw()
 
 glm::mat4 Sphere::modelMatrix()
 {
-    return glm::translate(m_Position) * glm::scale(glm::vec3(m_Radius));
+    return glm::translate(m_Position) * glm::toMat4(m_Rotation) * glm::scale(glm::vec3(m_Radius));
+}
+
+void Sphere::setRotation(const glm::vec3 &rotation)
+{
+    m_Rotation = glm::quat(rotation);
 }

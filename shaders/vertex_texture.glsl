@@ -14,5 +14,5 @@ void main()
 {
     Normal = vec3(NormalMatrix * vec4(in_Normal, 0.0));
     UV = in_UV;
-	gl_Position = ModelViewProjection * vec4(in_Position, 1.0);
+    gl_Position = ModelViewProjection * vec4(in_Position, 1.0);
 }

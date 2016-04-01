@@ -87,6 +87,8 @@ void reshape(GLFWwindow* /*window*/, int width, int height)
 	glViewport(0, 0, (GLint)width, (GLint)height);	
 }
 
+static Sphere* s = nullptr;
+
 static void init()
 {
     // OpenGL Initialization
@@ -102,15 +104,18 @@ static void init()
     auto mesh = new SphereMesh(100);
     
     auto simple = new SimpleMaterial;
+    auto simpleTexture = new SimpleTextureMaterial;
     auto phong = new PhongMaterial;
 	auto phongBBR = new PhongPBRMaterial;
+    
+    s = new Sphere({ -1.5, 1.0, 0.0 }, {glm::radians(-90.0f), 0.0f, 0.0f}, 0.5, mesh, simpleTexture);
 
     scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
 	scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
     scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phongBBR));
     scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
     
-    scene->addDrawable(new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simple));
+    scene->addDrawable(s);
     scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simple));
     scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simple));
     scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simple));
@@ -188,6 +193,11 @@ int main()
         
         // Update animation
         scene->animate(frameTimer.elapsedSeconds());
+        
+        static float currentRot = 0.0f;
+        currentRot += 0.4f * frameTimer.elapsedSeconds();
+        s->setRotation(glm::vec3(-(float)M_PI*0.5f, currentRot, glm::radians(10.0f)));
+        
         frameTimer.start();
         
         // Swap buffers

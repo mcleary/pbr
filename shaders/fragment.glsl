@@ -1,11 +1,11 @@
 #version 330 core
 
-in vec3 v_normal;
-in vec2 v_uv;
+in vec3 Normal;
+in vec2 UV;
 
 out vec4 color;
 
 void main()
 {
-    color = vec4(normalize(v_normal.xyz), 1.0);
+    color = vec4(normalize(Normal), 1.0);
 }

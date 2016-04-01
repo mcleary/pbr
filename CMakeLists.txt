@@ -11,6 +11,7 @@ add_subdirectory(deps/glbinding)
 include_directories(deps/glfw/include)
 include_directories(deps/glbinding/source/glbinding/include)
 include_directories(deps/glm)
+include_directories(deps/stb)
 
 add_executable(pbr
     main.cpp
@@ -24,6 +25,10 @@ add_executable(pbr
     Camera.cpp
     shaders/vertex.glsl
     shaders/fragment.glsl
+    shaders/vertex_texture.glsl
+    shaders/fragment_texture.glsl
+    shaders/phong_pbr_vert.glsl
+    shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
 )
@@ -31,6 +36,10 @@ add_executable(pbr
 source_group("Shaders" FILES
     shaders/vertex.glsl
     shaders/fragment.glsl
+    shaders/vertex_texture.glsl
+    shaders/fragment_texture.glsl
+    shaders/phong_pbr_vert.glsl
+    shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
 )

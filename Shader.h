@@ -42,10 +42,23 @@ public:
     void setUniform(const std::string& name, const glm::mat4& matrix);
     void setUniform(const std::string& name, const glm::vec3& vector);
     void setUniform(const std::string& name, float value);
+    void setUniform(const std::string& name, int value);
 
     void bind();
     void unbind();
 
 public:
 	GLuint m_ProgramID;
+};
+
+class Texture
+{
+public:
+    Texture(const std::string& filename);
+    
+    void bind();
+    void unbind();
+    
+private:
+    GLuint m_TextureID;
 };

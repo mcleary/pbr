@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include <glbinding/Binding.h>
 using namespace gl;
@@ -29,6 +31,18 @@ public:
     explicit SimpleMaterial();
     
     virtual void bind() override;
+};
+
+class SimpleTextureMaterial : public Material
+{
+public:
+    explicit SimpleTextureMaterial();
+    
+    virtual void bind() override;
+    virtual void unbind() override;
+    
+private:
+    Texture* m_Texture;
 };
 
 class PhongMaterial : public Material
@@ -132,13 +146,18 @@ class Sphere : public Drawable
 {
 public:
     Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* material);
+    Sphere(glm::vec3 position, glm::vec3 rotation, float radius, SphereMesh* mesh, Material* material);
 
 	virtual void draw() override;
     
     virtual glm::mat4 modelMatrix() override;
+    
+    void setPosition(const glm::vec3& position) { m_Position = position; }
+    void setRotation(const glm::vec3& rotation);
 
 private:
 	glm::vec3	m_Position;
+    glm::quat   m_Rotation;
 	float		m_Radius;
     SphereMesh* m_Mesh;
 };
