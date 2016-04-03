@@ -141,7 +141,7 @@ void Program::unbind()
 
 Texture::Texture(const std::string& filename)
 {
-    unsigned char *data = stbi_load(filename.data(), &m_Width, &m_Height, &m_NumberOfComponents, 0);
+    unsigned char *data = stbi_load(filename.data(), &m_Width, &m_Height, &m_NumberOfComponents, 3);
     // ... process data if not NULL ...
     // ... x = width, y = height, n = # 8-bit components per pixel ...
     // ... replace '0' with '1'..'4' to force that many components per pixel

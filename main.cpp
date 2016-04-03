@@ -89,9 +89,10 @@ void reshape(GLFWwindow* /*window*/, int width, int height)
 
 static void createScene()
 {
-    auto mesh = new SphereMesh(100);
+    auto mesh = new SphereMesh(200);
     
     auto simple = new SimpleMaterial;
+//    auto simpleTex = new SimpleTextureMaterial("textures/earth_clouds_8k.jpg");
     auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
     auto phong = new PhongMaterial;
     auto phongPBR = new PhongPBRMaterial;
@@ -154,8 +155,8 @@ int main()
 	glfwWindowHint(GLFW_DEPTH_BITS, 24);
 
 #ifdef __APPLE__    
-    glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, 1);
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif

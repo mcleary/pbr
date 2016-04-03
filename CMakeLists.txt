@@ -31,6 +31,8 @@ add_executable(pbr
     shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
+    textures/earth_8k.jpg
+    textures/earth_clouds_8k.jpg
 )
 
 source_group("Shaders" FILES
@@ -42,6 +44,11 @@ source_group("Shaders" FILES
     shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
+)
+
+source_group("Textures" FILES
+    textures/earth_8k.jpg
+    textures/earth_clouds_8k.jpg
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
