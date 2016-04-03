@@ -104,7 +104,7 @@ static void createDefaultScene()
     scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
     
     auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simpleTex);
-    earthNoShadingSphere->rotation() = glm::vec3{glm::radians(90.0f), 0.0f, glm::radians(10.0f)};
+	earthNoShadingSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
     auto earthAnimator = new SphereAnimator(earthNoShadingSphere);
     earthAnimator->setRotationVelocity({0.0f, 0.0f, glm::radians(10.0f)});
     scene->addAnimator(earthAnimator);
@@ -124,24 +124,15 @@ static void createEarthScene1()
 {
 	auto mesh = new SphereMesh(200);
 	auto material = new EarthMaterial;
-	auto simpleTex = new SimpleTextureMaterial("textures/earth_clouds_8k.jpg");
 
 	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.4f, mesh, material };
-	auto earthCloudsSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.43f, mesh, simpleTex };
-	earthSphere->rotation() = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
-	earthCloudsSphere->rotation() = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
+	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
 
 	auto earthAnimator = new SphereAnimator{ earthSphere };
-	earthAnimator->setRotationVelocity( {0.0f, 0.0f, glm::radians(2.0f)} );
-
-	auto earthCloudsAnimator = new SphereAnimator{ earthCloudsSphere };
-	earthCloudsAnimator->setRotationVelocity({ glm::radians(0.0f), glm::radians(0.2f), glm::radians(1.5f) });
+	earthAnimator->setRotationVelocity({ 0.0f, 0.0f, glm::radians(2.0f) });
 
 	scene->addDrawable(earthSphere);
-	scene->addDrawable(earthCloudsSphere);
-
 	scene->addAnimator(earthAnimator);
-	scene->addAnimator(earthCloudsAnimator);
 }
 
 static void init()

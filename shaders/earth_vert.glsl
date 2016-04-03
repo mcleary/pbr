@@ -12,6 +12,7 @@ uniform mat4 NormalMatrix;
 out vec3 Position;
 out vec3 Normal;
 out vec2 UV;
+out vec3 N;
 
 void main()
 {
@@ -19,6 +20,7 @@ void main()
 
     Position = position.xyz / position.w;
     Normal = vec3(NormalMatrix * vec4(in_Normal, 0.0));
+	N = in_Normal;
     UV = in_UV;
 
     gl_Position = ModelViewProjection * vec4(in_Position, 1.0);

@@ -3,27 +3,36 @@
 in vec3 Position;
 in vec3 Normal;
 in vec2 UV;
+in vec3 N;
 
 out vec4 color;
 
 uniform vec3 LightPos;
+uniform vec3 LightDir;
 
 uniform sampler2D EarthTexture;
+uniform sampler2D NightTexture;
 uniform sampler2D CloudsTexture;
-uniform sampler2D WaterTexture;
+uniform sampler2D OceanMaskTexture;
+uniform sampler2D TopographyTexture;
+uniform sampler2D OceanTexture;
 
-uniform vec4  SpecularColor = vec4(1.0);
-uniform float Shininess = 60.0;
-uniform float Gamma = 1.4;
+uniform vec3  SpecularColor = vec3(0.5);
+uniform float Shininess = 200.0;
+uniform float Gamma = 1.2;
 
 void main()
 {
-    vec4 earthColor = texture(EarthTexture, UV);
-    vec4 cloudsColor = texture(CloudsTexture, UV);
-	vec4 waterColor = texture(WaterTexture, UV);
+    vec3 earthColor = texture(EarthTexture, UV).rgb;
+    vec3 cloudsColor = texture(CloudsTexture, UV).rgb;
+	vec3 oceanMask = texture(OceanMaskTexture, UV).rgb;
+	vec3 nightColor = texture(NightTexture, UV).rgb;
+	vec3 oceanColor = texture(OceanTexture, UV).rgb;
+	vec3 elevation = texture(TopographyTexture, UV).rgb;
 	
 	vec3 normal = normalize(Normal);
-    vec3 lightDir = normalize(LightPos - Position);
+    //vec3 lightDir = normalize(LightPos - Position);
+	vec3 lightDir = LightDir;
     
     float lambertian = max(dot(lightDir, normal), 0.0);
     float specular = 0.0;
@@ -34,10 +43,14 @@ void main()
         vec3 halfDir = normalize(lightDir + viewDir);
         float specAngle = max(dot(halfDir, normal), 0.0);
         specular = pow(specAngle, Shininess);
-    }	
+    }		
+	
+	vec3 earthMask = (1.0 - oceanMask);
+	vec3 earthNightColor = (1.0 - lambertian) * nightColor;
+	vec3 earthDiffuseColor = lambertian * (earthColor*earthMask + oceanColor*oceanMask) + earthNightColor;	
     
-    vec4 colorLinear = lambertian * (earthColor) + specular * SpecularColor * waterColor;
-    vec4 colorGammaCorrected = pow(colorLinear, vec4(1.0 / Gamma));
-    
-    color = colorGammaCorrected;
+    vec3 colorLinear = earthDiffuseColor + specular * SpecularColor * oceanMask + cloudsColor * lambertian;
+    vec3 colorGammaCorrected = pow(colorLinear, vec3(1.0 / Gamma)); 
+
+	color = vec4(colorGammaCorrected, 1.0);	
 }

@@ -70,7 +70,10 @@ public:
 private:
 	Texture* m_EarthTexture;
 	Texture* m_CloudsTexture;
-	Texture* m_WaterTexture;
+	Texture* m_OceanMaskTexture;
+	Texture* m_OceanIceTexture;
+	Texture* m_EarthNightTexture;	
+	Texture* m_EarthTopographyTexture;
 };
 
 class PhongPBRMaterial : public Material
@@ -81,17 +84,26 @@ public:
 	virtual void bind() override;
 };
 
+struct Transform
+{
+	glm::vec3 translation;
+	glm::quat rotation;
+	glm::vec3 scale;
+};
+
 class Drawable
 {
 public:
     explicit Drawable(Material* material);
     
 	virtual void draw() = 0;
-    virtual glm::mat4 modelMatrix() { return glm::mat4(); }
+	virtual glm::mat4 modelMatrix();
     
     Material* material() { return m_Material; }
+	Transform& transform() { return m_Transform; }
     
 protected:
+	Transform m_Transform;	
     Material* m_Material;
 };
 
@@ -168,19 +180,8 @@ class Sphere : public Drawable
 public:
     Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* material);
 
-	virtual void draw() override;
-    
-    virtual glm::mat4 modelMatrix() override;
-    
-    glm::vec3& position() { return m_Position; }
-    glm::quat& rotation() { return m_Rotation; }
-    
-    void setRotation(const glm::vec3& rotation);
-    void setRelativeRotation(const glm::vec3& deltaRotation);
-
-private:
-	glm::vec3	m_Position;
-    glm::quat   m_Rotation;
+	virtual void draw() override;    
+private:	
 	float		m_Radius;
     SphereMesh* m_Mesh;
 };

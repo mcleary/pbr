@@ -79,7 +79,10 @@ EarthMaterial::EarthMaterial() :
 	
 	m_EarthTexture = new Texture("textures/earth_8k.jpg");
 	m_CloudsTexture = new Texture("textures/earth_clouds_8k.jpg");	
-	m_WaterTexture = new Texture("textures/water_8k.png");
+	m_OceanIceTexture = new Texture("textures/earth_ocean_color_8k.jpg");
+	m_OceanMaskTexture = new Texture("textures/ocean_mask_8k.png");
+	m_EarthNightTexture = new Texture("textures/earth_night_8k.jpg");
+	m_EarthTopographyTexture = new Texture("textures/topography.png");
 }
 
 void EarthMaterial::bind()
@@ -93,11 +96,23 @@ void EarthMaterial::bind()
 	m_CloudsTexture->bind();
 
 	glActiveTexture(GL_TEXTURE2);
-	m_WaterTexture->bind();
+	m_OceanMaskTexture->bind();
+
+	glActiveTexture(GL_TEXTURE3);
+	m_EarthNightTexture->bind();
+
+	glActiveTexture(GL_TEXTURE4);
+	m_EarthTopographyTexture->bind();
+
+	glActiveTexture(GL_TEXTURE5);
+	m_OceanIceTexture->bind();
 
 	m_Program->setUniform("EarthTexture", 0);
 	m_Program->setUniform("CloudsTexture", 1);
-	m_Program->setUniform("WaterTexture", 2);
+	m_Program->setUniform("OceanMaskTexture", 2);
+	m_Program->setUniform("NightTexture", 3);
+	m_Program->setUniform("TopographyTexture", 4);
+	m_Program->setUniform("OceanTexture", 5);	
 }
 
 PhongPBRMaterial::PhongPBRMaterial() :
@@ -116,6 +131,11 @@ void PhongPBRMaterial::bind()
 Drawable::Drawable(Material* material) :
     m_Material(material)
 {
+}
+
+glm::mat4 Drawable::modelMatrix()
+{
+	return glm::translate(m_Transform.translation) * glm::toMat4(m_Transform.rotation) * glm::scale(m_Transform.scale); 	
 }
 
 Light::Light(glm::vec3 position) :
@@ -150,7 +170,7 @@ void Scene::draw()
         lightSphere = new Sphere(m_Light->position(), 0.5f, new SphereMesh(10), new SimpleMaterial);
     }
     
-    lightSphere->position() = m_Light->position();
+    lightSphere->transform().translation = m_Light->position();
     lightSphere->material()->bind();
     lightSphere->material()->program()->setUniform("ModelViewProjection", viewProjection * lightSphere->modelMatrix());
     lightSphere->material()->program()->setUniform("NormalMatrix", glm::transpose(glm::inverse(viewMatrix * lightSphere->modelMatrix())));
@@ -161,17 +181,21 @@ void Scene::draw()
     
 	for (auto drawable : m_Drawables)
 	{
-        auto modelMatrix = drawable->modelMatrix();
+		auto modelMatrix = drawable->modelMatrix();
 		auto modelViewMatrix = viewMatrix * modelMatrix;
-        auto normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
-        
-        drawable->material()->bind();
-        drawable->material()->program()->setUniform("Model", modelMatrix);
-        drawable->material()->program()->setUniform("View", viewMatrix);
+		auto normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
+
+		drawable->material()->bind();
+		drawable->material()->program()->setUniform("Model", modelMatrix);
+		drawable->material()->program()->setUniform("View", viewMatrix);
 		drawable->material()->program()->setUniform("ModelView", modelViewMatrix);
-        drawable->material()->program()->setUniform("ModelViewProjection", viewProjection * modelMatrix);
-        drawable->material()->program()->setUniform("NormalMatrix", normalMatrix);
+		drawable->material()->program()->setUniform("ModelViewProjection", viewProjection * modelMatrix);
+		drawable->material()->program()->setUniform("NormalMatrix", normalMatrix);
 		drawable->material()->program()->setUniform("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
+
+		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position() - drawable->transform().translation, 0.0f };		
+		drawable->material()->program()->setUniform("LightDir", glm::normalize((glm::vec3{ lightViewDir })));
+
 		drawable->draw();
         drawable->material()->unbind();
 	}
@@ -282,21 +306,17 @@ void SphereMesh::draw()
 }
 
 Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* material) :
-	Drawable(material),
-	m_Position(position),
+	Drawable(material),	
 	m_Radius(radius),
     m_Mesh(mesh)
 {
+	transform().translation = position;
+	transform().scale = glm::vec3(radius);
 }
 
 void Sphere::draw()
 {
     m_Mesh->draw();
-}
-
-glm::mat4 Sphere::modelMatrix()
-{
-    return glm::translate(m_Position) * glm::toMat4(m_Rotation) * glm::scale(glm::vec3(m_Radius));
 }
 
 SphereAnimator::SphereAnimator(Sphere* sphere) :
@@ -307,8 +327,8 @@ SphereAnimator::SphereAnimator(Sphere* sphere) :
 
 void SphereAnimator::update(float deltaTime)
 {
-    auto& translation = m_Sphere->position();
-    auto& rotation = m_Sphere->rotation();
+	auto& translation = m_Sphere->transform().translation;
+	auto& rotation = m_Sphere->transform().rotation;
     
     translation += m_TranslationVelocity * deltaTime;
     rotation *= glm::quat(m_RotationVelocity * deltaTime);
