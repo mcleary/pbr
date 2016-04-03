@@ -143,6 +143,7 @@ private:
     Light*                 m_Light;
     Camera*                m_Camera;
 	bool			       m_bLightAnimationEnabled = false;
+	float				   m_CurrentTime = 0.0f;
 };
 
 struct Vertex
@@ -191,8 +192,8 @@ class SphereAnimator : public Animator
 public:
     SphereAnimator(Sphere* sphere);
     
-    void setRotationVelocity(const glm::vec3& rotVel) { m_RotationVelocity = rotVel; }
-    void setTranslationVelocity(const glm::vec3& transVel) { m_TranslationVelocity = transVel; }
+    void setRotationSpeed(const glm::vec3& rotVel) { m_RotationVelocity = rotVel; }
+    void setTranslationSpeed(const glm::vec3& transVel) { m_TranslationVelocity = transVel; }
     
     virtual void update(float deltaTime) override;
     

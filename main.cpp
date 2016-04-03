@@ -93,7 +93,6 @@ static void createDefaultScene()
     auto mesh = new SphereMesh(200);
     
     auto simple = new SimpleMaterial;
-//    auto simpleTex = new SimpleTextureMaterial("textures/earth_clouds_8k.jpg");
     auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
     auto phong = new PhongMaterial;
     auto phongPBR = new PhongPBRMaterial;
@@ -106,7 +105,7 @@ static void createDefaultScene()
     auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simpleTex);
 	earthNoShadingSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
     auto earthAnimator = new SphereAnimator(earthNoShadingSphere);
-    earthAnimator->setRotationVelocity({0.0f, 0.0f, glm::radians(10.0f)});
+    earthAnimator->setRotationSpeed({0.0f, 0.0f, glm::radians(10.0f)});
     scene->addAnimator(earthAnimator);
     
     scene->addDrawable(earthNoShadingSphere);
@@ -126,10 +125,10 @@ static void createEarthScene1()
 	auto material = new EarthMaterial;
 
 	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.4f, mesh, material };
-	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
+	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(0.0f) };
 
 	auto earthAnimator = new SphereAnimator{ earthSphere };
-	earthAnimator->setRotationVelocity({ 0.0f, 0.0f, glm::radians(2.0f) });
+	earthAnimator->setRotationSpeed({ 0.0f, 0.0f, glm::radians(0.0f) });
 
 	scene->addDrawable(earthSphere);
 	scene->addAnimator(earthAnimator);

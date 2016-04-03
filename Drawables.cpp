@@ -174,7 +174,7 @@ void Scene::draw()
     lightSphere->material()->bind();
     lightSphere->material()->program()->setUniform("ModelViewProjection", viewProjection * lightSphere->modelMatrix());
     lightSphere->material()->program()->setUniform("NormalMatrix", glm::transpose(glm::inverse(viewMatrix * lightSphere->modelMatrix())));
-    lightSphere->draw();
+    //lightSphere->draw();
     lightSphere->material()->unbind();
     
 	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ m_Light->position(), 1.0f };
@@ -186,6 +186,7 @@ void Scene::draw()
 		auto normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
 
 		drawable->material()->bind();
+		drawable->material()->program()->setUniform("Time", m_CurrentTime);
 		drawable->material()->program()->setUniform("Model", modelMatrix);
 		drawable->material()->program()->setUniform("View", viewMatrix);
 		drawable->material()->program()->setUniform("ModelView", modelViewMatrix);
@@ -201,9 +202,13 @@ void Scene::draw()
 	}
 }
 
+#include <iostream>
+
 void Scene::animate(float deltaTime)
 {
-    static float LightRotationSpeed = 0.5f;
+	m_CurrentTime += deltaTime;
+
+    static float LightRotationSpeed = 0.3f;
 	if (m_bLightAnimationEnabled)
 	{
 		m_Light->position() = glm::rotateY(m_Light->position(), LightRotationSpeed * deltaTime);
