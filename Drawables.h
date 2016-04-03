@@ -60,6 +60,19 @@ private:
     GLfloat   m_ScreenGamma   = 2.2f;
 };
 
+class EarthMaterial : public Material
+{
+public:
+	explicit EarthMaterial();
+
+	virtual void bind() override;
+
+private:
+	Texture* m_EarthTexture;
+	Texture* m_CloudsTexture;
+	Texture* m_WaterTexture;
+};
+
 class PhongPBRMaterial : public Material
 {
 public:

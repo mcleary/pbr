@@ -18,6 +18,7 @@ static int  s_WindowWidth  = 800;
 static int  s_WindowHeight = 600;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
+static bool s_bEarthScene = true;
 
 static Scene* scene = new Scene;
 
@@ -87,7 +88,7 @@ void reshape(GLFWwindow* /*window*/, int width, int height)
 	glViewport(0, 0, (GLint)width, (GLint)height);	
 }
 
-static void createScene()
+static void createDefaultScene()
 {
     auto mesh = new SphereMesh(200);
     
@@ -116,8 +117,31 @@ static void createScene()
     scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simple));
     scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simple));
     scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    
+    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));    
+}
+
+static void createEarthScene1()
+{
+	auto mesh = new SphereMesh(200);
+	auto material = new EarthMaterial;
+	auto simpleTex = new SimpleTextureMaterial("textures/earth_clouds_8k.jpg");
+
+	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.4f, mesh, material };
+	auto earthCloudsSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.43f, mesh, simpleTex };
+	earthSphere->rotation() = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
+	earthCloudsSphere->rotation() = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
+
+	auto earthAnimator = new SphereAnimator{ earthSphere };
+	earthAnimator->setRotationVelocity( {0.0f, 0.0f, glm::radians(2.0f)} );
+
+	auto earthCloudsAnimator = new SphereAnimator{ earthCloudsSphere };
+	earthCloudsAnimator->setRotationVelocity({ glm::radians(0.0f), glm::radians(0.2f), glm::radians(1.5f) });
+
+	scene->addDrawable(earthSphere);
+	scene->addDrawable(earthCloudsSphere);
+
+	scene->addAnimator(earthAnimator);
+	scene->addAnimator(earthCloudsAnimator);
 }
 
 static void init()
@@ -139,7 +163,14 @@ static void init()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
     
-    createScene();
+	if (s_bEarthScene)
+	{
+		createEarthScene1();
+	}
+	else
+	{
+		createDefaultScene();
+	}	
 }
 
 int main()

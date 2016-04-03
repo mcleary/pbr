@@ -9,7 +9,7 @@ uniform sampler2D Texture;
 
 void main()
 {
-    vec4 textureColor = texture(Texture, UV);
-    
-    color = textureColor;
+    vec4 textureColor = texture(Texture, UV);    
+    color = textureColor;	
+	color.a = textureColor.r;
 }

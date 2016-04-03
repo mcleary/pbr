@@ -70,6 +70,36 @@ void PhongMaterial::bind()
     m_Program->setUniform("Gamma", m_ScreenGamma);
 }
 
+EarthMaterial::EarthMaterial() :
+	Material()
+{
+	m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/earth_vert.glsl"));
+	m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/earth_frag.glsl"));
+	m_Program->link();
+	
+	m_EarthTexture = new Texture("textures/earth_8k.jpg");
+	m_CloudsTexture = new Texture("textures/earth_clouds_8k.jpg");	
+	m_WaterTexture = new Texture("textures/water_8k.png");
+}
+
+void EarthMaterial::bind()
+{
+	m_Program->bind();
+	
+	glActiveTexture(GL_TEXTURE0);
+	m_EarthTexture->bind();
+
+	glActiveTexture(GL_TEXTURE1);
+	m_CloudsTexture->bind();
+
+	glActiveTexture(GL_TEXTURE2);
+	m_WaterTexture->bind();
+
+	m_Program->setUniform("EarthTexture", 0);
+	m_Program->setUniform("CloudsTexture", 1);
+	m_Program->setUniform("WaterTexture", 2);
+}
+
 PhongPBRMaterial::PhongPBRMaterial() :
 	Material()
 {
@@ -111,7 +141,7 @@ void Scene::addAnimator(Animator* animator)
 
 void Scene::draw()
 {
-    auto viewMatrix = m_Camera->viewMatrix();
+    auto viewMatrix = m_Camera->viewMatrix();	
     auto viewProjection = m_Camera->projectionMatrix() * viewMatrix;
     
     static Sphere* lightSphere = nullptr;
@@ -127,19 +157,21 @@ void Scene::draw()
     lightSphere->draw();
     lightSphere->material()->unbind();
     
-    auto lightViewPos = glm::mat3(viewMatrix) * m_Light->position();
+	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ m_Light->position(), 1.0f };
     
 	for (auto drawable : m_Drawables)
 	{
         auto modelMatrix = drawable->modelMatrix();
-        auto normalMatrix = glm::transpose(glm::inverse(viewMatrix * modelMatrix));
+		auto modelViewMatrix = viewMatrix * modelMatrix;
+        auto normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
         
         drawable->material()->bind();
         drawable->material()->program()->setUniform("Model", modelMatrix);
         drawable->material()->program()->setUniform("View", viewMatrix);
+		drawable->material()->program()->setUniform("ModelView", modelViewMatrix);
         drawable->material()->program()->setUniform("ModelViewProjection", viewProjection * modelMatrix);
         drawable->material()->program()->setUniform("NormalMatrix", normalMatrix);
-        drawable->material()->program()->setUniform("LightPos", lightViewPos);
+		drawable->material()->program()->setUniform("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
 		drawable->draw();
         drawable->material()->unbind();
 	}
@@ -247,7 +279,6 @@ void SphereMesh::draw()
     glDrawElements(GL_TRIANGLES, m_Indices.size() * 3, GL_UNSIGNED_INT, 0);
     //	glDrawArrays(GL_POINTS, 0, m_Vertices.size());
     glBindVertexArray(0);
-
 }
 
 Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* material) :

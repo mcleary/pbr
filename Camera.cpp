@@ -19,7 +19,7 @@ void Camera::mouseMotionEvent(float x, float y)
     glm::vec2 rotation = (mouseMotion - m_CursorPosition) / 100.0f;
     m_CursorPosition = mouseMotion;
     
-    auto rotationMatrix = glm::rotate(rotation.y, glm::vec3{1, 0, 0}) * glm::rotate(rotation.x, glm::vec3{0, 1, 0});
+    auto rotationMatrix = glm::rotate(-rotation.y, glm::vec3{1, 0, 0}) * glm::rotate(-rotation.x, glm::vec3{0, 1, 0});
     auto newEye = rotationMatrix * glm::vec4(m_Eye, 1.0f);
     m_Eye = newEye;
 }
@@ -43,5 +43,5 @@ glm::mat4 Camera::viewMatrix()
 
 glm::mat4 Camera::projectionMatrix()
 {
-    return glm::perspective(45.0f, m_Aspect, 0.01f, 100.0f);
+    return glm::perspective(45.0f, m_Aspect, 0.1f, 10000.0f);
 }
