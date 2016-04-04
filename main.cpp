@@ -90,10 +90,12 @@ void reshape(GLFWwindow* /*window*/, int width, int height)
 
 static void createDefaultScene()
 {
+	glClearColor(0.1, 0.1, 0.1, 1.0);
+
     auto mesh = new SphereMesh(200);
     
     auto simple = new SimpleMaterial;
-    auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
+    //auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
     auto phong = new PhongMaterial;
     auto phongPBR = new PhongPBRMaterial;
     
@@ -102,7 +104,7 @@ static void createDefaultScene()
     scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phongPBR));
     scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
     
-    auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simpleTex);
+    auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simple);
 	earthNoShadingSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
     auto earthAnimator = new SphereAnimator(earthNoShadingSphere);
     earthAnimator->setRotationSpeed({0.0f, 0.0f, glm::radians(10.0f)});
@@ -121,6 +123,8 @@ static void createDefaultScene()
 
 static void createEarthScene1()
 {
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
 	auto mesh = new SphereMesh(200);
 	auto material = new EarthMaterial;
 

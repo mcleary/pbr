@@ -56,7 +56,7 @@ private:
     glm::vec3 m_AmbientColor  = {0.0f, 0.0f, 0.07f};
     glm::vec3 m_DiffuseColor  = {0.0f, 0.0f, 0.7f};
     glm::vec3 m_SpecularColor = {1.0f, 1.0f, 1.0f};
-    GLfloat   m_Shininess     = 16.0f;
+    GLfloat   m_Shininess     = 32.0f;
     GLfloat   m_ScreenGamma   = 2.2f;
 };
 
