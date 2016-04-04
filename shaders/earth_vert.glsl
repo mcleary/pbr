@@ -6,6 +6,7 @@ layout(location = 2) in vec2 in_UV;
 
 uniform mat4 Model;
 uniform mat4 View;
+uniform mat4 ModelView;
 uniform mat4 ModelViewProjection;
 uniform mat4 NormalMatrix;
 
@@ -15,7 +16,7 @@ out vec2 UV;
 
 void main()
 {
-    vec4 position = View * Model * vec4(in_Position, 1.0);
+    vec4 position = ModelView * vec4(in_Position, 1.0);
 
     Position = position.xyz / position.w;
     Normal = vec3(NormalMatrix * vec4(in_Normal, 0.0));

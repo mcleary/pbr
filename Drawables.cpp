@@ -256,7 +256,7 @@ void Scene::animate(float deltaTime)
 {
 	m_CurrentTime += deltaTime;
 
-    static float LightRotationSpeed = 0.3f;
+    static float LightRotationSpeed = -0.3f;
 	if (m_bLightAnimationEnabled)
 	{
 		m_Light->position() = glm::rotateY(m_Light->position(), LightRotationSpeed * deltaTime);
@@ -301,7 +301,7 @@ SphereMesh::SphereMesh(int resolution) :
             {
                 vertexPosition,
                 glm::normalize(vertexPosition),
-                { uAlpha, 1.0f - vAlpha }
+                { 1.0 - uAlpha, 1.0 - vAlpha }
             };
             
             m_Vertices.push_back(vertex);
