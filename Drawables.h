@@ -76,6 +76,22 @@ private:
 	Texture* m_EarthTopographyTexture;
 };
 
+class EarthMaterial2 : public Material
+{
+public:
+    explicit EarthMaterial2();
+    
+    virtual void bind() override;
+    
+private:
+    Texture* m_EarthTexture;
+    Texture* m_CloudsTexture;
+    Texture* m_OceanMaskTexture;
+    Texture* m_OceanIceTexture;
+    Texture* m_EarthNightTexture;
+    Texture* m_EarthTopographyTexture;
+};
+
 class PhongPBRMaterial : public Material
 {
 public:

@@ -15,6 +15,8 @@ public:
 
 	glm::mat4 viewMatrix();
     glm::mat4 projectionMatrix();
+    
+    glm::vec3& eye() { return m_Eye; }
 
 private:
 	glm::vec3 m_Eye = { 0.0f, 0.0f, 3.0f };

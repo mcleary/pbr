@@ -139,8 +139,12 @@ void Program::unbind()
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include <iostream>
+
 Texture::Texture(const std::string& filename)
 {
+    std::cout << "Loading texture '" << filename << "' ..." << std::endl;
+    
     unsigned char *data = stbi_load(filename.data(), &m_Width, &m_Height, &m_NumberOfComponents, 3);
     // ... process data if not NULL ...
     // ... x = width, y = height, n = # 8-bit components per pixel ...

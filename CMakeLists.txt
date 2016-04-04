@@ -23,6 +23,7 @@ add_executable(pbr
     Timer.cpp
     Camera.h
     Camera.cpp
+
     shaders/vertex.glsl
     shaders/fragment.glsl
     shaders/vertex_texture.glsl
@@ -31,10 +32,17 @@ add_executable(pbr
     shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
-	shaders/earth_vert.glsl
-	shaders/earth_frag.glsl
+	  shaders/earth_vert.glsl
+	  shaders/earth_frag.glsl
+    shaders/earth2_frag.glsl
+
     textures/earth_8k.jpg
     textures/earth_clouds_8k.jpg
+    textures/earth_night_8k.jpg
+    textures/earth_ocean_color_8k.jpg
+    textures/ocean_mask_8k.png
+    textures/starfield.jpg
+    textures/topography.png
 )
 
 source_group("Shaders" FILES
@@ -46,13 +54,19 @@ source_group("Shaders" FILES
     shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
-	shaders/earth_vert.glsl
-	shaders/earth_frag.glsl
+	  shaders/earth_vert.glsl
+	  shaders/earth_frag.glsl
+    shaders/earth2_frag.glsl
 )
 
 source_group("Textures" FILES
     textures/earth_8k.jpg
     textures/earth_clouds_8k.jpg
+    textures/earth_night_8k.jpg
+    textures/earth_ocean_color_8k.jpg
+    textures/ocean_mask_8k.png
+    textures/starfield.jpg
+    textures/topography.png
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})

@@ -14,8 +14,8 @@ using namespace gl;
 #include "Timer.h"
 #include "Drawables.h"
 
-static int  s_WindowWidth  = 800;
-static int  s_WindowHeight = 600;
+static int  s_WindowWidth  = 1280;
+static int  s_WindowHeight = 720;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
 static bool s_bEarthScene = true;
@@ -126,7 +126,7 @@ static void createEarthScene1()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	auto mesh = new SphereMesh(200);
-	auto material = new EarthMaterial;
+	auto material = new EarthMaterial2;
 
 	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.4f, mesh, material };
 	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(0.0f) };

@@ -115,6 +115,53 @@ void EarthMaterial::bind()
 	m_Program->setUniform("OceanTexture", 5);	
 }
 
+EarthMaterial2::EarthMaterial2() :
+Material()
+{
+    m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/earth_vert.glsl"));
+    m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/earth2_frag.glsl"));
+    m_Program->link();
+    
+    m_EarthTexture = new Texture("textures/earth_8k.jpg");
+    m_CloudsTexture = new Texture("textures/earth_clouds_8k.jpg");
+    m_OceanIceTexture = new Texture("textures/earth_ocean_color_8k.jpg");
+    m_OceanMaskTexture = new Texture("textures/ocean_mask_8k.png");
+    m_EarthNightTexture = new Texture("textures/earth_night_8k.jpg");
+    m_EarthTopographyTexture = new Texture("textures/topography.png");
+}
+
+void EarthMaterial2::bind()
+{
+    m_Program->bind();
+    
+    glActiveTexture(GL_TEXTURE0);
+    m_EarthTexture->bind();
+    
+    glActiveTexture(GL_TEXTURE1);
+    m_CloudsTexture->bind();
+    
+    glActiveTexture(GL_TEXTURE2);
+    m_OceanMaskTexture->bind();
+    
+    glActiveTexture(GL_TEXTURE3);
+    m_EarthNightTexture->bind();
+    
+    glActiveTexture(GL_TEXTURE4);
+    m_EarthTopographyTexture->bind();
+    
+    glActiveTexture(GL_TEXTURE5);
+    m_OceanIceTexture->bind();
+    
+    m_Program->setUniform("EarthTexture", 0);
+    m_Program->setUniform("CloudsTexture", 1);
+    m_Program->setUniform("OceanMaskTexture", 2);
+    m_Program->setUniform("NightTexture", 3);
+    m_Program->setUniform("TopographyTexture", 4);
+    m_Program->setUniform("OceanTexture", 5);	
+}
+
+
+
 PhongPBRMaterial::PhongPBRMaterial() :
 	Material()
 {
@@ -193,6 +240,7 @@ void Scene::draw()
 		drawable->material()->program()->setUniform("ModelViewProjection", viewProjection * modelMatrix);
 		drawable->material()->program()->setUniform("NormalMatrix", normalMatrix);
 		drawable->material()->program()->setUniform("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
+        drawable->material()->program()->setUniform("CameraPos", m_Camera->eye());
 
 		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position() - drawable->transform().translation, 0.0f };		
 		drawable->material()->program()->setUniform("LightDir", glm::normalize((glm::vec3{ lightViewDir })));
