@@ -1,8 +1,5 @@
 #include "Drawables.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-
 #include <glbinding/gl/gl.h>
 
 #include <glm/ext.hpp>
@@ -130,34 +127,17 @@ Material()
     m_EarthTopographyTexture = new Texture("textures/topography.png");
 }
 
-void EarthMaterial2::bind()
+
+
+void AtmosphereMaterial::bind()
 {
     m_Program->bind();
     
-    glActiveTexture(GL_TEXTURE0);
-    m_EarthTexture->bind();
-    
-    glActiveTexture(GL_TEXTURE1);
-    m_CloudsTexture->bind();
-    
-    glActiveTexture(GL_TEXTURE2);
-    m_OceanMaskTexture->bind();
-    
-    glActiveTexture(GL_TEXTURE3);
-    m_EarthNightTexture->bind();
-    
-    glActiveTexture(GL_TEXTURE4);
-    m_EarthTopographyTexture->bind();
-    
-    glActiveTexture(GL_TEXTURE5);
-    m_OceanIceTexture->bind();
-    
-    m_Program->setUniform("EarthTexture", 0);
-    m_Program->setUniform("CloudsTexture", 1);
-    m_Program->setUniform("OceanMaskTexture", 2);
-    m_Program->setUniform("NightTexture", 3);
-    m_Program->setUniform("TopographyTexture", 4);
-    m_Program->setUniform("OceanTexture", 5);	
+    m_Program->setUniform("fKrESun", m_Kr * m_ESun);
+    m_Program->setUniform("fKmESun", m_Km * m_ESun);
+    m_Program->setUniform("fKr4PI", m_Kr * 4.0f * glm::pi<float>());
+    m_Program->setUniform("fKm4PI", m_Km * 4.0f * glm::pi<float>());
+    m_Program->setUniform("v3InvWavelength", 1.0f / glm::pow(m_WaveLength, glm::vec3(4)));
 }
 
 
@@ -211,18 +191,18 @@ void Scene::draw()
     auto viewMatrix = m_Camera->viewMatrix();	
     auto viewProjection = m_Camera->projectionMatrix() * viewMatrix;
     
-    static Sphere* lightSphere = nullptr;
-    if(!lightSphere)
-    {
-        lightSphere = new Sphere(m_Light->position(), 0.5f, new SphereMesh(10), new SimpleMaterial);
-    }
+//    static Sphere* lightSphere = nullptr;
+//    if(!lightSphere)
+//    {
+//        lightSphere = new Sphere(m_Light->position(), 0.5f, new SphereMesh(10), new SimpleMaterial);
+//    }
     
-    lightSphere->transform().translation = m_Light->position();
-    lightSphere->material()->bind();
-    lightSphere->material()->program()->setUniform("ModelViewProjection", viewProjection * lightSphere->modelMatrix());
-    lightSphere->material()->program()->setUniform("NormalMatrix", glm::transpose(glm::inverse(viewMatrix * lightSphere->modelMatrix())));
+//    lightSphere->transform().translation = m_Light->position();
+//    lightSphere->material()->bind();
+//    lightSphere->material()->program()->setUniform("ModelViewProjection", viewProjection * lightSphere->modelMatrix());
+//    lightSphere->material()->program()->setUniform("NormalMatrix", glm::transpose(glm::inverse(viewMatrix * lightSphere->modelMatrix())));
     //lightSphere->draw();
-    lightSphere->material()->unbind();
+//    lightSphere->material()->unbind();
     
 	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ m_Light->position(), 1.0f };
     
@@ -250,8 +230,6 @@ void Scene::draw()
 	}
 }
 
-#include <iostream>
-
 void Scene::animate(float deltaTime)
 {
 	m_CurrentTime += deltaTime;
@@ -276,8 +254,8 @@ void Scene::toggleLightAnimation()
 SphereMesh::SphereMesh(int resolution) :
     m_Resolution(resolution)
 {
-    const float PI = M_PI;
-    const float TWO_PI = 2.0f * M_PI;
+    const float PI = glm::pi<float>();
+    const float TWO_PI = glm::two_pi<float>();
     const float INV_RESOLUTION = 1.0f / static_cast<float>(m_Resolution - 1);
     
     for (GLuint uIndex = 0; uIndex < m_Resolution; ++uIndex)
@@ -364,7 +342,7 @@ Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* mat
     m_Mesh(mesh)
 {
 	transform().translation = position;
-	transform().scale = glm::vec3(radius);
+	transform().scale = glm::vec3(m_Radius);
 }
 
 void Sphere::draw()

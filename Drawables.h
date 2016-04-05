@@ -18,6 +18,12 @@ public:
     
     virtual void bind() = 0;
     virtual void unbind();
+};
+
+class SingleProgramMaterial : public Material
+{
+public:
+    SingleProgramMaterial();
     
     Program* program() { return m_Program; }
     
@@ -76,20 +82,19 @@ private:
 	Texture* m_EarthTopographyTexture;
 };
 
-class EarthMaterial2 : public Material
+class AtmosphereMaterial : public Material
 {
 public:
-    explicit EarthMaterial2();
+    explicit AtmosphereMaterial();
     
     virtual void bind() override;
     
 private:
-    Texture* m_EarthTexture;
-    Texture* m_CloudsTexture;
-    Texture* m_OceanMaskTexture;
-    Texture* m_OceanIceTexture;
-    Texture* m_EarthNightTexture;
-    Texture* m_EarthTopographyTexture;
+    float m_ESun              = 20.0f;
+    float m_Kr                = 0.0025f;
+    float m_Km                = 0.0010f;
+    float m_OutterRadiusScale = 0.25f; // This is going to be the scaling to define the atmosphere thickness
+    glm::vec3 m_WaveLength = {0.650f, 0.570f, 0.475f};
 };
 
 class PhongPBRMaterial : public Material
@@ -219,3 +224,5 @@ private:
     glm::vec3 m_RotationVelocity;
     glm::vec3 m_TranslationVelocity;
 };
+
+

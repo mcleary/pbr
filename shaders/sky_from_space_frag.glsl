@@ -37,18 +37,22 @@ in vec3 Normal;
 in vec2 UV;
 in vec3 N;
 
-out vec4 color;
+out vec4 Color;
 
 uniform vec3 LightPos;
 uniform vec3 LightDir;
 
 uniform vec3  CameraPos;         // The camera's current position
 
-uniform vec3  v3InvWavelength;	// 1 / pow(wavelength, 4) for the red, green, and blue channels
-uniform float fCameraHeight2;	// fCameraHeight^2
-uniform float fOuterRadius;		// The outer (atmosphere) radius
-uniform float fOuterRadius2;	// fOuterRadius^2
-uniform float fInnerRadius;		// The inner (planetary) radius
+// Kr is the Rayleigh scattering constant
+// Km is the Mie scattering constant
+// ESun is the brightness of the sun
+
+uniform vec3  v3InvWavelength;          // 1 / pow(wavelength, 4) for the red, green, and blue channels
+uniform float fCameraHeight2;           // fCameraHeight^2
+uniform float fOuterRadius  = 1.25f;	// The outer (atmosphere) radius
+uniform float fOuterRadius2 = 1.5625;   // fOuterRadius^2
+uniform float fInnerRadius  = 1.0f;     // The inner (planetary) radius
 uniform float fKrESun;			// Kr * ESun
 uniform float fKmESun;			// Km * ESun
 uniform float fKr4PI;			// Kr * 4 * PI
@@ -57,13 +61,14 @@ uniform float fScale;			// 1 / (fOuterRadius - fInnerRadius)
 uniform float fScaleDepth;		// The scale depth (i.e. the altitude at which the atmosphere's average density is found)
 uniform float fScaleOverScaleDepth;	// fScale / fScaleDepth
 
-uniform float g;
-uniform float g2;
+uniform float Gamma = 1.2;
+
+uniform float g  = -0.990;
+uniform float g2 = -0.9801;
 
 const int nSamples = 2;
 const float fSamples = 2.0;
 
-varying vec3 position;
 
 float scale(float fCos)
 {
@@ -71,6 +76,10 @@ float scale(float fCos)
     return fScaleDepth * exp(-0.00287 + x*(0.459 + x*(3.83 + x*(-6.80 + x*5.25))));
 }
 
+float MiePhase(float g, float g2, float q)
+{
+    return 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + q*q) / pow(1.0 + g2 - 2.0 * g * q, 1.5);
+}
 
 void main (void)
 {
@@ -115,10 +124,11 @@ void main (void)
     }
     vec3 v3Direction = v3CameraPos - v3Pos;
     float fCos = dot(v3LightPos, v3Direction) / length(v3Direction);
-    float fMiePhase = 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos*fCos) / pow(1.0 + g2 - 2.0*g*fCos, 1.5);
+    float fMiePhase = MiePhase(g, g2, fCos);
     vec3 color = v3FrontColor * (v3InvWavelength * fKrESun);
     vec3 secondaryColor = v3FrontColor * fKmESun;
-    gl_FragColor.rgb = color + fMiePhase * secondaryColor;
-    gl_FragColor.a = gl_FragColor.b;
-    gl_FragColor.rgb = pow(gl_FragColor.rgb, vec3(1.0/2.2));
+    
+    Color.rgb = color + fMiePhase * secondaryColor;
+    Color.a = Color.b;
+    Color.rgb = pow(Color.rgb, vec3(1.0 / Gamma));  // Gamma Correction
 }

@@ -128,7 +128,7 @@ static void createEarthScene1()
 	auto mesh = new SphereMesh(200);
 	auto material = new EarthMaterial2;
 
-	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.4f, mesh, material };
+	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.0f, mesh, material };
 	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(0.0f) };
 
 	auto earthAnimator = new SphereAnimator{ earthSphere };

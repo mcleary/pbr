@@ -46,15 +46,15 @@ out vec3 Position;
 out vec3 Normal;
 out vec2 UV;
 
-uniform float fOuterRadius;		// The outer (atmosphere) radius
+uniform float fOuterRadius = 1.25;		// The outer (atmosphere) radius
 
 void main(void)
 {
-    vec4 position = ModelView * vec4(in_Position, 1.0);
+    vec4 position = ModelView * vec4(in_Position * fOuterRadius, 1.0);
     
     Position = position.xyz / position.w;
     Normal = vec3(NormalMatrix * vec4(in_Normal, 0.0));
     UV = in_UV;
     
-    gl_Position = ModelViewProjection * vec4(in_Position, 1.0);
+    gl_Position = ModelViewProjection * vec4(in_Position * fOuterRadius, 1.0);
 }
