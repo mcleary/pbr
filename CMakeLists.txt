@@ -23,6 +23,8 @@ add_executable(pbr
     Timer.cpp
     Camera.h
     Camera.cpp
+    Materials.h
+    Materials.cpp
 
     shaders/vertex.glsl
     shaders/fragment.glsl

@@ -9,101 +9,9 @@
 using namespace gl;
 
 #include "Shader.h"
+#include "Materials.h"
 #include "Camera.h"
 
-class Material
-{
-public:
-    explicit Material();
-    
-    virtual void bind() = 0;
-    virtual void unbind();
-};
-
-class SingleProgramMaterial : public Material
-{
-public:
-    SingleProgramMaterial();
-    
-    Program* program() { return m_Program; }
-    
-protected:
-    Program* m_Program;
-};
-
-class SimpleMaterial : public Material
-{
-public:
-    explicit SimpleMaterial();
-    
-    virtual void bind() override;
-};
-
-class SimpleTextureMaterial : public Material
-{
-public:
-    explicit SimpleTextureMaterial(const std::string& filename);
-    
-    virtual void bind() override;
-    virtual void unbind() override;
-    
-private:
-    Texture* m_Texture;
-};
-
-class PhongMaterial : public Material
-{
-public:
-    explicit PhongMaterial();
-    
-    virtual void bind() override;
-    
-private:
-    glm::vec3 m_AmbientColor  = {0.0f, 0.0f, 0.07f};
-    glm::vec3 m_DiffuseColor  = {0.0f, 0.0f, 0.7f};
-    glm::vec3 m_SpecularColor = {1.0f, 1.0f, 1.0f};
-    GLfloat   m_Shininess     = 32.0f;
-    GLfloat   m_ScreenGamma   = 2.2f;
-};
-
-class EarthMaterial : public Material
-{
-public:
-	explicit EarthMaterial();
-
-	virtual void bind() override;
-
-private:
-	Texture* m_EarthTexture;
-	Texture* m_CloudsTexture;
-	Texture* m_OceanMaskTexture;
-	Texture* m_OceanIceTexture;
-	Texture* m_EarthNightTexture;	
-	Texture* m_EarthTopographyTexture;
-};
-
-class AtmosphereMaterial : public Material
-{
-public:
-    explicit AtmosphereMaterial();
-    
-    virtual void bind() override;
-    
-private:
-    float m_ESun              = 20.0f;
-    float m_Kr                = 0.0025f;
-    float m_Km                = 0.0010f;
-    float m_OutterRadiusScale = 0.25f; // This is going to be the scaling to define the atmosphere thickness
-    glm::vec3 m_WaveLength = {0.650f, 0.570f, 0.475f};
-};
-
-class PhongPBRMaterial : public Material
-{
-public:
-	explicit PhongPBRMaterial();
-
-	virtual void bind() override;
-};
 
 struct Transform
 {
@@ -115,8 +23,6 @@ struct Transform
 class Drawable
 {
 public:
-    explicit Drawable(Material* material);
-    
 	virtual void draw() = 0;
 	virtual glm::mat4 modelMatrix();
     
@@ -219,10 +125,20 @@ public:
     virtual void update(float deltaTime) override;
     
 private:
-    Sphere* m_Sphere;
+    Sphere*   m_Sphere;
     
     glm::vec3 m_RotationVelocity;
     glm::vec3 m_TranslationVelocity;
+};
+
+class Earth : public Drawable
+{
+public:
+    virtual void draw() override;
+    
+private:
+    float       m_Radius;
+    SphereMesh* m_Mesh;
 };
 
 

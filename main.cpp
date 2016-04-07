@@ -97,11 +97,10 @@ static void createDefaultScene()
     auto simple = new SimpleMaterial;
     //auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
     auto phong = new PhongMaterial;
-    auto phongPBR = new PhongPBRMaterial;
     
     scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
     scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phongPBR));
+    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phong));
     scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
     
     auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simple);
@@ -124,9 +123,11 @@ static void createDefaultScene()
 static void createEarthScene1()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    
+    
 
 	auto mesh = new SphereMesh(200);
-	auto material = new EarthMaterial2;
+	auto material = new EarthMaterial;
 
 	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.0f, mesh, material };
 	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(0.0f) };
