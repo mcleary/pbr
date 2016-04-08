@@ -19,7 +19,7 @@ public:
     glm::vec3& eye() { return m_Eye; }
 
 private:
-	glm::vec3 m_Eye = { 0.0f, 0.0f, 3.0f };
+	glm::vec3 m_Eye = { 0.0f, 0.0f, 15.0f };
     glm::vec2 m_CursorPosition = {0.0f, 0.0f};
     float     m_Aspect = 1.0f;
 };

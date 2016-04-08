@@ -85,11 +85,11 @@ public:
     
     virtual void bind() override;
 	virtual void unbind() override;
-    
-private:
+
+public:
+	float m_RayleighScaleDepth = 0.25f;
     float m_ESun              = 20.0f;
     float m_Kr                = 0.0025f;
-    float m_Km                = 0.0010f;
-    float m_OutterRadiusScale = 0.25f; // This is going to be the scaling to define the atmosphere thickness
+    float m_Km                = 0.0010f;    
     glm::vec3 m_WaveLength = {0.650f, 0.570f, 0.475f};
 };

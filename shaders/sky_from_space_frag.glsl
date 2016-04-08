@@ -50,9 +50,9 @@ uniform vec3  CameraPos;         // The camera's current position
 
 uniform vec3  v3InvWavelength;          // 1 / pow(wavelength, 4) for the red, green, and blue channels
 uniform float fCameraHeight2;           // fCameraHeight^2
-uniform float fOuterRadius  = 1.25f;	// The outer (atmosphere) radius
-uniform float fOuterRadius2 = 1.5625;   // fOuterRadius^2
-uniform float fInnerRadius  = 1.0f;     // The inner (planetary) radius
+uniform float fOuterRadius;	// The outer (atmosphere) radius
+uniform float fOuterRadius2;   // fOuterRadius^2
+uniform float fInnerRadius;     // The inner (planetary) radius
 uniform float fKrESun;			// Kr * ESun
 uniform float fKmESun;			// Km * ESun
 uniform float fKr4PI;			// Kr * 4 * PI
@@ -66,7 +66,7 @@ uniform float Gamma = 1.2;
 uniform float g  = -0.990;
 uniform float g2 = -0.9801;
 
-const int nSamples = 2;
+const int nSamples = 3;
 const float fSamples = 2.0;
 
 
@@ -84,19 +84,19 @@ float MiePhase(float g, float g2, float q)
 void main (void)
 {
     // Get the ray from the camera to the vertex and its length (which is the far point of the ray passing through the atmosphere)
-    vec3 v3Pos = position;
-    vec3 v3Ray = v3Pos - v3CameraPos;
+    vec3 v3Pos = Position;
+    vec3 v3Ray = v3Pos - CameraPos;
     float fFar = length(v3Ray);
     v3Ray /= fFar;
     
     // Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
-    float B = 2.0 * dot(v3CameraPos, v3Ray);
+    float B = 2.0 * dot(CameraPos, v3Ray);
     float C = fCameraHeight2 - fOuterRadius2;
     float fDet = max(0.0, B*B - 4.0 * C);
     float fNear = 0.5 * (-B - sqrt(fDet));
     
     // Calculate the ray's starting position, then calculate its scattering offset
-    vec3 v3Start = v3CameraPos + v3Ray * fNear;
+    vec3 v3Start = CameraPos + v3Ray * fNear;
     fFar -= fNear;
     float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
     float fStartDepth = exp(-1.0 / fScaleDepth);
@@ -115,15 +115,15 @@ void main (void)
     {
         float fHeight = length(v3SamplePoint);
         float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
-        float fLightAngle = dot(v3LightPos, v3SamplePoint) / fHeight;
+        float fLightAngle = dot(LightPos, v3SamplePoint) / fHeight;
         float fCameraAngle = dot((v3Ray), v3SamplePoint) / fHeight * 0.99;
         float fScatter = (fStartOffset + fDepth * (scale(fLightAngle) - scale(fCameraAngle)));
         vec3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));
         v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
         v3SamplePoint += v3SampleRay;
     }
-    vec3 v3Direction = v3CameraPos - v3Pos;
-    float fCos = dot(v3LightPos, v3Direction) / length(v3Direction);
+    vec3 v3Direction = CameraPos - v3Pos;
+    float fCos = dot(LightPos, v3Direction) / length(v3Direction);
     float fMiePhase = MiePhase(g, g2, fCos);
     vec3 color = v3FrontColor * (v3InvWavelength * fKrESun);
     vec3 secondaryColor = v3FrontColor * fKmESun;
@@ -131,4 +131,8 @@ void main (void)
     Color.rgb = color + fMiePhase * secondaryColor;
     Color.a = Color.b;
     Color.rgb = pow(Color.rgb, vec3(1.0 / Gamma));  // Gamma Correction
+	
+	
+	Color.rgb = vec3(1.0);
+	Color.a = 1.0;
 }

@@ -64,9 +64,12 @@ void Scene::draw()
 		drawable->matParams().set("NormalMatrix", normalMatrix);
 		drawable->matParams().set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
 		drawable->matParams().set("CameraPos", m_Camera->eye());
+		
+		drawable->matParams().set("fCameraHeight", glm::length(m_Camera->eye()));
+		drawable->matParams().set("fCameraHeight2", glm::length2(m_Camera->eye()));
 
 		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position() - drawable->transform().translation, 0.0f };
-		drawable->matParams().set("LightDir", glm::normalize((glm::vec3{ lightViewDir })));		
+		drawable->matParams().set("LightDir", glm::normalize((glm::vec3{ lightViewDir })));
 
 		drawable->draw();
 	}
@@ -216,7 +219,11 @@ Earth::Earth(float radius) :
 	m_EarthMaterial(new EarthMaterial),
 	m_AtmosphereMaterial(new AtmosphereMaterial)
 {		
+	transform().translation = glm::vec3(0.0);
 	transform().scale = glm::vec3(m_Radius);
+	transform().rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
+
+	m_OuterRadius = m_Radius * 1.25;
 }
 
 void Earth::draw()
@@ -229,8 +236,13 @@ void Earth::draw()
 	m_EarthMaterial->unbind();
 
 	m_AtmosphereMaterial->bind();
-	{
+	{	
 		matParams().bindToMaterial(m_AtmosphereMaterial);
+		m_AtmosphereMaterial->program()->setUniform("fOuterRadius", m_OuterRadius);
+		m_AtmosphereMaterial->program()->setUniform("fOuterRadius2", m_OuterRadius * m_OuterRadius);
+		m_AtmosphereMaterial->program()->setUniform("fInnerRadius", m_Radius);
+		m_AtmosphereMaterial->program()->setUniform("fScale", 1.0f / (m_OuterRadius - m_Radius));
+		m_AtmosphereMaterial->program()->setUniform("fScaleOverScaleDepth", (1.0f / (m_OuterRadius - m_Radius)) / m_AtmosphereMaterial->m_RayleighScaleDepth);		
 		m_Mesh->draw();
 	}	
 	m_AtmosphereMaterial->unbind();

@@ -174,6 +174,7 @@ public:
     
 private:
     float				m_Radius;
+	float				m_OuterRadius;
     SphereMesh*			m_Mesh;
 	EarthMaterial*		m_EarthMaterial;
 	AtmosphereMaterial* m_AtmosphereMaterial;

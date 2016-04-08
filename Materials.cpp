@@ -138,7 +138,8 @@ void AtmosphereMaterial::bind()
     m_Program->setUniform("fKmESun", m_Km * m_ESun);
     m_Program->setUniform("fKr4PI", m_Kr * 4.0f * glm::pi<float>());
     m_Program->setUniform("fKm4PI", m_Km * 4.0f * glm::pi<float>());
-    m_Program->setUniform("v3InvWavelength", 1.0f / glm::pow(m_WaveLength, glm::vec3(4)));
+    m_Program->setUniform("v3InvWavelength", 1.0f / glm::pow(m_WaveLength, glm::vec3(4)));	
+	m_Program->setUniform("fScaleDepth", m_RayleighScaleDepth);
 }
 
 void AtmosphereMaterial::unbind()

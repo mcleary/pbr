@@ -18,7 +18,7 @@ static int  s_WindowWidth  = 1280;
 static int  s_WindowHeight = 720;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
-static bool s_bEarthScene = false;
+static bool s_bEarthScene = true;
 
 static Scene* scene = new Scene;
 
@@ -137,6 +137,13 @@ static void createEarthScene1()
 	scene->addAnimator(earthAnimator);
 }
 
+static void createEarthScene2()
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	scene->addDrawable(new Earth(10.0f));
+}
+
 static void init()
 {
     // OpenGL Initialization
@@ -158,7 +165,7 @@ static void init()
     
 	if (s_bEarthScene)
 	{
-		createEarthScene1();
+		createEarthScene2();
 	}
 	else
 	{
