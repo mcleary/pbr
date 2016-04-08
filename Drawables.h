@@ -12,7 +12,6 @@ using namespace gl;
 #include "Materials.h"
 #include "Camera.h"
 
-
 struct Transform
 {
 	glm::vec3 translation;
@@ -20,18 +19,52 @@ struct Transform
 	glm::vec3 scale;
 };
 
+class MaterialParams
+{
+public:
+	void set(const std::string& name, float value) { m_FloatValues[name] = value; }
+	void set(const std::string& name, const glm::vec3& value) { m_Vec3Values[name] = value; }
+	void set(const std::string& name, const glm::mat4 value) { m_Mat4Values[name] = value; }
+
+	void bindToMaterial(Material* mat)
+	{
+		//
+		// I'm not happy with this code
+		//
+		for (auto p : m_FloatValues)
+		{
+			mat->program()->setUniform(p.first, p.second);
+		}
+
+		for (auto p : m_Mat4Values)
+		{
+			mat->program()->setUniform(p.first, p.second);
+		}
+
+		for (auto p : m_Vec3Values)
+		{
+			mat->program()->setUniform(p.first, p.second);
+		}
+	}
+
+private:
+	std::map<std::string, float> m_FloatValues;
+	std::map<std::string, glm::vec3> m_Vec3Values;
+	std::map<std::string, glm::mat4> m_Mat4Values;
+};
+
 class Drawable
 {
 public:
 	virtual void draw() = 0;
-	virtual glm::mat4 modelMatrix();
+	virtual glm::mat4 modelMatrix();    
     
-    Material* material() { return m_Material; }
-	Transform& transform() { return m_Transform; }
+	MaterialParams& matParams() { return m_MatParams; }
+	Transform& transform() { return m_Transform; }	
     
 protected:
-	Transform m_Transform;	
-    Material* m_Material;
+	Transform	   m_Transform;	
+	MaterialParams m_MatParams;    
 };
 
 class Animator
@@ -112,6 +145,7 @@ public:
 private:	
 	float		m_Radius;
     SphereMesh* m_Mesh;
+	Material*   m_Material;
 };
 
 class SphereAnimator : public Animator
@@ -134,11 +168,15 @@ private:
 class Earth : public Drawable
 {
 public:
+	Earth(float radius);
+
     virtual void draw() override;
     
 private:
-    float       m_Radius;
-    SphereMesh* m_Mesh;
+    float				m_Radius;
+    SphereMesh*			m_Mesh;
+	EarthMaterial*		m_EarthMaterial;
+	AtmosphereMaterial* m_AtmosphereMaterial;
 };
 
 

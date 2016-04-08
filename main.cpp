@@ -18,7 +18,7 @@ static int  s_WindowWidth  = 1280;
 static int  s_WindowHeight = 720;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
-static bool s_bEarthScene = true;
+static bool s_bEarthScene = false;
 
 static Scene* scene = new Scene;
 
@@ -122,9 +122,7 @@ static void createDefaultScene()
 
 static void createEarthScene1()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    
-    
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);    
 
 	auto mesh = new SphereMesh(200);
 	auto material = new EarthMaterial;

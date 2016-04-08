@@ -1,9 +1,12 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <string>
-#include <glbinding/Binding.h>
+#include <map>
 
+#include <glm/glm.hpp>
+
+#include <string>
+
+#include <glbinding/Binding.h>
 using namespace gl;
 
 class Program;
@@ -14,6 +17,11 @@ class Material
 public:
     virtual void bind() = 0;
     virtual void unbind() = 0;
+
+	Program* program() { return m_Program; }
+
+protected:
+	Program* m_Program;
 };
 
 class SimpleMaterial : public Material
@@ -23,9 +31,6 @@ public:
     
     virtual void bind() override;
     virtual void unbind() override;
-    
-private:
-    Program* m_Program;
 };
 
 class SimpleTextureMaterial : public Material
@@ -37,7 +42,6 @@ public:
     virtual void unbind() override;
     
 private:
-    Program* m_Program;
     Texture* m_Texture;
 };
 
@@ -50,8 +54,6 @@ public:
     virtual void unbind() override;
     
 private:
-    Program* m_Program;
-    
     glm::vec3 m_AmbientColor  = {0.0f, 0.0f, 0.07f};
     glm::vec3 m_DiffuseColor  = {0.0f, 0.0f, 0.7f};
     glm::vec3 m_SpecularColor = {1.0f, 1.0f, 1.0f};
@@ -68,8 +70,6 @@ public:
     virtual void unbind() override;
     
 private:
-    Program* m_Program;
-    
     Texture* m_EarthTexture;
     Texture* m_CloudsTexture;
     Texture* m_OceanMaskTexture;
@@ -84,10 +84,9 @@ public:
     explicit AtmosphereMaterial();
     
     virtual void bind() override;
+	virtual void unbind() override;
     
 private:
-    Program* m_Program;
-    
     float m_ESun              = 20.0f;
     float m_Kr                = 0.0025f;
     float m_Km                = 0.0010f;

@@ -4,16 +4,9 @@
 
 #include <glm/ext.hpp>
 
-
-
-Drawable::Drawable(Material* material) :
-    m_Material(material)
-{
-}
-
 glm::mat4 Drawable::modelMatrix()
 {
-	return glm::translate(m_Transform.translation) * glm::toMat4(m_Transform.rotation) * glm::scale(m_Transform.scale); 	
+	return glm::translate(m_Transform.translation) * glm::toMat4(m_Transform.rotation) * glm::scale(m_Transform.scale);
 }
 
 Light::Light(glm::vec3 position) :
@@ -63,21 +56,19 @@ void Scene::draw()
 		auto modelViewMatrix = viewMatrix * modelMatrix;
 		auto normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
 
-		drawable->material()->bind();
-		drawable->material()->program()->setUniform("Time", m_CurrentTime);
-		drawable->material()->program()->setUniform("Model", modelMatrix);
-		drawable->material()->program()->setUniform("View", viewMatrix);
-		drawable->material()->program()->setUniform("ModelView", modelViewMatrix);
-		drawable->material()->program()->setUniform("ModelViewProjection", viewProjection * modelMatrix);
-		drawable->material()->program()->setUniform("NormalMatrix", normalMatrix);
-		drawable->material()->program()->setUniform("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
-        drawable->material()->program()->setUniform("CameraPos", m_Camera->eye());
+		drawable->matParams().set("Time", m_CurrentTime);
+		drawable->matParams().set("Model", modelMatrix);
+		drawable->matParams().set("View", viewMatrix);
+		drawable->matParams().set("ModelView", modelViewMatrix);
+		drawable->matParams().set("ModelViewProjection", viewProjection * modelMatrix);
+		drawable->matParams().set("NormalMatrix", normalMatrix);
+		drawable->matParams().set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
+		drawable->matParams().set("CameraPos", m_Camera->eye());
 
-		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position() - drawable->transform().translation, 0.0f };		
-		drawable->material()->program()->setUniform("LightDir", glm::normalize((glm::vec3{ lightViewDir })));
+		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position() - drawable->transform().translation, 0.0f };
+		drawable->matParams().set("LightDir", glm::normalize((glm::vec3{ lightViewDir })));		
 
 		drawable->draw();
-        drawable->material()->unbind();
 	}
 }
 
@@ -187,10 +178,10 @@ void SphereMesh::draw()
     glBindVertexArray(0);
 }
 
-Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* material) :
-	Drawable(material),	
+Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* material) :	
 	m_Radius(radius),
-    m_Mesh(mesh)
+    m_Mesh(mesh),
+	m_Material(material)
 {
 	transform().translation = position;
 	transform().scale = glm::vec3(m_Radius);
@@ -198,7 +189,10 @@ Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* mat
 
 void Sphere::draw()
 {
+	m_Material->bind();
+	matParams().bindToMaterial(m_Material);
     m_Mesh->draw();
+	m_Material->unbind();
 }
 
 SphereAnimator::SphereAnimator(Sphere* sphere) :
@@ -214,4 +208,30 @@ void SphereAnimator::update(float deltaTime)
     
     translation += m_TranslationVelocity * deltaTime;
     rotation *= glm::quat(m_RotationVelocity * deltaTime);
+}
+
+Earth::Earth(float radius) :
+	m_Radius(radius),
+	m_Mesh(new SphereMesh(200)),
+	m_EarthMaterial(new EarthMaterial),
+	m_AtmosphereMaterial(new AtmosphereMaterial)
+{		
+	transform().scale = glm::vec3(m_Radius);
+}
+
+void Earth::draw()
+{
+	m_EarthMaterial->bind();
+	{
+		matParams().bindToMaterial(m_EarthMaterial);
+		m_Mesh->draw();
+	}	
+	m_EarthMaterial->unbind();
+
+	m_AtmosphereMaterial->bind();
+	{
+		matParams().bindToMaterial(m_AtmosphereMaterial);
+		m_Mesh->draw();
+	}	
+	m_AtmosphereMaterial->unbind();
 }
