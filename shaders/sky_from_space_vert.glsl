@@ -33,26 +33,14 @@
 //
 
 layout(location = 0) in vec3 in_Position;
-layout(location = 1) in vec3 in_Normal;
-layout(location = 2) in vec2 in_UV;
 
-uniform mat4 ModelView;
 uniform mat4 ModelViewProjection;
-uniform mat4 NormalMatrix;
+uniform float fOuterRadiusFactor = 1.025;		// The outer (atmosphere) radius
 
 out vec3 Position;
-out vec3 Normal;
-out vec2 UV;
-
-uniform float fOuterRadiusFactor = 1.25;		// The outer (atmosphere) radius
 
 void main(void)
 {
-    vec4 position = ModelView * vec4(in_Position * fOuterRadiusFactor, 1.0);
-    
-    Position = position.xyz / position.w;
-    Normal = vec3(NormalMatrix * vec4(in_Normal, 0.0));
-    UV = in_UV;
-    
+    Position = in_Position;    
     gl_Position = ModelViewProjection * vec4(in_Position * fOuterRadiusFactor, 1.0);
 }

@@ -48,7 +48,7 @@ void Scene::draw()
     //lightSphere->draw();
 //    lightSphere->material()->unbind();
     
-	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ m_Light->position(), 1.0f };
+	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ m_Light->position(), 1.0f };	
     
 	for (auto drawable : m_Drawables)
 	{
@@ -63,13 +63,16 @@ void Scene::draw()
 		drawable->matParams().set("ModelViewProjection", viewProjection * modelMatrix);
 		drawable->matParams().set("NormalMatrix", normalMatrix);
 		drawable->matParams().set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
-		drawable->matParams().set("CameraPos", m_Camera->eye());
+		drawable->matParams().set("LightWorldPos", m_Light->position());
+		
+		drawable->matParams().set("CameraWorldPos", m_Camera->eye());
 		
 		drawable->matParams().set("fCameraHeight", glm::length(m_Camera->eye()));
 		drawable->matParams().set("fCameraHeight2", glm::length2(m_Camera->eye()));
 
 		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position() - drawable->transform().translation, 0.0f };
 		drawable->matParams().set("LightDir", glm::normalize((glm::vec3{ lightViewDir })));
+		drawable->matParams().set("LightWorldDir", glm::normalize(m_Light->position() - drawable->transform().translation));
 
 		drawable->draw();
 	}
@@ -215,7 +218,7 @@ void SphereAnimator::update(float deltaTime)
 
 Earth::Earth(float radius) :
 	m_Radius(radius),
-	m_Mesh(new SphereMesh(200)),
+	m_Mesh(new SphereMesh(20)),
 	m_EarthMaterial(new EarthMaterial),
 	m_AtmosphereMaterial(new AtmosphereMaterial)
 {		
@@ -223,7 +226,7 @@ Earth::Earth(float radius) :
 	transform().scale = glm::vec3(m_Radius);
 	transform().rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
 
-	m_OuterRadius = m_Radius * 1.25;
+	m_OuterRadius = m_Radius * 1.025;
 }
 
 void Earth::draw()

@@ -39,6 +39,8 @@ add_executable(pbr
     shaders/earth2_frag.glsl
     shaders/sky_from_space_vert.glsl
     shaders/sky_from_space_frag.glsl
+    shaders/sky_from_space2_vert.glsl
+    shaders/sky_from_space2_frag.glsl
 
     textures/earth_8k.jpg
     textures/earth_clouds_8k.jpg
@@ -46,7 +48,6 @@ add_executable(pbr
     textures/earth_ocean_color_8k.jpg
     textures/ocean_mask_8k.png
     textures/starfield.jpg
-    textures/topography.png
 )
 
 source_group("Shaders" FILES
@@ -63,6 +64,8 @@ source_group("Shaders" FILES
     shaders/earth2_frag.glsl
     shaders/sky_from_space_vert.glsl
     shaders/sky_from_space_frag.glsl
+    shaders/sky_from_space2_vert.glsl
+    shaders/sky_from_space2_frag.glsl
 )
 
 source_group("Textures" FILES
@@ -72,7 +75,6 @@ source_group("Textures" FILES
     textures/earth_ocean_color_8k.jpg
     textures/ocean_mask_8k.png
     textures/starfield.jpg
-    textures/topography.png
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})

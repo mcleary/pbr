@@ -78,12 +78,12 @@ EarthMaterial::EarthMaterial()
     m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/earth_frag.glsl"));
     m_Program->link();
     
-    m_EarthTexture = new Texture("textures/earth_8k.jpg");
-    m_CloudsTexture = new Texture("textures/earth_clouds_8k.jpg");
-    m_OceanIceTexture = new Texture("textures/earth_ocean_color_8k.jpg");
-    m_OceanMaskTexture = new Texture("textures/ocean_mask_8k.png");
-    m_EarthNightTexture = new Texture("textures/earth_night_8k.jpg");
-    m_EarthTopographyTexture = new Texture("textures/topography.png");
+    m_EarthTexture = new Texture("textures/earth_2k.jpg");
+    m_CloudsTexture = new Texture("textures/earth_clouds_2k.jpg");
+    m_OceanIceTexture = new Texture("textures/earth_ocean_color_2k.jpg");
+    m_OceanMaskTexture = new Texture("textures/ocean_mask_2k.png");
+    m_EarthNightTexture = new Texture("textures/earth_night_2k.jpg");
+    m_EarthTopographyTexture = new Texture("textures/topography_2k.png");
 }
 
 void EarthMaterial::bind()

@@ -14,8 +14,8 @@ using namespace gl;
 #include "Timer.h"
 #include "Drawables.h"
 
-static int  s_WindowWidth  = 1280;
-static int  s_WindowHeight = 720;
+static int  s_WindowWidth  = 640;
+static int  s_WindowHeight = 480;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
 static bool s_bEarthScene = true;
@@ -139,7 +139,7 @@ static void createEarthScene1()
 
 static void createEarthScene2()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
 	scene->addDrawable(new Earth(10.0f));
 }
