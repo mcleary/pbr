@@ -74,8 +74,8 @@ void PhongMaterial::unbind()
 EarthMaterial::EarthMaterial()
 {
     m_Program = new Program;
-    m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/earth_vert.glsl"));
-    m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/earth_frag.glsl"));
+    m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/ground_from_space_vert.glsl"));
+    m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/ground_from_space_frag.glsl"));
     m_Program->link();
     
     m_EarthTexture = new Texture("textures/earth_2k.jpg");

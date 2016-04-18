@@ -110,8 +110,6 @@ void main (void)
     
     // Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
     float fNear = getNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fOuterRadius2);
-	float fInnerRadius2 = fInnerRadius * fInnerRadius;
-	float fNearGround = getNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fInnerRadius2);
     
     // Calculate the ray's starting position, then calculate its scattering offset
     vec3 v3Start = CameraWorldPos + v3Ray * fNear;

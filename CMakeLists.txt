@@ -34,13 +34,12 @@ add_executable(pbr
     shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
-	  shaders/earth_vert.glsl
-	  shaders/earth_frag.glsl
-    shaders/earth2_frag.glsl
+	shaders/earth_vert.glsl
+	shaders/earth_frag.glsl    
     shaders/sky_from_space_vert.glsl
     shaders/sky_from_space_frag.glsl
-    shaders/sky_from_space2_vert.glsl
-    shaders/sky_from_space2_frag.glsl
+	shaders/ground_from_space_vert.glsl
+    shaders/ground_from_space_frag.glsl
 
     textures/earth_8k.jpg
     textures/earth_clouds_8k.jpg
@@ -60,12 +59,11 @@ source_group("Shaders" FILES
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
     shaders/earth_vert.glsl
-    shaders/earth_frag.glsl
-    shaders/earth2_frag.glsl
+    shaders/earth_frag.glsl    
     shaders/sky_from_space_vert.glsl
     shaders/sky_from_space_frag.glsl
-    shaders/sky_from_space2_vert.glsl
-    shaders/sky_from_space2_frag.glsl
+    shaders/ground_from_space_vert.glsl
+    shaders/ground_from_space_frag.glsl
 )
 
 source_group("Textures" FILES

@@ -237,6 +237,24 @@ void Earth::draw()
 	m_EarthMaterial->bind();
 	{
 		matParams().bindToMaterial(m_EarthMaterial);
+
+		//
+		// TODO: Needs serious refactoring
+		//
+		auto p = m_EarthMaterial->program();
+
+		p->setUniform("fOuterRadius", m_OuterRadius);
+		p->setUniform("fOuterRadius2", m_OuterRadius * m_OuterRadius);
+		p->setUniform("fInnerRadius", m_Radius);
+		p->setUniform("fScale", 1.0f / (m_OuterRadius - m_Radius));
+		p->setUniform("fScaleOverScaleDepth", (1.0f / (m_OuterRadius - m_Radius)) / m_AtmosphereMaterial->m_RayleighScaleDepth);
+		p->setUniform("fKrESun", m_AtmosphereMaterial->m_Kr * m_AtmosphereMaterial->m_ESun);
+		p->setUniform("fKmESun", m_AtmosphereMaterial->m_Km * m_AtmosphereMaterial->m_ESun);
+		p->setUniform("fKr4PI", m_AtmosphereMaterial->m_Kr * 4.0f * glm::pi<float>());
+		p->setUniform("fKm4PI", m_AtmosphereMaterial->m_Km * 4.0f * glm::pi<float>());
+		p->setUniform("v3InvWavelength", 1.0f / glm::pow(m_AtmosphereMaterial->m_WaveLength, glm::vec3(4)));
+		p->setUniform("fScaleDepth", m_AtmosphereMaterial->m_RayleighScaleDepth);
+
 		m_Mesh->draw();
 	}	
 	m_EarthMaterial->unbind();
