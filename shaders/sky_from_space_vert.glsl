@@ -34,13 +34,17 @@
 
 layout(location = 0) in vec3 in_Position;
 
+uniform mat4 Model;
 uniform mat4 ModelViewProjection;
+uniform mat4 ViewProjection;
 uniform float fOuterRadiusFactor = 1.025;		// The outer (atmosphere) radius
 
 out vec3 Position;
 
 void main(void)
 {
-    Position = in_Position;    
-    gl_Position = ModelViewProjection * vec4(in_Position * fOuterRadiusFactor, 1.0);
+	vec4 position = Model * vec4(in_Position * fOuterRadiusFactor, 1.0);
+    Position = position.xyz / position.w;    
+
+    gl_Position = ViewProjection * position;
 }

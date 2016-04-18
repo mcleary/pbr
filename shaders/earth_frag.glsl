@@ -55,5 +55,5 @@ void main()
     vec3 colorLinear = earthDiffuseColor + specular * SpecularColor * oceanMask + cloudsColor * lambertian;
     vec3 colorGammaCorrected = pow(colorLinear, vec3(1.0 / Gamma)); 
 
-	color = vec4(colorGammaCorrected, 1.0);	
+	color = vec4(colorGammaCorrected, 1.0);		
 }

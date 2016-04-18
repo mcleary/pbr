@@ -59,18 +59,18 @@ void Scene::draw()
 		drawable->matParams().set("Time", m_CurrentTime);
 		drawable->matParams().set("Model", modelMatrix);
 		drawable->matParams().set("View", viewMatrix);
+		drawable->matParams().set("ViewProjection", viewProjection);
 		drawable->matParams().set("ModelView", modelViewMatrix);
 		drawable->matParams().set("ModelViewProjection", viewProjection * modelMatrix);
-		drawable->matParams().set("NormalMatrix", normalMatrix);
-		drawable->matParams().set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
-		drawable->matParams().set("LightWorldPos", m_Light->position());
+		drawable->matParams().set("NormalMatrix", normalMatrix);		
 		
-		drawable->matParams().set("CameraWorldPos", m_Camera->eye());
-		
+		drawable->matParams().set("CameraWorldPos", m_Camera->eye());		
 		drawable->matParams().set("fCameraHeight", glm::length(m_Camera->eye()));
 		drawable->matParams().set("fCameraHeight2", glm::length2(m_Camera->eye()));
 
 		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position() - drawable->transform().translation, 0.0f };
+		drawable->matParams().set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
+		drawable->matParams().set("LightWorldPos", m_Light->position());
 		drawable->matParams().set("LightDir", glm::normalize((glm::vec3{ lightViewDir })));
 		drawable->matParams().set("LightWorldDir", glm::normalize(m_Light->position() - drawable->transform().translation));
 
@@ -218,7 +218,7 @@ void SphereAnimator::update(float deltaTime)
 
 Earth::Earth(float radius) :
 	m_Radius(radius),
-	m_Mesh(new SphereMesh(20)),
+	m_Mesh(new SphereMesh(200)),
 	m_EarthMaterial(new EarthMaterial),
 	m_AtmosphereMaterial(new AtmosphereMaterial)
 {		
@@ -230,13 +230,19 @@ Earth::Earth(float radius) :
 }
 
 void Earth::draw()
-{
+{	
+	glFrontFace(GL_CCW);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	m_EarthMaterial->bind();
 	{
 		matParams().bindToMaterial(m_EarthMaterial);
 		m_Mesh->draw();
 	}	
 	m_EarthMaterial->unbind();
+
+	glFrontFace(GL_CW);
+	glBlendFunc(GL_ONE, GL_ONE);
 
 	m_AtmosphereMaterial->bind();
 	{	

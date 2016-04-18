@@ -59,10 +59,10 @@ uniform float fScaleDepth;				// The scale depth (i.e. the altitude at which the
 uniform float fScaleOverScaleDepth;		// fScale / fScaleDepth
 uniform float Gamma = 1.2;
 
-uniform float g  = -0.990;
-uniform float g2 = -0.9801;
+uniform float g  = -0.990;	// The Mie phase asymmetry factor
+uniform float g2 = 0.9801;	// g*g
 
-const int nSamples = 2;
+const int nSamples = 10;
 const float fSamples = float(nSamples);
 
 
@@ -110,6 +110,8 @@ void main (void)
     
     // Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
     float fNear = getNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fOuterRadius2);
+	float fInnerRadius2 = fInnerRadius * fInnerRadius;
+	float fNearGround = getNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fInnerRadius2);
     
     // Calculate the ray's starting position, then calculate its scattering offset
     vec3 v3Start = CameraWorldPos + v3Ray * fNear;
@@ -142,11 +144,11 @@ void main (void)
     float fMiePhase = MiePhase(g, g2, fCos);
 	float fRayleightPhase = RayleighPhase(fCos * fCos);
 	vec4 c0 = vec4(v3FrontColor * (v3InvWavelength * fKrESun), 1.0);
-	vec4 c1 = vec4(v3FrontColor * fKmESun, 1.0);
+	vec4 c1 = vec4(v3FrontColor * fKmESun, 1.0);	
 	vec4 color = fRayleightPhase * c0 + fMiePhase * c1;    
-    
-    Color = vec4(0.0);
-    Color.r = color.g;
-	Color.a = 1.0;	
-    //Color.rgb = pow(Color.rgb, vec3(1.0 / Gamma));  // Gamma Correction		
+
+	Color = color;
+	Color.a = color.b; 
+   	
+    Color.rgb = pow(Color.rgb, vec3(1.0 / Gamma));  // Gamma Correction		
 }
