@@ -80,7 +80,7 @@ EarthMaterial::EarthMaterial()
 	//m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/earth_frag.glsl"));
     m_Program->link();
     
-	static const std::string s_TexRes = "2k";
+	static const std::string s_TexRes = "8k";
 
     m_EarthTexture = new Texture("textures/earth_" + s_TexRes + ".jpg");
     m_CloudsTexture = new Texture("textures/earth_clouds_" + s_TexRes + ".jpg");
