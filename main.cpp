@@ -184,6 +184,7 @@ int main()
     }
     
 	glfwWindowHint(GLFW_DEPTH_BITS, 24);
+    glfwWindowHint(GLFW_SAMPLES, 16);
 
 #ifdef __APPLE__    
     glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);

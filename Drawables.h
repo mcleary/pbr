@@ -104,7 +104,7 @@ private:
     Camera*                m_Camera;
 	bool			       m_bLightAnimationEnabled = false;
 	float				   m_CurrentTime = 0.0f;
-	float				   m_Gamma = 1.4f;
+	float				   m_Gamma = 1.2f;
 };
 
 struct Vertex
@@ -136,6 +136,7 @@ private:
     GLuint m_VBO;
     GLuint m_EBO;
 };
+
 
 class Sphere : public Drawable
 {
