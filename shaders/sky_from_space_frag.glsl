@@ -57,7 +57,7 @@ uniform float fKm4PI;					// Km * 4 * PI
 uniform float fScale;					// 1 / (fOuterRadius - fInnerRadius)
 uniform float fScaleDepth;				// The scale depth (i.e. the altitude at which the atmosphere's average density is found)
 uniform float fScaleOverScaleDepth;		// fScale / fScaleDepth
-uniform float Gamma = 1.2;
+uniform float Gamma;
 
 uniform float g  = -0.990;	// The Mie phase asymmetry factor
 uniform float g2 = 0.9801;	// g*g

@@ -76,14 +76,18 @@ EarthMaterial::EarthMaterial()
     m_Program = new Program;
     m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/ground_from_space_vert.glsl"));
     m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/ground_from_space_frag.glsl"));
+	//m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/earth_vert.glsl"));
+	//m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/earth_frag.glsl"));
     m_Program->link();
     
-    m_EarthTexture = new Texture("textures/earth_2k.jpg");
-    m_CloudsTexture = new Texture("textures/earth_clouds_2k.jpg");
-    m_OceanIceTexture = new Texture("textures/earth_ocean_color_2k.jpg");
-    m_OceanMaskTexture = new Texture("textures/ocean_mask_2k.png");
-    m_EarthNightTexture = new Texture("textures/earth_night_2k.jpg");
-    m_EarthTopographyTexture = new Texture("textures/topography_2k.png");
+	static const std::string s_TexRes = "2k";
+
+    m_EarthTexture = new Texture("textures/earth_" + s_TexRes + ".jpg");
+    m_CloudsTexture = new Texture("textures/earth_clouds_" + s_TexRes + ".jpg");
+    m_OceanIceTexture = new Texture("textures/earth_ocean_color_" + s_TexRes + ".jpg");
+    m_OceanMaskTexture = new Texture("textures/ocean_mask_" + s_TexRes + ".png");
+    m_EarthNightTexture = new Texture("textures/earth_night_" + s_TexRes + ".jpg");
+    m_EarthTopographyTexture = new Texture("textures/topography_" + s_TexRes + ".png");
 }
 
 void EarthMaterial::bind()

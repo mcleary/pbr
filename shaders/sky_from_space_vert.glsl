@@ -35,7 +35,6 @@
 layout(location = 0) in vec3 in_Position;
 
 uniform mat4 Model;
-uniform mat4 ModelViewProjection;
 uniform mat4 ViewProjection;
 uniform float fOuterRadiusFactor = 1.025;		// The outer (atmosphere) radius
 

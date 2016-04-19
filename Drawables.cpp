@@ -15,7 +15,7 @@ Light::Light(glm::vec3 position) :
 }
 
 Scene::Scene() :
-    m_Light(new Light({0.0, 0.0, 10.0})),
+    m_Light(new Light({0.0, 0.0, 300.0})),
     m_Camera(new Camera)
 {
 }
@@ -56,6 +56,7 @@ void Scene::draw()
 		auto modelViewMatrix = viewMatrix * modelMatrix;
 		auto normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
 
+		drawable->matParams().set("Gamma", m_Gamma);
 		drawable->matParams().set("Time", m_CurrentTime);
 		drawable->matParams().set("Model", modelMatrix);
 		drawable->matParams().set("View", viewMatrix);

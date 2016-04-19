@@ -104,6 +104,7 @@ private:
     Camera*                m_Camera;
 	bool			       m_bLightAnimationEnabled = false;
 	float				   m_CurrentTime = 0.0f;
+	float				   m_Gamma = 1.4f;
 };
 
 struct Vertex

@@ -16,10 +16,10 @@ out vec2 UV;
 
 void main()
 {
-    vec4 position = ModelView * vec4(in_Position, 1.0);
+    vec4 position = Model * vec4(in_Position, 1.0);
 
     Position = position.xyz / position.w;
-    Normal = vec3(NormalMatrix * vec4(in_Normal, 0.0));
+    Normal = vec3(Model * vec4(in_Normal, 0.0));
     UV = in_UV;
 
     gl_Position = ModelViewProjection * vec4(in_Position, 1.0);

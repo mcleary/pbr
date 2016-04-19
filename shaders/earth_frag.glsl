@@ -3,12 +3,12 @@
 in vec3 Position;
 in vec3 Normal;
 in vec2 UV;
-in vec3 N;
 
 out vec4 color;
 
-uniform vec3 LightPos;
-uniform vec3 LightDir;
+uniform vec3 LightWorldPos;
+uniform vec3 LightWorldDir;
+uniform vec3 CameraWorldPos;
 
 uniform float Time;
 uniform vec2 CloudsRotationSpeed = vec2(-0.001, 0.0);
@@ -36,14 +36,14 @@ void main()
 	vec3 normal = normalize(Normal);
 
     //vec3 lightDir = normalize(LightPos - Position); // For pontual light source
-	vec3 lightDir = LightDir;						  // For directional light sources
+	vec3 lightDir = LightWorldDir;						  // For directional light sources
     
     float lambertian = max(dot(lightDir, normal), 0.0);
     float specular = 0.0;
     
     if(lambertian > 0.0)
     {
-        vec3 viewDir = normalize(-Position);
+        vec3 viewDir = normalize(CameraWorldPos - Position);
         vec3 halfDir = normalize(lightDir + viewDir);
         float specAngle = max(dot(halfDir, normal), 0.0);
         specular = pow(specAngle, Shininess);

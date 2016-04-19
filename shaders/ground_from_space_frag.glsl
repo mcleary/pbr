@@ -3,12 +3,12 @@
 in vec3 Position;
 in vec3 Normal;
 in vec2 UV;
-in vec3 N;
 
 out vec4 color;
 
 uniform vec3 LightWorldPos;
 uniform vec3 LightWorldDir;
+uniform vec3 LightViewDir;
 uniform vec3 CameraWorldPos;
 
 uniform float Time;
@@ -21,9 +21,9 @@ uniform sampler2D OceanMaskTexture;
 uniform sampler2D TopographyTexture;
 uniform sampler2D OceanTexture;
 
-uniform vec3  SpecularColor = vec3(0.5);
+uniform vec3  SpecularColor = vec3(0.8);
 uniform float Shininess = 200.0;
-uniform float Gamma = 1.2;
+uniform float Gamma;
 
 uniform vec3  v3InvWavelength;          // 1 / pow(wavelength, 4) for the red, green, and blue channels
 uniform float fCameraHeight2;           // fCameraHeight^2
@@ -54,6 +54,18 @@ float getNearIntersection(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadiu
 	float C = fDistance2 - fRadius2;
 	float fDet = max(0.0, B*B - 4.0 * C);
 	return 0.5 * (-B - sqrt(fDet));
+}
+
+float BlendOverlay(float base, float blend) 
+{
+	return base < 0.5 ? (2.0 * base * blend) : (1.0 - 2.0 * (1.0 - base) * (1.0 - blend));
+}
+
+vec3 BlendOverlay(vec3 base, vec3 blend) 
+{
+	return vec3(BlendOverlay(base.r,blend.r),
+				BlendOverlay(base.g,blend.g),
+				BlendOverlay(base.b,blend.b));
 }
 
 void main()
@@ -94,7 +106,7 @@ void main()
 	// Now loop through the sample rays
 	vec3 v3FrontColor = vec3(0.0, 0.0, 0.0);
 	vec3 v3Attenuate = vec3(0.0);
-	for(int i=0; i<nSamples; i++)
+	for(int i = 0; i < nSamples; i++)
 	{
 		float fHeight = length(v3SamplePoint);
 		float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
@@ -108,27 +120,26 @@ void main()
 	
 	vec3 normal = normalize(Normal);
 
-    //vec3 lightDir = normalize(LightPos - Position); // For pontual light source
-	vec3 lightDir = LightWorldDir;						  // For directional light sources
+    vec3 lightDir = normalize(LightWorldPos - Position); // For pontual light source
+	//vec3 lightDir = LightWorldDir;				// For directional light sources
     
     float lambertian = max(dot(lightDir, normal), 0.0);
     float specular = 0.0;
     
     if(lambertian > 0.0)
     {
-        vec3 viewDir = normalize(-Position);
+        vec3 viewDir = normalize(CameraWorldPos - Position);
         vec3 halfDir = normalize(lightDir + viewDir);
         float specAngle = max(dot(halfDir, normal), 0.0);
         specular = pow(specAngle, Shininess);
     }		
 	
 	vec3 earthMask = (1.0 - oceanMask);	
-	vec3 earthDiffuseColor = lambertian * (earthColor*earthMask + oceanColor*oceanMask) + (1.0 - lambertian) * nightColor;	
+	vec3 earthDiffuseColor = lambertian * (earthColor*earthMask + oceanColor*oceanMask) + (1.0 - lambertian) * nightColor;	    
+    vec3 earthFinalColor = earthDiffuseColor + specular * SpecularColor * oceanMask + cloudsColor * lambertian;	
+	
+	vec3 colorLinear = BlendOverlay(earthFinalColor, v3ScatteringColor);		
     
-    vec3 colorLinear = earthDiffuseColor + specular * SpecularColor * oceanMask + cloudsColor * lambertian;
-    vec3 colorGammaCorrected = pow(colorLinear, vec3(1.0 / Gamma)); 
-
-	color = vec4(colorGammaCorrected, 1.0);	
-
-	color = vec4(v3ScatteringColor, 1.0);	
+	vec3 colorGammaCorrected = pow(colorLinear, vec3(1.0 / Gamma)); 
+	color = vec4(colorGammaCorrected, 1.0);		
 }
