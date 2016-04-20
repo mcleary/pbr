@@ -187,6 +187,47 @@ void SphereMesh::draw()
     glBindVertexArray(0);
 }
 
+Axis::Axis()
+{	
+	const GLfloat scale = 20.0f;
+	std::array<GLfloat, 36> vertices =
+	{
+		-scale, 0.0f, 0.0f,	1.0f, 0.0f, 0.0,
+		scale, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+
+		0.0f, -scale, 0.0f,	0.0f, 1.0f, 0.0f,
+		0.0f, scale, 0.0f,	0.0f, 1.0f, 0.0f,
+
+		0.0f, 0.0f, -scale,	0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, scale,	0.0f, 0.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &m_VAO);
+	glBindVertexArray(m_VAO);
+	{
+		glGenBuffers(1, &m_VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), nullptr);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 6 * sizeof(GLfloat), (void*)(sizeof(GLfloat)*3));
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+	}
+	glBindVertexArray(0);
+}
+
+void Axis::draw()
+{
+	m_AxisMaterial->bind();
+	matParams().bindToMaterial(m_AxisMaterial);
+	glBindVertexArray(m_VAO);
+	glDrawArrays(GL_LINES, 0, 6);
+	glBindVertexArray(0);
+	m_AxisMaterial->unbind();
+}
+
 Sphere::Sphere(glm::vec3 position, float radius, SphereMesh* mesh, Material* material) :	
 	m_Radius(radius),
     m_Mesh(mesh),

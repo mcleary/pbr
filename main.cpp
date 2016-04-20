@@ -14,8 +14,8 @@ using namespace gl;
 #include "Timer.h"
 #include "Drawables.h"
 
-static int  s_WindowWidth  = 1920;
-static int  s_WindowHeight = 1080;
+static int  s_WindowWidth  = 800;
+static int  s_WindowHeight = 600;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
 static bool s_bEarthScene = true;
@@ -142,19 +142,47 @@ static void createDefaultScene()
 static void createEarthScene2()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
+	
 	scene->addDrawable(new Earth(10.0f));
+
+	//scene->addDrawable(new Axis);
 }
 
 static void init()
 {
     // OpenGL Initialization
     using namespace std;
+	using namespace glbinding;
 
     cout << "OpenGL Version: " << endl;
     cout << "\tGL_RENDERER: " << glbinding::ContextInfo::renderer() << endl;
     cout << "\tGL_VERSION : " << glbinding::ContextInfo::version() << endl;
     cout << "\tGL_VENDOR  : " << glbinding::ContextInfo::vendor() << endl;
+
+	setCallbackMaskExcept(CallbackMask::After, { "glGetError" });
+	setAfterCallback([](const FunctionCall &)
+	{
+		const auto error = glGetError();
+		if (error != GL_NO_ERROR)
+			std::cout << "error: " << std::hex << error << std::endl;
+	});
+	/*setCallbackMask(CallbackMask::After | CallbackMask::ParametersAndReturnValue);
+	glbinding::setAfterCallback([](const glbinding::FunctionCall & call)
+	{
+		std::cout << call.function->name() << "(";
+		for (unsigned i = 0; i < call.parameters.size(); ++i)
+		{
+			std::cout << call.parameters[i]->asString();
+			if (i < call.parameters.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << ")";
+
+		if (call.returnValue)
+			std::cout << " -> " << call.returnValue->asString();
+
+		std::cout << std::endl;
+	});*/
     
     glClearColor(0.1, 0.1, 0.1, 1.0);
     

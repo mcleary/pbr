@@ -137,6 +137,43 @@ private:
     GLuint m_EBO;
 };
 
+class Axis : public Drawable
+{
+public:
+	explicit Axis();
+
+	virtual void draw() override;
+private:
+	GLuint m_VAO;
+	GLuint m_VBO;
+
+	//
+	// TODO: I really need a better way to manage Materiais
+	//
+	class AxisMaterial : public Material
+	{
+	public:
+		explicit AxisMaterial()
+		{
+			m_Program = new Program;
+			m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/lines_vert.glsl"));
+			m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/lines_frag.glsl"));
+			m_Program->link();
+		}
+
+		void bind() override 
+		{
+			m_Program->bind();
+		}
+
+		void unbind() override
+		{
+			m_Program->unbind();
+		}
+	};
+
+	AxisMaterial* m_AxisMaterial = new AxisMaterial;
+};
 
 class Sphere : public Drawable
 {

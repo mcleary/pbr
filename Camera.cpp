@@ -133,19 +133,21 @@ glm::mat4 Camera::projectionMatrix()
 void Camera::update(float deltaTime)
 {
     glm::vec3 viewDirection = glm::normalize(m_Eye - m_Pivot);
-    glm::vec3 slideDirection = glm::cross(viewDirection, m_Up);
+    glm::vec3 slideDirection = glm::normalize(glm::cross(viewDirection, m_Up));
     
     glm::vec3 forwardBackwardTranslation = m_KeySpeed * deltaTime * viewDirection;
-    glm::vec3 leftRightTranslation = m_KeySpeed * deltaTime * slideDirection;
-    glm::vec3 upDownTranslation = m_KeySpeed * deltaTime * glm::normalize(m_Up);
+    glm::vec3 leftRightTranslation = m_KeySpeed * deltaTime * slideDirection * 5.0;
+    glm::vec3 upDownTranslation = m_KeySpeed * deltaTime * glm::normalize(m_Up) * 5.0;
     
     if(m_W_Pressed)
     {
         m_Eye -= forwardBackwardTranslation;
+		m_Pivot -= forwardBackwardTranslation;
     }
     if(m_S_Pressed)
     {
         m_Eye += forwardBackwardTranslation;
+		m_Pivot += forwardBackwardTranslation;
     }
     if(m_A_Pressed)
     {
