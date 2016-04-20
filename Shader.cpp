@@ -114,6 +114,12 @@ void Program::setUniform(const std::string& name, const glm::vec3& vector)
     glUniform3fv(loc, 1, glm::value_ptr(vector));
 }
 
+void Program::setUniform(const std::string& name, const glm::vec2& vector)
+{
+    auto loc = glGetUniformLocation(m_ProgramID, name.data());
+    glUniform2fv(loc, 1, glm::value_ptr(vector));
+}
+
 void Program::setUniform(const std::string& name, float value)
 {
     auto loc = glGetUniformLocation(m_ProgramID, name.data());

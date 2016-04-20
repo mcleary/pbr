@@ -83,7 +83,7 @@ void Scene::animate(float deltaTime)
 {
 	m_CurrentTime += deltaTime;
 
-    static float LightRotationSpeed = -0.3f;
+    static float LightRotationSpeed = -0.04f;
 	if (m_bLightAnimationEnabled)
 	{
 		m_Light->position() = glm::rotateY(m_Light->position(), LightRotationSpeed * deltaTime);

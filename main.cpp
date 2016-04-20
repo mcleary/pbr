@@ -14,8 +14,8 @@ using namespace gl;
 #include "Timer.h"
 #include "Drawables.h"
 
-static int  s_WindowWidth  = 640;
-static int  s_WindowHeight = 480;
+static int  s_WindowWidth  = 1920;
+static int  s_WindowHeight = 1080;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
 static bool s_bEarthScene = true;
@@ -39,7 +39,7 @@ void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 		case GLFW_KEY_L:
 			scene->toggleLightAnimation();
 			break;
-		case GLFW_KEY_W:
+		case GLFW_KEY_O:
 			s_bWireframe = !s_bWireframe;
 			glPolygonMode(GL_FRONT_AND_BACK, s_bWireframe ? GL_LINE : GL_FILL);			
 			break;		
@@ -122,22 +122,22 @@ static void createDefaultScene()
     scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));    
 }
 
-static void createEarthScene1()
-{
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);    
-
-	auto mesh = new SphereMesh(200);
-	auto material = new EarthMaterial;
-
-	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.0f, mesh, material };
-	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(0.0f) };
-
-	auto earthAnimator = new SphereAnimator{ earthSphere };
-	earthAnimator->setRotationSpeed({ 0.0f, 0.0f, glm::radians(0.0f) });
-
-	scene->addDrawable(earthSphere);
-	scene->addAnimator(earthAnimator);
-}
+//static void createEarthScene1()
+//{
+//	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);    
+//
+//	auto mesh = new SphereMesh(200);
+//	auto material = new EarthMaterial;
+//
+//	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.0f, mesh, material };
+//	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(0.0f) };
+//
+//	auto earthAnimator = new SphereAnimator{ earthSphere };
+//	earthAnimator->setRotationSpeed({ 0.0f, 0.0f, glm::radians(0.0f) });
+//
+//	scene->addDrawable(earthSphere);
+//	scene->addAnimator(earthAnimator);
+//}
 
 static void createEarthScene2()
 {
@@ -213,7 +213,7 @@ int main()
 	glfwSetScrollCallback(window, mouseScrollCallback);
     
     glfwMakeContextCurrent(window);
-    glfwSwapInterval( s_bEnableVSync );
+    glfwSwapInterval(s_bEnableVSync);
 
 	glbinding::Binding::initialize(false);
     

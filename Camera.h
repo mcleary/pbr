@@ -33,14 +33,19 @@ private:
 	glm::vec3 m_Up					= { 0.0f, 1.0f, 0.0f };
     float     m_Aspect			    = 1.0f;
 
-	glm::vec2 m_CursorPosition = { 0.0f, 0.0f };
+	glm::vec2 m_CursorPosition      = { 0.0f, 0.0f };
 	float     m_RotationSpeedFactor = 1000.0f;
 	float     m_ZoomSpeedFactor     = 10.0f;
 
-	float     m_KeySpeed = 1.5f;
-	bool      m_RollRightPressed = false;
-	bool      m_UpPressed = false;
-	bool	  m_DownPressed = false;
-	bool      m_LeftPressed = false;
-	bool	  m_RightPressed = false;	
+	float     m_KeySpeed      = 3.0f;
+	bool      m_Up_Pressed    = false;
+	bool	  m_Down_Pressed  = false;
+	bool      m_Left_Pressed  = false;
+	bool	  m_Right_Pressed = false;
+    bool      m_W_Pressed     = false;
+    bool      m_A_Pressed     = false;
+    bool      m_S_Pressed     = false;
+    bool      m_D_Pressed     = false;
+    bool      m_Q_Pressed     = false;
+    bool      m_E_Pressed     = false;
 };

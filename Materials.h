@@ -71,11 +71,11 @@ public:
     
 private:
     Texture* m_EarthTexture;
-    Texture* m_CloudsTexture;
     Texture* m_OceanMaskTexture;
     Texture* m_OceanIceTexture;
     Texture* m_EarthNightTexture;
     Texture* m_EarthTopographyTexture;
+    Texture* m_CloudsTexture;
 };
 
 class AtmosphereMaterial : public Material
@@ -93,5 +93,4 @@ public:
 	float m_Km = 0.0010f;					 // Mie scattering constant
 	float m_g = -0.990f;					 // The Mie phase asymmetry factor
 	glm::vec3 m_WaveLength = { 0.650f, 0.570f, 0.475f };
-	//glm::vec3 m_WaveLength = { 0.100f, 0.100f, 0.100f };
 };

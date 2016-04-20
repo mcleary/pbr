@@ -12,7 +12,7 @@ uniform vec3 LightViewDir;
 uniform vec3 CameraWorldPos;
 
 uniform float Time;
-uniform vec2 CloudsRotationSpeed = vec2(-0.001, 0.0);
+uniform vec2 CloudsRotationSpeed = vec2(-0.0008, 0.0);
 
 uniform sampler2D EarthTexture;
 uniform sampler2D NightTexture;
@@ -41,6 +41,7 @@ uniform float fScaleOverScaleDepth;		// fScale / fScaleDepth
 
 const int nSamples = 10;
 const float fSamples = float(nSamples);
+
 
 float scale(float fCos)
 {
@@ -97,19 +98,33 @@ void main()
     float fFar = length(v3Ray);
     v3Ray /= fFar;
 
-	// Calculate the ray's starting position, then calculate its scattering offset
-    float fNear = getNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fOuterRadius2);
+    vec3 v3Start = vec3(0.0);
+    float fDepth = 0.0;
     
-    // Calculate the ray's starting position, then calculate its scattering offset
-    vec3 v3Start = CameraWorldPos + v3Ray * fNear;
-    fFar -= fNear;
-    float fDepth = exp((fInnerRadius - fOuterRadius) / fScaleDepth);
+    if(fCameraHeight > fOuterRadius)
+    {
+        // Camera in space
+        
+        // Calculate the ray's starting position, then calculate its scattering offset
+        float fNear = getNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fOuterRadius2);
+        fFar -= fNear;
+        v3Start = CameraWorldPos + v3Ray * fNear;
+        fDepth = exp((fInnerRadius - fOuterRadius) / fScaleDepth);
+    }
+    else
+    {
+        // Camera inside the atmosphere
+        v3Start = CameraWorldPos;
+        fDepth = exp((fInnerRadius - fCameraHeight) / fScaleDepth);
+    }
+
     float fCameraAngle = dot(-v3Ray, v3Pos) / length(v3Pos);
     float fLightAngle = dot(LightWorldDir, v3Pos) / length(v3Pos);
     float fCameraScale = scale(fCameraAngle);
     float fLightScale = scale(fLightAngle);
     float fCameraOffset = fDepth*fCameraScale;
-    float fTemp = (fLightScale + fCameraScale);
+    float fTemp = fLightScale + fCameraScale;
+
     
     // Initialize the scattering loop variables
     float fSampleLength = fFar / fSamples;

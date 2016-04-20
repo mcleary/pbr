@@ -105,7 +105,8 @@ void main (void)
 
 	if(fCameraHeight > fOuterRadius)
 	{
-		// if camera in space
+		// Camera in space
+        
 		// Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
 		float fNear = GetNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fOuterRadius2);
 

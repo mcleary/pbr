@@ -71,14 +71,14 @@ void PhongMaterial::unbind()
 	m_Program->unbind();
 }
 
+static const std::string s_TexRes = "8k";
+
 EarthMaterial::EarthMaterial()
 {
     m_Program = new Program;
     m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/ground_vert.glsl"));
     m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/ground_frag.glsl"));
     m_Program->link();
-    
-	static const std::string s_TexRes = "8k";
 
     m_EarthTexture = new Texture("textures/earth_" + s_TexRes + ".jpg");
     m_CloudsTexture = new Texture("textures/earth_clouds_" + s_TexRes + ".jpg");
@@ -96,26 +96,26 @@ void EarthMaterial::bind()
     m_EarthTexture->bind();
     
     glActiveTexture(GL_TEXTURE1);
-    m_CloudsTexture->bind();
-    
-    glActiveTexture(GL_TEXTURE2);
     m_OceanMaskTexture->bind();
     
-    glActiveTexture(GL_TEXTURE3);
+    glActiveTexture(GL_TEXTURE2);
     m_EarthNightTexture->bind();
     
-    glActiveTexture(GL_TEXTURE4);
+    glActiveTexture(GL_TEXTURE3);
     m_EarthTopographyTexture->bind();
     
-    glActiveTexture(GL_TEXTURE5);
+    glActiveTexture(GL_TEXTURE4);
     m_OceanIceTexture->bind();
     
+    glActiveTexture(GL_TEXTURE5);
+    m_CloudsTexture->bind();
+    
     m_Program->setUniform("EarthTexture", 0);
-    m_Program->setUniform("CloudsTexture", 1);
-    m_Program->setUniform("OceanMaskTexture", 2);
-    m_Program->setUniform("NightTexture", 3);
-    m_Program->setUniform("TopographyTexture", 4);
-    m_Program->setUniform("OceanTexture", 5);
+    m_Program->setUniform("OceanMaskTexture", 1);
+    m_Program->setUniform("NightTexture", 2);
+    m_Program->setUniform("TopographyTexture", 3);
+    m_Program->setUniform("OceanTexture", 4);
+    m_Program->setUniform("CloudsTexture", 5);
 }
 
 void EarthMaterial::unbind()
