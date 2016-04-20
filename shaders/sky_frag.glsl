@@ -38,14 +38,14 @@ out vec4 Color;
 
 uniform vec3 LightWorldPos;
 uniform vec3 LightWorldDir;
-
-uniform vec3  CameraWorldPos;         // The camera's current position
+uniform vec3 CameraWorldPos;         // The camera's current position
 
 // Kr is the Rayleigh scattering constant
 // Km is the Mie scattering constant
 // ESun is the brightness of the sun
 
 uniform vec3  v3InvWavelength;          // 1 / pow(wavelength, 4) for the red, green, and blue channels
+uniform float fCameraHeight;
 uniform float fCameraHeight2;           // fCameraHeight^2
 uniform float fOuterRadius;			    // The outer (atmosphere) radius
 uniform float fOuterRadius2;			// fOuterRadius^2
@@ -83,21 +83,12 @@ float RayleighPhase(float fCos)
 }
 
 // Returns the near intersection point of a line and a sphere
-float getNearIntersection(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2)
+float GetNearIntersection(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadius2)
 {
 	float B = 2.0 * dot(v3Pos, v3Ray);
 	float C = fDistance2 - fRadius2;
 	float fDet = max(0.0, B*B - 4.0 * C);
 	return 0.5 * (-B - sqrt(fDet));
-}
-
-// Returns the far intersection point of a line and a sphere
-float getFarIntersection(vec4 v3Pos, vec4 v3Ray, float fDistance2, float fRadius2)
-{
-	float B = 2.0 * dot(v3Pos, v3Ray);
-	float C = fDistance2 - fRadius2;
-	float fDet = max(0.0, B*B - 4.0 * C);
-	return 0.5 * (-B + sqrt(fDet));
 }
 
 void main (void)
@@ -106,18 +97,34 @@ void main (void)
     vec3 v3Pos = Position;
     vec3 v3Ray = v3Pos - CameraWorldPos;
     float fFar = length(v3Ray);
-    v3Ray /= fFar;
-    
-    // Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
-    float fNear = getNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fOuterRadius2);
+    v3Ray /= fFar;	
     
     // Calculate the ray's starting position, then calculate its scattering offset
-    vec3 v3Start = CameraWorldPos + v3Ray * fNear;
-    fFar -= fNear;
-    float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
-    float fStartDepth = exp(-1.0 / fScaleDepth);
-    float fStartOffset = fStartDepth * scale(fStartAngle);
-    
+    vec3 v3Start = vec3(0.0);	
+	float fStartOffset = 0.0;
+
+	if(fCameraHeight > fOuterRadius)
+	{
+		// if camera in space
+		// Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
+		float fNear = GetNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fOuterRadius2);
+
+		v3Start = CameraWorldPos + v3Ray * fNear;
+		fFar -= fNear;
+		float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
+		float fStartDepth = exp(-1.0 / fScaleDepth);
+		fStartOffset = fStartDepth * scale(fStartAngle);
+	}
+	else
+	{
+		// if camera inside the atmosphere
+		v3Start = CameraWorldPos;
+		float fHeight = length(v3Start);
+		float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
+		float fStartAngle = dot(v3Ray, v3Start) / fHeight;
+		fStartOffset = fDepth*scale(fStartAngle);
+	}
+
     // Initialize the scattering loop variables    
     float fSampleLength = fFar / fSamples;
     float fScaledLength = fSampleLength * fScale;

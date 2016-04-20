@@ -30,6 +30,8 @@ void draw()
 
 void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 {
+	scene->camera()->keyEvent(key, action);
+
 	if (action == GLFW_RELEASE)
 	{
 		switch (key)
@@ -40,7 +42,7 @@ void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 		case GLFW_KEY_W:
 			s_bWireframe = !s_bWireframe;
 			glPolygonMode(GL_FRONT_AND_BACK, s_bWireframe ? GL_LINE : GL_FILL);			
-			break;
+			break;		
 		default:
 			break;
 		}		

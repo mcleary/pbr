@@ -26,6 +26,7 @@ uniform float Shininess = 200.0;
 uniform float Gamma;
 
 uniform vec3  v3InvWavelength;          // 1 / pow(wavelength, 4) for the red, green, and blue channels
+uniform float fCameraHeight;
 uniform float fCameraHeight2;           // fCameraHeight^2
 uniform float fOuterRadius;			    // The outer (atmosphere) radius
 uniform float fOuterRadius2;			// fOuterRadius^2
@@ -56,21 +57,9 @@ float getNearIntersection(vec3 v3Pos, vec3 v3Ray, float fDistance2, float fRadiu
 	return 0.5 * (-B - sqrt(fDet));
 }
 
-float BlendOverlay(float base, float blend) 
+vec3 GetGroundColor()
 {
-	return base < 0.5 ? (2.0 * base * blend) : (1.0 - 2.0 * (1.0 - base) * (1.0 - blend));
-}
-
-vec3 BlendOverlay(vec3 base, vec3 blend) 
-{
-	return vec3(BlendOverlay(base.r,blend.r),
-				BlendOverlay(base.g,blend.g),
-				BlendOverlay(base.b,blend.b));
-}
-
-void main()
-{	
-    vec3 cloudsColor = texture(CloudsTexture, UV + Time * CloudsRotationSpeed).rgb;
+	vec3 cloudsColor = texture(CloudsTexture, UV + Time * CloudsRotationSpeed).rgb;
 	vec3 earthColor = texture(EarthTexture, UV).rgb;
 	vec3 oceanMask = texture(OceanMaskTexture, UV).rgb;
 	vec3 nightColor = texture(NightTexture, UV).rgb;
@@ -96,15 +85,22 @@ void main()
 	vec3 earthMask = (1.0 - oceanMask);	
 	vec3 earthDiffuseColor = lambertian * (earthColor*earthMask + oceanColor*oceanMask) + (1.0 - lambertian) * nightColor;	    
     vec3 earthFinalColor = earthDiffuseColor + specular * SpecularColor * oceanMask + cloudsColor * lambertian;	
-	
-	//vec3 colorLinear = BlendOverlay(earthFinalColor, v3ScatteringColor);
-    //vec3 colorLinear = v3ScatteringColor;
-    
+
+	return earthFinalColor;
+}
+
+void main()
+{		
     // Get the ray from the camera to the fragment and its length (which is the far point of the ray passing through the atmosphere)
     vec3 v3Pos = Position;
     vec3 v3Ray = v3Pos - CameraWorldPos;
     float fFar = length(v3Ray);
     v3Ray /= fFar;
+
+	// Calculate the ray's starting position, then calculate its scattering offset
+	vec3 v3Start = vec3(0.0);
+	
+	float fTemp = 0.0;
     
     // Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
     float fNear = getNearIntersection(CameraWorldPos, v3Ray, fCameraHeight2, fOuterRadius2);
@@ -126,10 +122,9 @@ void main()
     vec3 v3SampleRay = v3Ray * fSampleLength;
     vec3 v3SamplePoint = v3Start + v3SampleRay * 0.5;
     
-    // Now loop through the sample rays
-    //vec3 v3FrontColor = vec3(0.0, 0.0, 0.0);
-    vec3 v3FrontColor = earthFinalColor - vec3(0.1);
-    vec3 v3Attenuate = vec3(0.0);
+    // Now loop through the sample rays    
+	vec3 v3FrontColor = vec3(0.0);
+    vec3 v3Attenuate = vec3(0.0);	
     for(int i = 0; i < nSamples; i++)
     {
         float fHeight = length(v3SamplePoint);
@@ -139,8 +134,8 @@ void main()
         v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
         v3SamplePoint += v3SampleRay;
     }
-    vec3 v3ScatteringPrimaryColor = v3FrontColor * (v3InvWavelength * fKrESun + fKmESun);
-    vec3 v3ScatteringColor = v3ScatteringPrimaryColor + 0.25 * v3Attenuate;
+    vec3 v3ScatteringPrimaryColor = v3FrontColor * (v3InvWavelength * fKrESun + fKmESun);	
+    vec3 v3ScatteringColor = v3ScatteringPrimaryColor + GetGroundColor() * v3Attenuate;	
     
 	vec3 colorGammaCorrected = pow(v3ScatteringColor, vec3(1.0 / Gamma));
 	color = vec4(colorGammaCorrected, 1.0);

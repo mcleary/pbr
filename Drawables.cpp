@@ -93,6 +93,8 @@ void Scene::animate(float deltaTime)
     {
         animator->update(deltaTime);
     }
+
+	m_Camera->update(deltaTime);
 }
 
 void Scene::toggleLightAnimation()
