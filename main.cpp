@@ -39,6 +39,9 @@ void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 		case GLFW_KEY_L:
 			scene->toggleLightAnimation();
 			break;
+		case GLFW_KEY_K:
+			scene->toggleLightDirection();
+			break;
 		case GLFW_KEY_O:
 			s_bWireframe = !s_bWireframe;
 			glPolygonMode(GL_FRONT_AND_BACK, s_bWireframe ? GL_LINE : GL_FILL);			
@@ -86,8 +89,11 @@ void mouseScrollCallback(GLFWwindow* /*window*/, double x, double y)
 
 void reshape(GLFWwindow* /*window*/, int width, int height)
 {
-    scene->camera()->setViewportSize(width, height);
-	glViewport(0, 0, (GLint)width, (GLint)height);	
+	if (width > 0 && height > 0)
+	{
+		scene->camera()->setViewportSize(width, height);
+		glViewport(0, 0, (GLint)width, (GLint)height);
+	}    
 }
 
 static void createDefaultScene()
@@ -213,7 +219,7 @@ int main()
 		return EXIT_FAILURE;
     }
     
-	glfwWindowHint(GLFW_DEPTH_BITS, 24);
+	glfwWindowHint(GLFW_DEPTH_BITS, 32);
     glfwWindowHint(GLFW_SAMPLES, 16);
 
 #ifdef __APPLE__    
@@ -224,8 +230,18 @@ int main()
 #endif
     
     std::string windowTitleBase = "Physically Based Rendering with OpenGL ";
+
+	int monitorsCount;
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorsCount);
+	const int activeMonitorIdx = 1;
+
+	const GLFWvidmode* mode = glfwGetVideoMode(monitors[activeMonitorIdx]);
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
     
-    window = glfwCreateWindow( s_WindowWidth, s_WindowHeight, windowTitleBase.data(), nullptr, nullptr );
+    window = glfwCreateWindow( mode->width, mode->height, windowTitleBase.data(), monitors[activeMonitorIdx], nullptr );
     if (!window)
     {
         std::cerr << "Failed to open GLFW window" << std::endl;

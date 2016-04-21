@@ -71,7 +71,7 @@ void PhongMaterial::unbind()
 	m_Program->unbind();
 }
 
-static const std::string s_TexRes = "2k";
+static const std::string s_TexRes = "8k";
 
 EarthMaterial::EarthMaterial()
 {

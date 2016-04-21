@@ -94,6 +94,7 @@ public:
     void animate(float deltaTime);
 
 	void toggleLightAnimation();	
+	void toggleLightDirection();
     
     Camera* camera() { return m_Camera; }
     
@@ -103,6 +104,7 @@ private:
     Light*                 m_Light;
     Camera*                m_Camera;
 	bool			       m_bLightAnimationEnabled = false;
+	bool				   m_bLightForward = true;
 	float				   m_CurrentTime = 0.0f;
 	float				   m_Gamma = 1.2f;
 };

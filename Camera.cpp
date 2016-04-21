@@ -137,7 +137,7 @@ void Camera::update(float deltaTime)
     
     glm::vec3 forwardBackwardTranslation = m_KeySpeed * deltaTime * viewDirection;
     glm::vec3 leftRightTranslation = m_KeySpeed * deltaTime * slideDirection * 5.0;
-    glm::vec3 upDownTranslation = m_KeySpeed * deltaTime * glm::normalize(m_Up) * 5.0;
+    glm::vec3 upDownTranslation = m_KeySpeed * deltaTime * glm::normalize(m_Up) * 10.0;
     
     if(m_W_Pressed)
     {

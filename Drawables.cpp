@@ -83,7 +83,8 @@ void Scene::animate(float deltaTime)
 {
 	m_CurrentTime += deltaTime;
 
-    static float LightRotationSpeed = -0.04f;
+	const float lightSpeed = 0.04f;
+	float LightRotationSpeed = m_bLightForward ? -lightSpeed : lightSpeed;
 	if (m_bLightAnimationEnabled)
 	{
 		m_Light->position() = glm::rotateY(m_Light->position(), LightRotationSpeed * deltaTime);
@@ -100,6 +101,11 @@ void Scene::animate(float deltaTime)
 void Scene::toggleLightAnimation()
 {
 	m_bLightAnimationEnabled = !m_bLightAnimationEnabled;
+}
+
+void Scene::toggleLightDirection()
+{
+	m_bLightForward = !m_bLightForward;
 }
 
 SphereMesh::SphereMesh(int resolution) :
