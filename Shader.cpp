@@ -193,5 +193,68 @@ void Texture::unbind()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+CubeMap::CubeMap(const std::string& cubemapName)
+{
+	std::array<FaceInfo, 6> cubeFaces =
+	{
+		_loadFaceData(cubemapName, "right"),
+		_loadFaceData(cubemapName, "left"),
+		_loadFaceData(cubemapName, "top"),
+		_loadFaceData(cubemapName, "bottom"),
+		_loadFaceData(cubemapName, "back"),
+		_loadFaceData(cubemapName, "front")
+	};
 
+	glGenTextures(1, &m_CubeMapID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubeMapID);
+	for (GLuint i = 0; i < cubeFaces.size(); ++i)
+	{
+		const FaceInfo& face = cubeFaces[i];
 
+		glTexImage2D(
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+			0,
+			static_cast<GLint>(GL_RGB),
+			static_cast<GLsizei>(face.width),
+			static_cast<GLsizei>(face.height),
+			0,
+			GL_RGB,
+			GL_UNSIGNED_BYTE,
+			reinterpret_cast<void*>(face.data)
+		);
+
+		stbi_image_free(face.data);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, (GLint)GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, (GLint)GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, (GLint)GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, (GLint)GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, (GLint)GL_CLAMP_TO_EDGE);	
+}
+
+void CubeMap::bind()
+{
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubeMapID);
+}
+
+void CubeMap::unbind()
+{
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
+
+CubeMap::FaceInfo CubeMap::_loadFaceData(const std::string& filename, const std::string& face)
+{
+	FaceInfo faceInfo;
+
+	std::string faceFilename = filename + "_" + face + ".jpg";
+
+	std::cout << "Loading cubemap face '" << faceFilename << "' ..." << std::endl;
+	faceInfo.data = stbi_load(faceFilename.data(), &faceInfo.width, &faceInfo.height, &faceInfo.numberOfComponents, 3);
+
+	if (!faceInfo.data)
+	{
+		throw std::runtime_error("Error loading texture");
+	}
+
+	return faceInfo;
+}

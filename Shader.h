@@ -55,7 +55,7 @@ public:
 class Texture
 {
 public:
-    Texture(const std::string& filename);
+    explicit Texture(const std::string& filename);
     
     void bind();
     void unbind();
@@ -65,4 +65,26 @@ private:
     int    m_Width;
     int    m_Height;
     int    m_NumberOfComponents;
+};
+
+class CubeMap
+{
+public:
+	explicit CubeMap(const std::string& cubemapName);
+
+	void bind();
+	void unbind();
+
+private:
+	struct FaceInfo
+	{
+		unsigned char* data = nullptr;
+		int width;
+		int height;
+		int numberOfComponents;
+	};
+
+	FaceInfo _loadFaceData(const std::string& basename, const std::string& face);
+
+	GLuint m_CubeMapID;
 };

@@ -209,7 +209,7 @@ private:
 class Earth : public Drawable
 {
 public:
-	Earth(float radius);
+	explicit Earth(float radius);
 
     virtual void draw() override;
     
@@ -219,6 +219,19 @@ private:
     SphereMesh*			m_Mesh;
 	EarthMaterial*		m_EarthMaterial;
 	AtmosphereMaterial* m_AtmosphereMaterial;
+};
+
+class StarField : public Drawable
+{
+public:
+	explicit StarField();
+	
+	virtual void draw() override;
+
+private:
+	GLuint m_VAO;
+	GLuint m_VBO;
+	StarFieldMaterial*  m_StarFieldMaterial;
 };
 
 

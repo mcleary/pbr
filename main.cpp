@@ -19,6 +19,7 @@ static int  s_WindowHeight = 600;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
 static bool s_bEarthScene = true;
+static bool s_bFullScreen = false;
 
 static Scene* scene = new Scene;
 
@@ -147,10 +148,10 @@ static void createDefaultScene()
 
 static void createEarthScene2()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	
-	scene->addDrawable(new Earth(10.0f));
-
+	//scene->addDrawable(new Earth(10.0f));
+	scene->addDrawable(new StarField);
 	//scene->addDrawable(new Axis);
 }
 
@@ -229,19 +230,27 @@ int main()
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
     
-    std::string windowTitleBase = "Physically Based Rendering with OpenGL ";
-
-	int monitorsCount;
-	GLFWmonitor** monitors = glfwGetMonitors(&monitorsCount);
-	const int activeMonitorIdx = 1;
-
-	const GLFWvidmode* mode = glfwGetVideoMode(monitors[activeMonitorIdx]);
-	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+    std::string windowTitleBase = "Physically Based Rendering with OpenGL ";	
     
-    window = glfwCreateWindow( mode->width, mode->height, windowTitleBase.data(), monitors[activeMonitorIdx], nullptr );
+	if (s_bFullScreen)
+	{
+		int monitorsCount;
+		GLFWmonitor** monitors = glfwGetMonitors(&monitorsCount);
+		const int activeMonitorIdx = 1;
+
+		const GLFWvidmode* mode = glfwGetVideoMode(monitors[activeMonitorIdx]);
+		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+		window = glfwCreateWindow(mode->width, mode->height, windowTitleBase.data(), monitors[activeMonitorIdx], nullptr);
+	}
+	else
+	{
+		window = glfwCreateWindow(s_WindowWidth, s_WindowHeight, windowTitleBase.data(), nullptr, nullptr);
+	}
+    
     if (!window)
     {
         std::cerr << "Failed to open GLFW window" << std::endl;

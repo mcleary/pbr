@@ -32,8 +32,9 @@ void Scene::addAnimator(Animator* animator)
 
 void Scene::draw()
 {
+	auto projectionMatrix = m_Camera->projectionMatrix();
     auto viewMatrix = m_Camera->viewMatrix();	
-    auto viewProjection = m_Camera->projectionMatrix() * viewMatrix;
+    auto viewProjection = projectionMatrix * viewMatrix;
     
 //    static Sphere* lightSphere = nullptr;
 //    if(!lightSphere)
@@ -60,6 +61,7 @@ void Scene::draw()
 		drawable->matParams().set("Time", m_CurrentTime);
 		drawable->matParams().set("Model", modelMatrix);
 		drawable->matParams().set("View", viewMatrix);
+		drawable->matParams().set("Projection", projectionMatrix);
 		drawable->matParams().set("ViewProjection", viewProjection);
 		drawable->matParams().set("ModelView", modelViewMatrix);
 		drawable->matParams().set("ModelViewProjection", viewProjection * modelMatrix);
@@ -323,4 +325,78 @@ void Earth::draw()
 		m_Mesh->draw();
 	}	
 	m_AtmosphereMaterial->unbind();
+}
+
+StarField::StarField()
+{
+	std::array<GLfloat, 108> vertices = 
+	{
+		// Positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f
+	};
+
+	glGenVertexArrays(1, &m_VAO);
+	glBindVertexArray(m_VAO);
+	{
+		glGenBuffers(1, &m_VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
+		glEnableVertexAttribArray(0);		
+	}
+	glBindVertexArray(0);
+
+	m_StarFieldMaterial = new StarFieldMaterial;
+}
+
+void StarField::draw()
+{	
+	glDepthMask(GL_FALSE);
+	m_StarFieldMaterial->bind();
+	matParams().bindToMaterial(m_StarFieldMaterial);
+	glBindVertexArray(m_VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+	m_StarFieldMaterial->unbind();
+	glDepthMask(GL_TRUE);
 }

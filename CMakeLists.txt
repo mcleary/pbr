@@ -42,6 +42,8 @@ add_executable(pbr
     shaders/ground_frag.glsl
     shaders/lines_vert.glsl
 	shaders/lines_frag.glsl
+    shaders/skybox_vert.glsl
+    shaders/skybox_frag.glsl
 
     textures/earth_8k.jpg
     textures/earth_clouds_8k.jpg
@@ -68,6 +70,8 @@ source_group("Shaders" FILES
     shaders/ground_frag.glsl
     shaders/lines_vert.glsl
 	shaders/lines_frag.glsl
+    shaders/skybox_vert.glsl
+    shaders/skybox_frag.glsl
 )
 
 source_group("Textures" FILES

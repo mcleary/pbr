@@ -11,6 +11,7 @@ using namespace gl;
 
 class Program;
 class Texture;
+class CubeMap;
 
 class Material
 {
@@ -59,6 +60,18 @@ private:
     glm::vec3 m_SpecularColor = {1.0f, 1.0f, 1.0f};
     GLfloat   m_Shininess     = 32.0f;
     GLfloat   m_ScreenGamma   = 2.2f;
+};
+
+class StarFieldMaterial : public Material
+{
+public:
+	explicit StarFieldMaterial();
+
+	virtual void bind() override;
+	virtual void unbind() override;
+
+private:
+	CubeMap* m_StarFieldCubeMap;
 };
 
 class EarthMaterial : public Material

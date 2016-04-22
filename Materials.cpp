@@ -71,7 +71,32 @@ void PhongMaterial::unbind()
 	m_Program->unbind();
 }
 
-static const std::string s_TexRes = "8k";
+static const std::string s_TexRes = "2k";
+
+StarFieldMaterial::StarFieldMaterial()
+{
+	m_Program = new Program;
+	m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/skybox_vert.glsl"));
+	m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/skybox_frag.glsl"));
+	m_Program->link();
+
+	m_StarFieldCubeMap = new CubeMap("textures/starfield");
+}
+
+void StarFieldMaterial::bind()
+{
+	m_Program->bind();
+
+	glActiveTexture(GL_TEXTURE0);
+	m_StarFieldCubeMap->bind();
+
+	m_Program->setUniform("SkyboxTexture", 0);
+}
+
+void StarFieldMaterial::unbind()
+{
+	m_Program->unbind();
+}
 
 EarthMaterial::EarthMaterial()
 {
