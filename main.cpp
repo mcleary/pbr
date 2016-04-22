@@ -150,8 +150,8 @@ static void createEarthScene2()
 {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	
-	//scene->addDrawable(new Earth(10.0f));
 	scene->addDrawable(new StarField);
+	scene->addDrawable(new Earth(10.0f));	
 	//scene->addDrawable(new Axis);
 }
 

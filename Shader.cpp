@@ -246,7 +246,7 @@ CubeMap::FaceInfo CubeMap::_loadFaceData(const std::string& filename, const std:
 {
 	FaceInfo faceInfo;
 
-	std::string faceFilename = filename + "_" + face + ".jpg";
+	std::string faceFilename = filename + "_" + face + ".jpg";	
 
 	std::cout << "Loading cubemap face '" << faceFilename << "' ..." << std::endl;
 	faceInfo.data = stbi_load(faceFilename.data(), &faceInfo.width, &faceInfo.height, &faceInfo.numberOfComponents, 3);

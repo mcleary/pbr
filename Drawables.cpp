@@ -325,6 +325,9 @@ void Earth::draw()
 		m_Mesh->draw();
 	}	
 	m_AtmosphereMaterial->unbind();
+	
+	glFrontFace(GL_CCW);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 StarField::StarField()
