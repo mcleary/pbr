@@ -148,11 +148,13 @@ static void createDefaultScene()
 
 static void createEarthScene2()
 {
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	
-	scene->addDrawable(new StarField);
-	scene->addDrawable(new Earth(10.0f));	
-	//scene->addDrawable(new Axis);
+	scene->addDrawable(new Moon(10.0f));
+	//scene->addDrawable(new StarField2);
+	//scene->addDrawable(new StarField);
+	//scene->addDrawable(new Earth(10.0f));	
+	scene->addDrawable(new Axis);
 }
 
 static void init()

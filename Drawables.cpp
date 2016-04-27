@@ -330,6 +330,25 @@ void Earth::draw()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+Moon::Moon(float radius)
+{
+	m_Radius = radius;
+	m_Mesh = new SphereMesh(200);
+	m_MoonMaterial = new MoonMaterial;
+
+	transform().translation = glm::vec3(0.0);
+	transform().scale = glm::vec3(m_Radius);
+	transform().rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
+}
+
+void Moon::draw()
+{
+	m_MoonMaterial->bind();
+	matParams().bindToMaterial(m_MoonMaterial);
+	m_Mesh->draw();
+	m_MoonMaterial->unbind();
+}
+
 StarField::StarField()
 {
 	std::array<GLfloat, 108> vertices = 
@@ -402,4 +421,69 @@ void StarField::draw()
 	glBindVertexArray(0);
 	m_StarFieldMaterial->unbind();
 	glDepthMask(GL_TRUE);
+}
+
+#include <fstream>
+#include <iostream>
+
+StarField2::StarField2()
+{
+	std::cout << "Loading stars data ..." << std::endl;
+
+	std::fstream starsFile("data/stars.txt", std::ios::in);
+	if (!starsFile.is_open())
+	{
+		throw std::runtime_error("Error opening Stars.txt");
+	}
+
+	starsFile >> m_NumberOfStars;
+
+	std::vector<glm::vec3> vertices;
+	vertices.reserve(m_NumberOfStars);
+
+	while (!starsFile.eof())
+	{
+		int catlogNumber;
+		glm::vec3 position;
+		float mag;
+		std::string details;
+
+		starsFile >> catlogNumber >> position.x >> position.y >> position.z >> mag >> details;
+
+		vertices.push_back(position);
+	}
+
+	glm::vec3 meanVertice = glm::vec3(0.0);
+	for (auto v : vertices)
+	{
+		meanVertice += v;
+	}
+	meanVertice /= (float)vertices.size();
+	for (auto& v : vertices)
+	{
+		//v -= meanVertice;
+		v *= 15.0f;
+		//v.z = 0;
+	}
+
+	glGenVertexArrays(1, &m_VAO);
+	glBindVertexArray(m_VAO);
+	{
+		glGenBuffers(1, &m_VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
+		glEnableVertexAttribArray(0);
+	}
+	glBindVertexArray(0);
+}
+
+void StarField2::draw()
+{
+	m_StarFieldMaterial->bind();
+	matParams().bindToMaterial(m_StarFieldMaterial);
+	glBindVertexArray(m_VAO);
+	glDrawArrays(GL_POINTS, 0, m_NumberOfStars);
+	glBindVertexArray(0);
+	m_StarFieldMaterial->unbind();
 }

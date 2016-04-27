@@ -107,3 +107,15 @@ public:
 	float m_g = -0.990f;					 // The Mie phase asymmetry factor
 	glm::vec3 m_WaveLength = { 0.650f, 0.570f, 0.475f };
 };
+
+class MoonMaterial : public Material
+{
+public:
+	explicit MoonMaterial();
+
+	virtual void bind() override;
+	virtual void unbind() override;
+
+private:
+	Texture* m_MoonTexture;
+};

@@ -127,7 +127,7 @@ glm::mat4 Camera::viewMatrix()
 
 glm::mat4 Camera::projectionMatrix()
 {
-    return glm::perspective(45.0f, m_Aspect, 0.01f, 1000.0f);
+    return glm::perspective(45.0f, m_Aspect, 0.01f, 10000.0f);
 }
 
 void Camera::update(float deltaTime)

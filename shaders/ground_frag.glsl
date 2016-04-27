@@ -4,11 +4,10 @@ in vec3 Position;
 in vec3 Normal;
 in vec2 UV;
 
-out vec4 color;
+out vec4 Color;
 
 uniform vec3 LightWorldPos;
 uniform vec3 LightWorldDir;
-uniform vec3 LightViewDir;
 uniform vec3 CameraWorldPos;
 
 uniform float Time;
@@ -148,5 +147,5 @@ void main()
     vec3 v3ScatteringColor = v3ScatteringPrimaryColor + GetGroundColor() * v3Attenuate;	
     
 	vec3 colorGammaCorrected = pow(v3ScatteringColor, vec3(1.0 / Gamma));
-	color = vec4(colorGammaCorrected, 1.0);
+	Color = vec4(colorGammaCorrected, 1.0);
 }
