@@ -1,5 +1,5 @@
 # pbr
-Physically Based Rendering With OpenGL. An attemp to render atmosferic effects
+Physically Based Rendering With OpenGL. An attempt to render atmosferic effects
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/eDFXFgd_flA" frameborder="0" allowfullscreen></iframe>
 
