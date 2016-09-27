@@ -16,7 +16,7 @@ struct Transform
 {
 	glm::vec3 translation;
 	glm::quat rotation;
-	glm::vec3 scale;
+	glm::vec3 scale = glm::vec3(1.0);
 };
 
 class MaterialParams
@@ -221,6 +221,19 @@ private:
 	AtmosphereMaterial* m_AtmosphereMaterial;
 };
 
+class Moon : public Drawable
+{
+public:
+	explicit Moon(float radius);
+	
+	virtual void draw() override;
+
+private:
+	float			m_Radius;
+	SphereMesh*		m_Mesh;
+	MoonMaterial*	m_MoonMaterial;
+};
+
 class StarField : public Drawable
 {
 public:
@@ -232,6 +245,43 @@ private:
 	GLuint m_VAO;
 	GLuint m_VBO;
 	StarFieldMaterial*  m_StarFieldMaterial;
+};
+
+class StarField2 : public Drawable
+{
+public:
+	explicit StarField2();
+
+	virtual void draw() override;
+
+private:
+	GLuint m_VAO;
+	GLuint m_VBO;
+	GLuint m_NumberOfStars;
+
+	class StarFieldMaterial : public Material
+	{
+	public:
+		StarFieldMaterial()
+		{
+			m_Program = new Program;
+			m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/stars_vert.glsl"));
+			m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/stars_frag.glsl"));
+			m_Program->link();
+		}
+
+		virtual void bind() override
+		{
+			m_Program->bind();
+		}
+
+		virtual void unbind() override
+		{
+			m_Program->unbind();
+		}
+	};
+
+	StarFieldMaterial* m_StarFieldMaterial = new StarFieldMaterial;
 };
 
 

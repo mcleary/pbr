@@ -34,8 +34,6 @@ add_executable(pbr
     shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
-	shaders/earth_vert.glsl
-	shaders/earth_frag.glsl
     shaders/sky_vert.glsl
     shaders/sky_frag.glsl
 	shaders/ground_vert.glsl
@@ -44,13 +42,10 @@ add_executable(pbr
 	shaders/lines_frag.glsl
     shaders/skybox_vert.glsl
     shaders/skybox_frag.glsl
-
-    textures/earth_8k.jpg
-    textures/earth_clouds_8k.jpg
-    textures/earth_night_8k.jpg
-    textures/earth_ocean_color_8k.jpg
-    textures/ocean_mask_8k.png
-    textures/starfield.jpg
+	shaders/stars_vert.glsl
+	shaders/stars_frag.glsl
+	shaders/space_vert.glsl
+	shaders/space_frag.glsl
 )
 
 source_group("Shaders" FILES
@@ -62,8 +57,6 @@ source_group("Shaders" FILES
     shaders/phong_pbr_frag.glsl
     shaders/phong_vert.glsl
     shaders/phong_frag.glsl
-    shaders/earth_vert.glsl
-    shaders/earth_frag.glsl
     shaders/sky_vert.glsl
     shaders/sky_frag.glsl
     shaders/ground_vert.glsl
@@ -72,15 +65,8 @@ source_group("Shaders" FILES
 	shaders/lines_frag.glsl
     shaders/skybox_vert.glsl
     shaders/skybox_frag.glsl
-)
-
-source_group("Textures" FILES
-    textures/earth_8k.jpg
-    textures/earth_clouds_8k.jpg
-    textures/earth_night_8k.jpg
-    textures/earth_ocean_color_8k.jpg
-    textures/ocean_mask_8k.png
-    textures/starfield.jpg
+	shaders/stars_vert.glsl
+	shaders/stars_frag.glsl
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
