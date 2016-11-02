@@ -85,7 +85,7 @@ void Scene::animate(float deltaTime)
 {
 	m_CurrentTime += deltaTime;
 
-	const float lightSpeed = 0.04f;
+	const float lightSpeed = 0.9f;
 	float LightRotationSpeed = m_bLightForward ? -lightSpeed : lightSpeed;
 	if (m_bLightAnimationEnabled)
 	{

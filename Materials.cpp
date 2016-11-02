@@ -71,7 +71,7 @@ void PhongMaterial::unbind()
 	m_Program->unbind();
 }
 
-static const std::string s_TexRes = "2k";
+static const std::string s_TexRes = "8k";
 
 StarFieldMaterial::StarFieldMaterial()
 {
@@ -178,10 +178,10 @@ void AtmosphereMaterial::unbind()
 
 MoonMaterial::MoonMaterial()
 {
-	m_Program = new Program;
+	/*m_Program = new Program;
 	m_Program->attach(new Shader(ShaderType::VERTEX, "shaders/space_vert.glsl"));
 	m_Program->attach(new Shader(ShaderType::FRAGMENT, "shaders/space_frag.glsl"));
-	m_Program->link();
+	m_Program->link();*/
 
 	m_MoonTexture = new Texture("textures/moon_4k.png");
 }

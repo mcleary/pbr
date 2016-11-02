@@ -67,6 +67,8 @@ source_group("Shaders" FILES
     shaders/skybox_frag.glsl
 	shaders/stars_vert.glsl
 	shaders/stars_frag.glsl
+	shaders/space_vert.glsl
+	shaders/space_frag.glsl
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
