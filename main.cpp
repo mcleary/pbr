@@ -6,7 +6,7 @@
 #include <glbinding/ContextInfo.h>
 #include <glbinding/Version.h>
 using namespace gl;
-
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <glm/ext.hpp>
