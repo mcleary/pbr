@@ -27,20 +27,25 @@ set(DATA_SRC
 	data/stars.txt
 )
 
+set(CODE_SRC
+	main.cpp
+	Drawables.h
+	Drawables.cpp
+	Shader.h
+	Shader.cpp
+	Timer.h
+	Timer.cpp
+	Camera.h
+	Camera.cpp
+	Materials.h
+	Materials.cpp
+)
+
 add_executable(pbr
 	WIN32
 	MACOSX_BUNDLE
-	main.cpp
-    Drawables.h
-    Drawables.cpp
-    Shader.h
-    Shader.cpp
-    Timer.h
-    Timer.cpp
-    Camera.h
-    Camera.cpp
-    Materials.h
-    Materials.cpp
+
+	${CODE_SRC}
 
 	${SHADERS_SRC}
 
