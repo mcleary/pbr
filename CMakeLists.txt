@@ -13,63 +13,71 @@ include_directories(deps/glbinding/source/glbinding/include)
 include_directories(deps/glm)
 include_directories(deps/stb)
 
-add_executable(pbr
-    main.cpp
-    Drawables.h
-    Drawables.cpp
-    Shader.h
-    Shader.cpp
-    Timer.h
-    Timer.cpp
-    Camera.h
-    Camera.cpp
-    Materials.h
-    Materials.cpp
 
-    shaders/vertex.glsl
-    shaders/fragment.glsl
-    shaders/vertex_texture.glsl
-    shaders/fragment_texture.glsl
-    shaders/phong_pbr_vert.glsl
-    shaders/phong_pbr_frag.glsl
-    shaders/phong_vert.glsl
-    shaders/phong_frag.glsl
-    shaders/sky_vert.glsl
-    shaders/sky_frag.glsl
-	shaders/ground_vert.glsl
-    shaders/ground_frag.glsl
-    shaders/lines_vert.glsl
-	shaders/lines_frag.glsl
-    shaders/skybox_vert.glsl
-    shaders/skybox_frag.glsl
-	shaders/stars_vert.glsl
-	shaders/stars_frag.glsl
-	shaders/space_vert.glsl
-	shaders/space_frag.glsl
+file(GLOB TEXTURES_SRC
+	textures/*.jpg
+	textures/*.png
 )
 
+file(GLOB SHADERS_SRC
+	shaders/*.glsl
+)
+
+set(DATA_SRC
+	data/stars.txt
+)
+
+set(CODE_SRC
+	main.cpp
+	Drawables.h
+	Drawables.cpp
+	Shader.h
+	Shader.cpp
+	Timer.h
+	Timer.cpp
+	Camera.h
+	Camera.cpp
+	Materials.h
+	Materials.cpp
+)
+
+add_executable(pbr
+	WIN32
+	MACOSX_BUNDLE
+
+	${CODE_SRC}
+
+	${SHADERS_SRC}
+
+	${TEXTURES_SRC}
+
+	${DATA_SRC}
+)
+
+if (APPLE)
+	set_source_files_properties(${SHADERS_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/shaders")
+	set_source_files_properties(${TEXTURES_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/textures")
+	set_source_files_properties(${DATA_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/data")
+endif()
+
 source_group("Shaders" FILES
-    shaders/vertex.glsl
-    shaders/fragment.glsl
-    shaders/vertex_texture.glsl
-    shaders/fragment_texture.glsl
-    shaders/phong_pbr_vert.glsl
-    shaders/phong_pbr_frag.glsl
-    shaders/phong_vert.glsl
-    shaders/phong_frag.glsl
-    shaders/sky_vert.glsl
-    shaders/sky_frag.glsl
-    shaders/ground_vert.glsl
-    shaders/ground_frag.glsl
-    shaders/lines_vert.glsl
-	shaders/lines_frag.glsl
-    shaders/skybox_vert.glsl
-    shaders/skybox_frag.glsl
-	shaders/stars_vert.glsl
-	shaders/stars_frag.glsl
-	shaders/space_vert.glsl
-	shaders/space_frag.glsl
+	shaders/*.glsl
+)
+
+source_group("data" FILES
+	data/*.*
+)
+
+source_group("textures" FILES
+	textures/*.jpg
+	textures/*.png
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
 target_link_libraries(pbr glbinding ${GLBINDING_LIBRARIES})
+
+
+if (APPLE)
+	set_target_properties(pbr PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Pbr")
+endif()
+
