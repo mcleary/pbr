@@ -14,20 +14,24 @@ include_directories(deps/glm)
 include_directories(deps/stb)
 
 
-file(GLOB TEXTURES_SRC
+file(
+	GLOB TEXTURES_SRC
 	textures/*.jpg
 	textures/*.png
 )
 
-file(GLOB SHADERS_SRC
+file(
+	GLOB SHADERS_SRC
 	shaders/*.glsl
 )
 
-set(DATA_SRC
+set(
+	DATA_SRC
 	data/stars.txt
 )
 
-set(CODE_SRC
+set(
+	CODE_SRC
 	main.cpp
 	Drawables.h
 	Drawables.cpp
@@ -41,16 +45,11 @@ set(CODE_SRC
 	Materials.cpp
 )
 
-add_executable(pbr
-	WIN32
+add_executable(pbr	
 	MACOSX_BUNDLE
-
 	${CODE_SRC}
-
 	${SHADERS_SRC}
-
 	${TEXTURES_SRC}
-
 	${DATA_SRC}
 )
 
@@ -58,19 +57,21 @@ if (APPLE)
 	set_source_files_properties(${SHADERS_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/shaders")
 	set_source_files_properties(${TEXTURES_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/textures")
 	set_source_files_properties(${DATA_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/data")
-endif()
+endif(APPLE)
 
-source_group("Shaders" FILES
-	shaders/*.glsl
+source_group(
+	"shaders" FILES
+	${SHADERS_SRC}
 )
 
-source_group("data" FILES
-	data/*.*
+source_group(
+	"data" FILES
+	${DATA_SRC}
 )
 
-source_group("textures" FILES
-	textures/*.jpg
-	textures/*.png
+source_group(
+	"textures" FILES
+	${TEXTURES_SRC}
 )
 
 target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
@@ -79,5 +80,5 @@ target_link_libraries(pbr glbinding ${GLBINDING_LIBRARIES})
 
 if (APPLE)
 	set_target_properties(pbr PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Pbr")
-endif()
+endif(APPLE)
 
