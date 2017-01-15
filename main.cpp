@@ -50,6 +50,7 @@ void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 		case GLFW_KEY_O:
 			s_bWireframe = !s_bWireframe;
 			glPolygonMode(GL_FRONT_AND_BACK, s_bWireframe ? GL_LINE : GL_FILL);			
+			std::cout << "Wireframe: " << s_bWireframe << std::endl;
 			break;		
 		default:
 			break;
@@ -105,8 +106,13 @@ static void createScene()
 {
 	glClearColor(0.1, 0.1, 0.1, 1.0);
 
+	auto phongMaterial = std::make_shared<PhongMaterial>();
 	auto sphereMesh = std::make_shared<SphereMesh>(200);
-	auto sphere = std::make_shared<Sphere>(glm::vec3{ 0.0 }, 1.0f, sphereMesh);
+	auto sphere = std::make_shared<Sphere>(glm::vec3{ 0.0 }, 10.0f, sphereMesh, phongMaterial);
+
+	std::cout << glm::to_string(sphere->transform.translation) << std::endl;
+	std::cout << glm::to_string(sphere->transform.rotation) << std::endl;
+	std::cout << glm::to_string(sphere->transform.scale) << std::endl;
 
 	scene->addDrawable(sphere);	
 }
@@ -196,7 +202,7 @@ static void init()
 		std::cout << std::endl;
 	});*/
     
-    glClearColor(0.1, 0.1, 0.1, 1.0);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -205,6 +211,7 @@ static void init()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);   
 	
+	createScene();
 }
 
 int main()

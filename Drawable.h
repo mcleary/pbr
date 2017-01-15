@@ -8,26 +8,28 @@
 #include <glm/ext.hpp>
 
 #include "Mesh.h"
+#include "Material.h"
 
-struct Transform
+class Transform
 {
+public:
+	glm::mat4 asMatrix() const;
+
 	glm::vec3 translation;
 	glm::quat rotation;
-	glm::vec3 scale = glm::vec3(1.0);
+	glm::vec3 scale = glm::vec3(1.0);	
 };
 
 class Drawable
 {
 public:
-	explicit Drawable(std::shared_ptr<Mesh> mesh);
+	explicit Drawable(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material);
 
 	virtual void draw();
 	
 	virtual glm::mat4 modelMatrix() const;
 
-	Transform& transform();
-
-private:
-	Transform			  m_Transform;
-	std::shared_ptr<Mesh> m_Mesh;
+	Transform				  transform;	
+	std::shared_ptr<Material> material;
+	std::shared_ptr<Mesh>	  mesh;
 };

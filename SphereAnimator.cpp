@@ -5,14 +5,14 @@
 SphereAnimator::SphereAnimator(std::shared_ptr<Sphere> sphere) :
 	Animator()
 {
-	m_Sphere = sphere;
+	this->sphere = sphere;
 }
 
 void SphereAnimator::update(float deltaTime)
 {
-	auto& translation = m_Sphere->transform().translation;
-	auto& rotation = m_Sphere->transform().rotation;
+	auto& translation = sphere->transform.translation;
+	auto& rotation = sphere->transform.rotation;
 
-	translation += m_TranslationSpeed * deltaTime;
-	rotation *= glm::quat(m_RotationSpeed * deltaTime);
+	translation += translationSpeed * deltaTime;
+	rotation *= glm::quat(rotationSpeed * deltaTime);
 }

@@ -33,8 +33,6 @@ set(
 set(
 	CODE_SRC
 	main.cpp
-	Drawables.h	
-	Drawables.cpp
 	Drawable.h
 	Drawable.cpp
 	Animator.h
@@ -44,6 +42,7 @@ set(
 	Scene.h
 	Scene.cpp
 	Light.h
+	Light.cpp
 	Mesh.h
 	Mesh.cpp
 	SphereMesh.h
@@ -52,12 +51,12 @@ set(
 	Sphere.cpp
 	Shader.h
 	Shader.cpp
+	Material.h
+	Material.cpp
 	Timer.h
 	Timer.cpp
 	Camera.h
 	Camera.cpp
-	Materials.h
-	Materials.cpp
 )
 
 add_executable(pbr	

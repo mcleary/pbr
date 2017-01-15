@@ -1,23 +1,22 @@
 #include "Drawable.h"
 
-Drawable::Drawable(std::shared_ptr<Mesh> mesh)
+glm::mat4 Transform::asMatrix() const
 {
-	m_Mesh = mesh;
+	return glm::translate(translation) * glm::toMat4(rotation) * glm::scale(scale);
+}
+
+Drawable::Drawable(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material)
+{
+	this->mesh = mesh;
+	this->material = material;
 }
 
 glm::mat4 Drawable::modelMatrix() const
 {
-	return glm::translate(m_Transform.translation) *
-		glm::toMat4(m_Transform.rotation) *
-		glm::scale(m_Transform.scale);
-}
-
-Transform& Drawable::transform()
-{
-	return m_Transform;
+	return transform.asMatrix();
 }
 
 void Drawable::draw()
 {
-	m_Mesh->draw();
+	mesh->draw();
 }
