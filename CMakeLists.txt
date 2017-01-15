@@ -33,8 +33,23 @@ set(
 set(
 	CODE_SRC
 	main.cpp
-	Drawables.h
+	Drawables.h	
 	Drawables.cpp
+	Drawable.h
+	Drawable.cpp
+	Animator.h
+	Animator.cpp
+	SphereAnimator.h
+	SphereAnimator.cpp
+	Scene.h
+	Scene.cpp
+	Light.h
+	Mesh.h
+	Mesh.cpp
+	SphereMesh.h
+	SphereMesh.cpp
+	Sphere.h
+	Sphere.cpp
 	Shader.h
 	Shader.cpp
 	Timer.h

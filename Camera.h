@@ -28,8 +28,8 @@ public:
 	void update(float deltaTime);
 
 private:
-	glm::vec3 m_Eye					= {0.0f, 0.0f, 20.0f};
-	glm::vec3 m_Pivot 				= {0.0f, 0.0f, 0.0f};    
+	glm::vec3 m_Eye					= { 0.0f, 0.0f, 20.0f };
+	glm::vec3 m_Pivot 				= { 0.0f, 0.0f, 0.0f };    
 	glm::vec3 m_Up					= { 0.0f, 1.0f, 0.0f };
     float     m_Aspect			    = 1.0f;
 

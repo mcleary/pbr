@@ -1,4 +1,5 @@
 #include "Camera.h"
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
@@ -24,6 +25,7 @@ void Camera::mouseMotionEvent(float x, float y)
     auto rotationMatrix = glm::rotate(-rotation.y, glm::vec3{1, 0, 0}) * glm::rotate(-rotation.x, glm::vec3{0, 1, 0});
     auto newEye = rotationMatrix * glm::vec4{ m_Eye, 1.0f };
     auto newUp = rotationMatrix * glm::vec4{ m_Up, 0.0f };
+
     m_Eye = newEye;
     m_Up = newUp;
 }
