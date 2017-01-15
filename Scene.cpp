@@ -35,28 +35,23 @@ void Scene::draw()
 		auto modelViewMatrix = viewMatrix * modelMatrix;
 		auto normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
 
-		auto material = drawable->material;
-		auto program = material->program;
-
-		material->bind();
-		program->setUniform("Gamma", m_Gamma);
-		program->setUniform("Time", m_CurrentTime);
-		program->setUniform("Model", modelMatrix);
-		program->setUniform("View", viewMatrix);
-		program->setUniform("Projection", projectionMatrix);
-		program->setUniform("ViewProjection", viewProjection);
-		program->setUniform("ModelView", modelViewMatrix);
-		program->setUniform("ModelViewProjection", viewProjection * modelMatrix);
-		program->setUniform("NormalMatrix", normalMatrix);
+		drawable->materialParams.set("Gamma", m_Gamma);
+		drawable->materialParams.set("Time", m_CurrentTime);
+		drawable->materialParams.set("Model", modelMatrix);
+		drawable->materialParams.set("View", viewMatrix);
+		drawable->materialParams.set("Projection", projectionMatrix);
+		drawable->materialParams.set("ViewProjection", viewProjection);
+		drawable->materialParams.set("ModelView", modelViewMatrix);
+		drawable->materialParams.set("ModelViewProjection", viewProjection * modelMatrix);
+		drawable->materialParams.set("NormalMatrix", normalMatrix);
 
 		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position - drawable->transform.translation, 0.0f };
-		program->setUniform("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
-		program->setUniform("LightWorldPos", m_Light->position);
-		program->setUniform("LightDir", glm::normalize(glm::vec3{ lightViewDir }));
-		program->setUniform("LightWorldDir", glm::normalize(m_Light->position - drawable->transform.translation));
+		drawable->materialParams.set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
+		drawable->materialParams.set("LightWorldPos", m_Light->position);
+		drawable->materialParams.set("LightDir", glm::normalize(glm::vec3{ lightViewDir }));
+		drawable->materialParams.set("LightWorldDir", glm::normalize(m_Light->position - drawable->transform.translation));
 
 		drawable->draw();
-		material->unbind();
 	}
 }
 

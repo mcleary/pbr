@@ -17,6 +17,8 @@ using namespace gl;
 #include "Timer.h"
 #include "Scene.h"
 #include "Sphere.h"
+#include "PhongMaterial.h"
+#include "Earth.h"
 
 static int  s_WindowWidth  = 800;
 static int  s_WindowHeight = 600;
@@ -110,11 +112,10 @@ static void createScene()
 	auto sphereMesh = std::make_shared<SphereMesh>(200);
 	auto sphere = std::make_shared<Sphere>(glm::vec3{ 0.0 }, 10.0f, sphereMesh, phongMaterial);
 
-	std::cout << glm::to_string(sphere->transform.translation) << std::endl;
-	std::cout << glm::to_string(sphere->transform.rotation) << std::endl;
-	std::cout << glm::to_string(sphere->transform.scale) << std::endl;
-
-	scene->addDrawable(sphere);	
+	auto earth = std::make_shared<Earth>(glm::vec3{ 0.0f }, 10.0f, sphereMesh);
+	
+	scene->addDrawable(earth);
+	//scene->addDrawable(sphere);	
 }
 
 //static void createDefaultScene()

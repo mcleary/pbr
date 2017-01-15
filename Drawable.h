@@ -9,6 +9,7 @@
 
 #include "Mesh.h"
 #include "Material.h"
+#include "MaterialParams.h"
 
 class Transform
 {
@@ -23,13 +24,13 @@ public:
 class Drawable
 {
 public:
-	explicit Drawable(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material);
+	explicit Drawable(std::shared_ptr<Mesh> mesh);
 
-	virtual void draw();
-	
 	virtual glm::mat4 modelMatrix() const;
 
+	virtual void draw() = 0;	
+
 	Transform				  transform;	
-	std::shared_ptr<Material> material;
+	MaterialParams			  materialParams;
 	std::shared_ptr<Mesh>	  mesh;
 };

@@ -1,10 +1,18 @@
 #include "Sphere.h"
 
 Sphere::Sphere(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh, std::shared_ptr<Material> material) :
-	Drawable(mesh, material)
+	Drawable(mesh)
 {
-	m_Radius = radius;
+	this->radius = radius;
+	this->material = material;
 
 	transform.translation = position;
-	transform.scale = glm::vec3{ m_Radius };
+	transform.scale = glm::vec3{ this->radius };
+}
+
+void Sphere::draw()
+{
+	material->bind();
+	material->bindParams(materialParams);
+	mesh->draw();
 }

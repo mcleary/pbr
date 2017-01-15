@@ -5,25 +5,18 @@ Material::Material()
 	program = std::make_shared<Program>();
 }
 
-PhongMaterial::PhongMaterial() :
-	Material()
+template<typename MapType>
+void Material::bindParams(const MapType& paramsMap)
 {
-	program->attach(new Shader{ ShaderType::VERTEX, "shaders/phong_vert.glsl" });
-	program->attach(new Shader{ ShaderType::FRAGMENT, "shaders/phong_frag.glsl" });
-	program->link();
+	for (const auto& p : paramsMap)
+	{
+		program->setUniform(p.first, p.second);
+	}
 }
 
-void PhongMaterial::bind()
+void Material::bindParams(const MaterialParams& params)
 {
-	program->bind();
-	program->setUniform("DiffuseColor", diffuseColor);
-	program->setUniform("SpecularColor", specularColor);
-	program->setUniform("AmbientColor", ambientColor);
-	program->setUniform("Shininess", shininess);
-	program->setUniform("screenGamma", screenGamma);
-}
-
-void PhongMaterial::unbind()
-{
-	program->unbind();
+	bindParams(params.floatValues);
+	bindParams(params.vec3Values);
+	bindParams(params.mat4Values);
 }

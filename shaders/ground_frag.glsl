@@ -148,4 +148,6 @@ void main()
     
 	vec3 colorGammaCorrected = pow(v3ScatteringColor, vec3(1.0 / Gamma));
 	Color = vec4(colorGammaCorrected, 1.0);
+
+	Color = vec4(GetGroundColor(), 1.0);
 }

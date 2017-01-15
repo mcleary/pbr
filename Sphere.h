@@ -2,6 +2,7 @@
 
 #include "Drawable.h"
 #include "SphereMesh.h"
+#include "Material.h"
 
 class Sphere : public Drawable
 {
@@ -13,6 +14,8 @@ public:
 		std::shared_ptr<Material>	material
 	);
 
-private:
-	float m_Radius;
+	virtual void draw() override;
+
+	float radius;
+	std::shared_ptr<Material> material;
 };

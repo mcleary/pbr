@@ -53,10 +53,15 @@ set(
 	Shader.cpp
 	Material.h
 	Material.cpp
+	MaterialParams.h
+	PhongMaterial.h
+	PhongMaterial.cpp
 	Timer.h
 	Timer.cpp
 	Camera.h
 	Camera.cpp
+	Earth.h
+	Earth.cpp
 )
 
 add_executable(pbr	
