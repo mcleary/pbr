@@ -69,6 +69,8 @@ set(
 	Camera.cpp
 	Earth.h
 	Earth.cpp
+	Moon.h
+	Moon.cpp
 )
 
 add_executable(pbr	

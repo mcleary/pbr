@@ -19,7 +19,9 @@ using namespace gl;
 #include "Sphere.h"
 #include "PhongMaterial.h"
 #include "Earth.h"
+#include "Moon.h"
 #include "Axis.h"
+#include "SphereAnimator.h"
 
 static int  s_WindowWidth  = 800;
 static int  s_WindowHeight = 600;
@@ -107,18 +109,20 @@ void reshape(GLFWwindow* /*window*/, int width, int height)
 
 static void createScene()
 {
-	glClearColor(0.1, 0.1, 0.1, 1.0);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 
 	auto phongMaterial = std::make_shared<PhongMaterial>();
 	auto sphereMesh = std::make_shared<SphereMesh>(200);
 	auto sphere = std::make_shared<Sphere>(glm::vec3{ 0.0 }, 10.0f, sphereMesh, phongMaterial);
 
 	auto earth = std::make_shared<Earth>(glm::vec3{ 0.0f }, 10.0f, sphereMesh);
+	auto moon = std::make_shared<Moon>(glm::vec3{ 100.0f, 0.0f, 0.0f }, 10.0f / 4.0f, sphereMesh);
 
 	auto axis = std::make_shared<Axis>();
 	
 	scene->addDrawable(earth);
-	scene->addDrawable(axis);
+	scene->addDrawable(moon);
+	//scene->addDrawable(axis);
 	//scene->addDrawable(sphere);	
 }
 

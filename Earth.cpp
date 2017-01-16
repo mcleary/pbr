@@ -2,7 +2,7 @@
 
 static const std::string s_TexRes = "2k";
 
-std::string fullTextureName(std::string textureName)
+static std::string fullTextureName(std::string textureName)
 {
 	return "textures/" + textureName + "_" + s_TexRes + ".jpg";
 }
@@ -81,7 +81,7 @@ Earth::Earth(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh)
 	EarthAtmosphereMaterial = std::make_shared<AtmosphereMaterial>();
 
 	transform.scale = glm::vec3{ radius };
-	transform.rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
+	transform.rotation = glm::vec3{ glm::radians(90.0f), 0.0f, 0.0f };
 
 	InnerRadius = radius;
 	OuterRadius = InnerRadius * 1.025f;

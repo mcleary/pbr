@@ -2,17 +2,17 @@
 
 #include "Sphere.h"
 
-SphereAnimator::SphereAnimator(std::shared_ptr<Sphere> sphere) :
+SphereAnimator::SphereAnimator(std::shared_ptr<Drawable> drawable) :
 	Animator()
 {
-	this->sphere = sphere;
+	this->drawable = drawable;
 }
 
 void SphereAnimator::update(float deltaTime)
 {
-	auto& translation = sphere->transform.translation;
-	auto& rotation = sphere->transform.rotation;
+	auto& translation = drawable->transform.translation;
+	auto& rotation = drawable->transform.rotation;
 
-	translation += translationSpeed * deltaTime;
-	rotation *= glm::quat(rotationSpeed * deltaTime);
+	translation += TranslationSpeed * deltaTime;
+	rotation *= glm::quat(RotationSpeed * deltaTime);	
 }
