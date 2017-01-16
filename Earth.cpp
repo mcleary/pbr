@@ -62,6 +62,7 @@ Earth::Earth(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh)
 	EarthSurfaceMaterial = std::make_shared<EarthMaterial>();
 
 	transform.scale = glm::vec3{ radius };
+	transform.rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
 
 	InnerRadius = radius;
 	OuterRadius = InnerRadius * 1.025f;
@@ -79,7 +80,7 @@ Earth::Earth(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh)
 	materialParams.set("fKmESun", Km * ESun);
 	materialParams.set("fKr4PI", Kr * 4.0f * PI);
 	materialParams.set("fKm4PI", Km * 4.0f * PI);
-	materialParams.set("v3InvWavelength", 1.0f / glm::pow(WaveLength, glm::vec3(4.0f)));
+	materialParams.set("v3InvWavelength", 1.0f / glm::pow(WaveLength, glm::vec3{ 4.0f }));
 }
 
 void Earth::draw()

@@ -123,7 +123,6 @@ void main()
     float fLightScale = scale(fLightAngle);
     float fCameraOffset = fDepth*fCameraScale;
     float fTemp = fLightScale + fCameraScale;
-
     
     // Initialize the scattering loop variables
     float fSampleLength = fFar / fSamples;
@@ -147,7 +146,5 @@ void main()
     vec3 v3ScatteringColor = v3ScatteringPrimaryColor + GetGroundColor() * v3Attenuate;	
     
 	vec3 colorGammaCorrected = pow(v3ScatteringColor, vec3(1.0 / Gamma));
-	Color = vec4(colorGammaCorrected, 1.0);
-
-	Color = vec4(GetGroundColor(), 1.0);
+	Color = vec4(colorGammaCorrected, 1.0);	
 }

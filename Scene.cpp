@@ -45,6 +45,10 @@ void Scene::draw()
 		drawable->materialParams.set("ModelViewProjection", viewProjection * modelMatrix);
 		drawable->materialParams.set("NormalMatrix", normalMatrix);
 
+		drawable->materialParams.set("CameraWorldPos", m_Camera->eye());
+		drawable->materialParams.set("fCameraHeight", glm::length(m_Camera->eye()));
+		drawable->materialParams.set("fCameraHeight2", glm::length2(m_Camera->eye()));
+
 		auto lightViewDir = viewMatrix * glm::vec4{ m_Light->position - drawable->transform.translation, 0.0f };
 		drawable->materialParams.set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
 		drawable->materialParams.set("LightWorldPos", m_Light->position);
