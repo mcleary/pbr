@@ -56,10 +56,28 @@ void EarthMaterial::unbind()
 	program->unbind();
 }
 
+AtmosphereMaterial::AtmosphereMaterial()
+{
+	program->attach(new Shader{ ShaderType::VERTEX, "shaders/sky_vert.glsl" });
+	program->attach(new Shader{ ShaderType::FRAGMENT, "shaders/sky_frag.glsl" });
+	program->link();
+}
+
+void AtmosphereMaterial::bind()
+{
+	program->bind();
+}
+
+void AtmosphereMaterial::unbind()
+{
+	program->unbind();
+}
+
 Earth::Earth(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh) :
 	Drawable(mesh)
 {
 	EarthSurfaceMaterial = std::make_shared<EarthMaterial>();
+	EarthAtmosphereMaterial = std::make_shared<AtmosphereMaterial>();
 
 	transform.scale = glm::vec3{ radius };
 	transform.rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
@@ -85,11 +103,29 @@ Earth::Earth(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh)
 
 void Earth::draw()
 {	
+	// First pass - Draw earth's surface
+	{
+		glFrontFace(GL_CCW);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		EarthSurfaceMaterial->bind();
+		EarthSurfaceMaterial->bindParams(materialParams);
+
+		mesh->draw();
+	}
+
+	// Second pass - Draw earth's atmosphere
+	{
+		glFrontFace(GL_CW);
+		glBlendFunc(GL_ONE, GL_ONE);
+
+		EarthAtmosphereMaterial->bind();
+		EarthAtmosphereMaterial->bindParams(materialParams);
+
+		mesh->draw();		
+	}
+
+	// Restore OpenGL state
 	glFrontFace(GL_CCW);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	EarthSurfaceMaterial->bind();
-	EarthSurfaceMaterial->bindParams(materialParams);
-
-	mesh->draw();
 }
