@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Drawable.h"
+
 #include <glm/glm.hpp>
 
 #include <glbinding/Binding.h>
@@ -19,10 +21,10 @@ struct Triangle
 	GLuint p2;
 };
 
-class Mesh
+class Mesh : public Geometry
 {
 public:
-	virtual void draw();
+	virtual void draw() override;
 
 protected:
 

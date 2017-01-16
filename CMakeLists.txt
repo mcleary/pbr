@@ -35,6 +35,7 @@ set(
 	main.cpp
 	Axis.h
 	Axis.cpp
+	Geometry.h
 	Drawable.h
 	Drawable.cpp
 	Animator.h
@@ -45,6 +46,8 @@ set(
 	Scene.cpp
 	Light.h
 	Light.cpp
+	LinesGeometry.h
+	LinesGeometry.cpp
 	Mesh.h
 	Mesh.cpp
 	SphereMesh.h
@@ -59,7 +62,7 @@ set(
 	PhongMaterial.h
 	PhongMaterial.cpp
 	LinesMaterial.h
-	LinesMaterial.cpp
+	LinesMaterial.cpp	
 	Timer.h
 	Timer.cpp
 	Camera.h

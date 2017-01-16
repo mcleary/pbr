@@ -14,5 +14,5 @@ void Sphere::draw()
 {
 	material->bind();
 	material->bindParams(materialParams);
-	mesh->draw();
+	Mesh->draw();
 }

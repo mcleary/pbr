@@ -76,6 +76,7 @@ void AtmosphereMaterial::unbind()
 Earth::Earth(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh) :
 	Drawable(mesh)
 {
+	EarthMesh = mesh;
 	EarthSurfaceMaterial = std::make_shared<EarthMaterial>();
 	EarthAtmosphereMaterial = std::make_shared<AtmosphereMaterial>();
 
@@ -111,7 +112,7 @@ void Earth::draw()
 		EarthSurfaceMaterial->bind();
 		EarthSurfaceMaterial->bindParams(materialParams);
 
-		mesh->draw();
+		EarthMesh->draw();
 	}
 
 	// Second pass - Draw earth's atmosphere
@@ -122,7 +123,7 @@ void Earth::draw()
 		EarthAtmosphereMaterial->bind();
 		EarthAtmosphereMaterial->bindParams(materialParams);
 
-		mesh->draw();		
+		EarthMesh->draw();
 	}
 
 	// Restore OpenGL state

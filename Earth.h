@@ -47,6 +47,7 @@ public:
 	float	g = -0.990f;    // The Mie phase asymmetry factor
 	glm::vec3 WaveLength = { 0.650f, 0.570f, 0.475f };
 
-	std::shared_ptr<EarthMaterial> EarthSurfaceMaterial;	
+	std::shared_ptr<SphereMesh>			EarthMesh;
+	std::shared_ptr<EarthMaterial>		EarthSurfaceMaterial;	
 	std::shared_ptr<AtmosphereMaterial> EarthAtmosphereMaterial;
 };

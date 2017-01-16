@@ -17,5 +17,6 @@ public:
 	virtual void draw() override;
 
 	float radius;
-	std::shared_ptr<Material> material;
+	std::shared_ptr<SphereMesh> Mesh;
+	std::shared_ptr<Material>	material;
 };

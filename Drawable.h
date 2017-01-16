@@ -7,8 +7,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/ext.hpp>
 
-#include "Mesh.h"
-#include "Material.h"
+#include "Geometry.h"
 #include "MaterialParams.h"
 
 class Transform
@@ -21,10 +20,11 @@ public:
 	glm::vec3 scale = glm::vec3(1.0);	
 };
 
+
 class Drawable
 {
 public:	
-	explicit Drawable(std::shared_ptr<Mesh> mesh);	
+	explicit Drawable(std::shared_ptr<Geometry> mesh);	
 	explicit Drawable();
 
 	virtual glm::mat4 modelMatrix() const;
@@ -33,5 +33,5 @@ public:
 
 	Transform				  transform;	
 	MaterialParams			  materialParams;
-	std::shared_ptr<Mesh>	  mesh;
+	std::shared_ptr<Geometry> geometry;
 };

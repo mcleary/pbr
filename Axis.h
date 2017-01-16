@@ -2,6 +2,14 @@
 
 #include "Drawable.h"
 #include "LinesMaterial.h"
+#include "LinesGeometry.h"
+
+class AxisGeometry : public LinesGeometry
+{
+public:
+	explicit AxisGeometry(float scale);
+
+};
 
 class Axis : public Drawable
 {
@@ -11,8 +19,6 @@ public:
 	virtual void draw() override;
 
 private:
+	std::shared_ptr<AxisGeometry>  Lines;
 	std::shared_ptr<LinesMaterial> AxisMaterial;
-
-	GLuint VAO;
-	GLuint VBO;
 };
