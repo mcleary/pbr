@@ -11,6 +11,11 @@ Drawable::Drawable(std::shared_ptr<Mesh> mesh)
 	this->mesh = mesh;	
 }
 
+Drawable::Drawable() :
+	Drawable(nullptr)
+{
+}
+
 glm::mat4 Drawable::modelMatrix() const
 {
 	return transform.asMatrix();

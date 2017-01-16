@@ -23,8 +23,9 @@ public:
 
 class Drawable
 {
-public:
-	explicit Drawable(std::shared_ptr<Mesh> mesh);
+public:	
+	explicit Drawable(std::shared_ptr<Mesh> mesh);	
+	explicit Drawable();
 
 	virtual glm::mat4 modelMatrix() const;
 

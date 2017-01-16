@@ -33,6 +33,8 @@ set(
 set(
 	CODE_SRC
 	main.cpp
+	Axis.h
+	Axis.cpp
 	Drawable.h
 	Drawable.cpp
 	Animator.h
@@ -56,6 +58,8 @@ set(
 	MaterialParams.h
 	PhongMaterial.h
 	PhongMaterial.cpp
+	LinesMaterial.h
+	LinesMaterial.cpp
 	Timer.h
 	Timer.cpp
 	Camera.h

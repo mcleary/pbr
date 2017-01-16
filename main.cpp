@@ -19,6 +19,7 @@ using namespace gl;
 #include "Sphere.h"
 #include "PhongMaterial.h"
 #include "Earth.h"
+#include "Axis.h"
 
 static int  s_WindowWidth  = 800;
 static int  s_WindowHeight = 600;
@@ -113,8 +114,11 @@ static void createScene()
 	auto sphere = std::make_shared<Sphere>(glm::vec3{ 0.0 }, 10.0f, sphereMesh, phongMaterial);
 
 	auto earth = std::make_shared<Earth>(glm::vec3{ 0.0f }, 10.0f, sphereMesh);
+
+	auto axis = std::make_shared<Axis>();
 	
 	scene->addDrawable(earth);
+	scene->addDrawable(axis);
 	//scene->addDrawable(sphere);	
 }
 
