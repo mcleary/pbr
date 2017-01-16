@@ -5,14 +5,21 @@
 #include <glbinding/Binding.h>
 #include <glbinding/ContextInfo.h>
 #include <glbinding/Version.h>
+
 using namespace gl;
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <glm/ext.hpp>
 
+#include <memory>
+
 #include "Timer.h"
-#include "Drawables.h"
+#include "Scene.h"
+#include "Sphere.h"
+#include "PhongMaterial.h"
+#include "Earth.h"
+#include "Axis.h"
 
 static int  s_WindowWidth  = 800;
 static int  s_WindowHeight = 600;
@@ -21,7 +28,7 @@ static bool s_bWireframe   = false;
 static bool s_bEarthScene = true;
 static bool s_bFullScreen = false;
 
-static Scene* scene = new Scene;
+static std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 
 void draw()
 {
@@ -38,14 +45,15 @@ void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 		switch (key)
 		{
 		case GLFW_KEY_L:
-			scene->toggleLightAnimation();
+			//scene->toggleLightAnimation();
 			break;
 		case GLFW_KEY_K:
-			scene->toggleLightDirection();
+			//scene->toggleLightDirection();
 			break;
 		case GLFW_KEY_O:
 			s_bWireframe = !s_bWireframe;
 			glPolygonMode(GL_FRONT_AND_BACK, s_bWireframe ? GL_LINE : GL_FILL);			
+			std::cout << "Wireframe: " << s_bWireframe << std::endl;
 			break;		
 		default:
 			break;
@@ -97,37 +105,54 @@ void reshape(GLFWwindow* /*window*/, int width, int height)
 	}    
 }
 
-static void createDefaultScene()
+static void createScene()
 {
 	glClearColor(0.1, 0.1, 0.1, 1.0);
 
-    auto mesh = new SphereMesh(200);
-    
-    auto simple = new SimpleMaterial;
-    //auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
-    auto phong = new PhongMaterial;
-    
-    scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
-    scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phong));
-    scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
-    
-    auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simple);
-	earthNoShadingSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
-    auto earthAnimator = new SphereAnimator(earthNoShadingSphere);
-    earthAnimator->setRotationSpeed({0.0f, 0.0f, glm::radians(10.0f)});
-    scene->addAnimator(earthAnimator);
-    
-    scene->addDrawable(earthNoShadingSphere);
-    scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simple));
-    
-    scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simple));
-    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));    
+	auto phongMaterial = std::make_shared<PhongMaterial>();
+	auto sphereMesh = std::make_shared<SphereMesh>(200);
+	auto sphere = std::make_shared<Sphere>(glm::vec3{ 0.0 }, 10.0f, sphereMesh, phongMaterial);
+
+	auto earth = std::make_shared<Earth>(glm::vec3{ 0.0f }, 10.0f, sphereMesh);
+
+	auto axis = std::make_shared<Axis>();
+	
+	scene->addDrawable(earth);
+	scene->addDrawable(axis);
+	//scene->addDrawable(sphere);	
 }
+
+//static void createDefaultScene()
+//{
+//	glClearColor(0.1, 0.1, 0.1, 1.0);
+//
+//    auto mesh = new SphereMesh(200);
+//    
+//    auto simple = new SimpleMaterial;
+//    //auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
+//    auto phong = new PhongMaterial;
+//    
+//    scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
+//    scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
+//    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phong));
+//    scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
+//    
+//    auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simple);
+//	earthNoShadingSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
+//    auto earthAnimator = new SphereAnimator(earthNoShadingSphere);
+//    earthAnimator->setRotationSpeed({0.0f, 0.0f, glm::radians(10.0f)});
+//    scene->addAnimator(earthAnimator);
+//    
+//    scene->addDrawable(earthNoShadingSphere);
+//    scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simple));
+//    scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simple));
+//    scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simple));
+//    
+//    scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simple));
+//    scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simple));
+//    scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simple));
+//    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));    
+//}
 
 //static void createEarthScene1()
 //{
@@ -145,17 +170,6 @@ static void createDefaultScene()
 //	scene->addDrawable(earthSphere);
 //	scene->addAnimator(earthAnimator);
 //}
-
-static void createEarthScene2()
-{
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	
-	//scene->addDrawable(new Moon(10.0f));
-	//scene->addDrawable(new StarField2);
-	//scene->addDrawable(new StarField);
-	scene->addDrawable(new Earth(10.0f));	
-	//scene->addDrawable(new Axis);
-}
 
 static void init()
 {
@@ -193,23 +207,16 @@ static void init()
 		std::cout << std::endl;
 	});*/
     
-    glClearColor(0.1, 0.1, 0.1, 1.0);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_CULL_FACE);
-    
-	if (s_bEarthScene)
-	{
-		createEarthScene2();
-	}
-	else
-	{
-		createDefaultScene();
-	}	
+    glEnable(GL_CULL_FACE);   
+	
+	createScene();
 }
 
 int main()
@@ -290,7 +297,7 @@ int main()
         draw();
         
         // Update animation
-        scene->animate(frameTimer.elapsedSeconds());
+        scene->update(frameTimer.elapsedSeconds());
         
         frameTimer.start();
         

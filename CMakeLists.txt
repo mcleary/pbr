@@ -33,16 +33,42 @@ set(
 set(
 	CODE_SRC
 	main.cpp
-	Drawables.h
-	Drawables.cpp
+	Axis.h
+	Axis.cpp
+	Geometry.h
+	Drawable.h
+	Drawable.cpp
+	Animator.h
+	Animator.cpp
+	SphereAnimator.h
+	SphereAnimator.cpp
+	Scene.h
+	Scene.cpp
+	Light.h
+	Light.cpp
+	LinesGeometry.h
+	LinesGeometry.cpp
+	Mesh.h
+	Mesh.cpp
+	SphereMesh.h
+	SphereMesh.cpp
+	Sphere.h
+	Sphere.cpp
 	Shader.h
 	Shader.cpp
+	Material.h
+	Material.cpp
+	MaterialParams.h
+	PhongMaterial.h
+	PhongMaterial.cpp
+	LinesMaterial.h
+	LinesMaterial.cpp	
 	Timer.h
 	Timer.cpp
 	Camera.h
 	Camera.cpp
-	Materials.h
-	Materials.cpp
+	Earth.h
+	Earth.cpp
 )
 
 add_executable(pbr	

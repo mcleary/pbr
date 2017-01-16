@@ -25,10 +25,10 @@ public:
 private:
 	bool _compileShader();
 
-	ShaderType m_ShaderType;
+	ShaderType	m_ShaderType;
 	std::string m_ShaderSourceFile;
 	std::string m_ShaderSource;
-	GLuint m_ShaderID;
+	GLuint		m_ShaderID;
 };
 
 class Program
