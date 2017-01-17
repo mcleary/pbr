@@ -2,5 +2,5 @@
 
 Light::Light(glm::vec3 position)
 {
-	this->position = position;
+	transform.translation = position;
 }

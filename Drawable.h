@@ -2,24 +2,9 @@
 
 #include <memory>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
-#include <glm/ext.hpp>
-
 #include "Geometry.h"
 #include "MaterialParams.h"
-
-class Transform
-{
-public:
-	glm::mat4 asMatrix() const;
-
-	glm::vec3 translation;
-	glm::quat rotation;
-	glm::vec3 scale = glm::vec3(1.0);	
-};
-
+#include "Transform.h"
 
 class Drawable
 {

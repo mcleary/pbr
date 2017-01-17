@@ -15,8 +15,8 @@ public:
 
 	virtual void update(float deltaTime) override;	
 
-	glm::vec3 RotationSpeed;
-	glm::vec3 TranslationSpeed;
+	
+	glm::vec3 WorldRotationSpeed;
 
 private:
 	std::shared_ptr<Drawable> drawable;

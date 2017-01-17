@@ -24,9 +24,10 @@ public:
 	void draw();
 	void update(float deltaTime);
 
+	std::shared_ptr<Light> light;
+
 private:
-	std::vector<std::shared_ptr<Drawable>> m_Drawables;
-	std::shared_ptr<Light>                 m_Light;
+	std::vector<std::shared_ptr<Drawable>> m_Drawables;	
 	std::shared_ptr<Camera>                m_Camera;
 	std::vector<std::shared_ptr<Animator>> m_Animators;
 	float								   m_CurrentTime	= 0.0f;

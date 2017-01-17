@@ -21,7 +21,7 @@ using namespace gl;
 #include "Earth.h"
 #include "Moon.h"
 #include "Axis.h"
-#include "SphereAnimator.h"
+#include "Animator.h"
 
 static int  s_WindowWidth  = 800;
 static int  s_WindowHeight = 600;
@@ -113,17 +113,28 @@ static void createScene()
 
 	auto phongMaterial = std::make_shared<PhongMaterial>();
 	auto sphereMesh = std::make_shared<SphereMesh>(200);
-	auto sphere = std::make_shared<Sphere>(glm::vec3{ 0.0 }, 10.0f, sphereMesh, phongMaterial);
 
-	auto earth = std::make_shared<Earth>(glm::vec3{ 0.0f }, 10.0f, sphereMesh);
-	auto moon = std::make_shared<Moon>(glm::vec3{ 100.0f, 0.0f, 0.0f }, 10.0f / 4.0f, sphereMesh);
+	auto earth = std::make_shared<Earth>(glm::vec3{ 0.0f }, 6.371f, sphereMesh);
+	auto moon = std::make_shared<Moon>(glm::vec3{ 384.400f, 0.0f, 0.0f }, 10.737f, sphereMesh);
 
 	auto axis = std::make_shared<Axis>();
-	
-	scene->addDrawable(earth);
+
+	const float MoonRotationSpeed = 0.3f;
+
+	auto moonAnimator = std::make_shared<Animator>(moon->transform);
+	moonAnimator->RotationSpeed.z = MoonRotationSpeed;
+	moonAnimator->WorldRotationSpeed.y = -MoonRotationSpeed;
+
+	auto sunAnimator = std::make_shared<Animator>(scene->light->transform);
+	sunAnimator->WorldRotationSpeed.y = -0.03f;
+
+	scene->addAnimator(moonAnimator);
+	scene->addAnimator(sunAnimator);
+
+	// Order is important here. Earth must be the last
 	scene->addDrawable(moon);
-	//scene->addDrawable(axis);
-	//scene->addDrawable(sphere);	
+	scene->addDrawable(earth);
+	scene->addDrawable(axis);
 }
 
 //static void createDefaultScene()
@@ -296,8 +307,7 @@ int main()
     
     // Main loop
     while( !glfwWindowShouldClose(window) )
-    {
-        // Draw gears
+    {        
         draw();
         
         // Update animation
