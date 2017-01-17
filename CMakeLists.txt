@@ -36,12 +36,11 @@ set(
 	Axis.h
 	Axis.cpp
 	Geometry.h
+	Transform.h
 	Drawable.h
 	Drawable.cpp
 	Animator.h
 	Animator.cpp
-	SphereAnimator.h
-	SphereAnimator.cpp
 	Scene.h
 	Scene.cpp
 	Light.h
@@ -69,6 +68,8 @@ set(
 	Camera.cpp
 	Earth.h
 	Earth.cpp
+	Moon.h
+	Moon.cpp
 )
 
 add_executable(pbr	

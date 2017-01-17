@@ -6,20 +6,19 @@
 
 #include <memory>
 
-class Sphere;
-
+class Drawable;
 
 class SphereAnimator : public Animator
 {
 public:
-	explicit SphereAnimator(std::shared_ptr<Sphere> sphere);
+	explicit SphereAnimator(std::shared_ptr<Drawable> drawable);
 
-	virtual void update(float deltaTime) override;
+	virtual void update(float deltaTime) override;	
+
+	
+	glm::vec3 WorldRotationSpeed;
 
 private:
-	std::shared_ptr<Sphere> sphere;
-
-	glm::vec3 rotationSpeed;
-	glm::vec3 translationSpeed;
+	std::shared_ptr<Drawable> drawable;
 };
 
