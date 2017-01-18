@@ -1,5 +1,5 @@
 # pbr
-Physically Based Rendering With OpenGL. An attempt to render atmosferic effects
+Physically Based Rendering With OpenGL. An attempt to render atmospheric effects
 
 This is a demo project where I build an application to render the Earth from space using high-resolution textures created by NASA. The atmospheric scattering uses the full equations from Nishita et al. 1993 in a GPU shader that runs in real-time. The demo was implemented in C++ with OpenGL and GLSL.
 
