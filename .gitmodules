@@ -1,6 +1,3 @@
-[submodule "deps/glm"]
-	path = deps/glm
-	url = git@github.com:mcleary/glm.git
 [submodule "deps/stb"]
 	path = deps/stb
 	url = git@github.com:mcleary/stb.git
