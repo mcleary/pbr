@@ -84,6 +84,8 @@ if (APPLE)
 	set_source_files_properties(${SHADERS_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/shaders")
 	set_source_files_properties(${TEXTURES_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/textures")
 	set_source_files_properties(${DATA_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/data")
+
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "macOS version" FORCE)
 endif(APPLE)
 
 source_group(
