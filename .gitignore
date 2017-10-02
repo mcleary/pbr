@@ -1,0 +1,17 @@
+build*
+*_build
+/install
+/logs/*
+CMakeLists.txt.*
+
+# backup files
+*~
+
+# config
+.localconfig
+*.bat
+
+# IDE project files
+*.sublime-project
+*.sublime-workspace
+
