@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class Transform
 {
@@ -15,5 +17,5 @@ public:
 
 inline glm::mat4 Transform::asMatrix() const
 {
-	return glm::translate(translation) * glm::toMat4(rotation) * glm::scale(scale);
+    return glm::translate(glm::mat4(1.0), translation) * glm::toMat4(rotation) * glm::scale(scale);
 }

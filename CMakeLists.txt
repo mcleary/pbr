@@ -5,6 +5,8 @@ project (pbr)
 
 if(UNIX)
 
+    add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
+
 	execute_process(COMMAND sh BuildDependencies.sh
 				    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
