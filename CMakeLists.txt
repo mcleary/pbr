@@ -29,6 +29,7 @@ find_package(glm REQUIRED)
 include_directories(deps-install/glbinding/include)
 include_directories(deps-install/glm/include)
 include_directories(deps-install/stb)
+include_directories(deps-install/glfw/include)
 
 file(
 	GLOB TEXTURES_SRC
@@ -118,10 +119,13 @@ source_group(
 	${TEXTURES_SRC}
 )
 
-target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
-target_link_libraries(pbr glbinding ${GLBINDING_LIBRARIES})
+target_link_libraries(pbr
+	glbinding::glbinding
+	glfw
+)
 
 if (APPLE)
+	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12")
 	set_target_properties(pbr PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Pbr")
 endif(APPLE)
 
