@@ -3,7 +3,7 @@
 	url = git@github.com:mcleary/glfw.git
 [submodule "deps/glm"]
 	path = deps/glm
-	url = git@github.com:mcleary/glm.git
+	url = https://github.com/g-truc/glm.git
 [submodule "deps/glbinding"]
 	path = deps/glbinding
 	url = git@github.com:mcleary/glbinding.git
