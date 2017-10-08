@@ -27,7 +27,6 @@ static int  s_WindowWidth  = 800;
 static int  s_WindowHeight = 600;
 static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
-static bool s_bEarthScene = true;
 static bool s_bFullScreen = false;
 
 static std::shared_ptr<Scene> scene = std::make_shared<Scene>();
@@ -120,77 +119,27 @@ static void createScene()
     const glm::vec3 moonPosition{ 200.4f, 0.0f, 0.0f };
     const float moonRadius = 10.737;
 
-	auto earth = std::make_shared<Earth>(earthPosition, earthRadius, sphereMesh);
-	auto moon = std::make_shared<Moon>(moonPosition, moonRadius, sphereMesh);
-
+//    auto earth = std::make_shared<Earth>(earthPosition, earthRadius, sphereMesh);
+//    auto moon = std::make_shared<Moon>(moonPosition, moonRadius, sphereMesh);
 	auto axis = std::make_shared<Axis>();
 
 	const float MoonRotationSpeed = 0.3f;
 
-	auto moonAnimator = std::make_shared<Animator>(moon->transform);
-	moonAnimator->RotationSpeed.z = MoonRotationSpeed;
-	moonAnimator->WorldRotationSpeed.y = -MoonRotationSpeed;
+//    auto moonAnimator = std::make_shared<Animator>(moon->transform);
+//    moonAnimator->RotationSpeed.z = MoonRotationSpeed;
+//    moonAnimator->WorldRotationSpeed.y = -MoonRotationSpeed;
 
-	auto sunAnimator = std::make_shared<Animator>(scene->light->transform);
-	sunAnimator->WorldRotationSpeed.y = -0.01f;
+//    auto sunAnimator = std::make_shared<Animator>(scene->light->transform);
+//    sunAnimator->WorldRotationSpeed.y = -0.00f;
 
-	scene->addAnimator(moonAnimator);
-	scene->addAnimator(sunAnimator);
+//    scene->addAnimator(moonAnimator);
+//    scene->addAnimator(sunAnimator);
 
 	// Order is important here. Earth must be the last
-	scene->addDrawable(moon);
-	scene->addDrawable(earth);
-	// scene->addDrawable(axis);
+//    scene->addDrawable(moon);
+//    scene->addDrawable(earth);
+    scene->addDrawable(axis);
 }
-
-//static void createDefaultScene()
-//{
-//	glClearColor(0.1, 0.1, 0.1, 1.0);
-//
-//    auto mesh = new SphereMesh(200);
-//    
-//    auto simple = new SimpleMaterial;
-//    //auto simpleTex = new SimpleTextureMaterial("textures/earth_8k.jpg");
-//    auto phong = new PhongMaterial;
-//    
-//    scene->addDrawable(new Sphere({ -1.5, 0.0, 0.0 }, 0.5, mesh, phong));
-//    scene->addDrawable(new Sphere({ -0.5, 0.0, 0.0 }, 0.5, mesh, simple));
-//    scene->addDrawable(new Sphere({ 0.5, 0.0, 0.0 }, 0.5, mesh, phong));
-//    scene->addDrawable(new Sphere({ 1.5, 0.0, 0.0 }, 0.5, mesh, simple));
-//    
-//    auto earthNoShadingSphere = new Sphere({ -1.5, 1.0, 0.0 }, 0.5, mesh, simple);
-//	earthNoShadingSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(10.0f) };
-//    auto earthAnimator = new SphereAnimator(earthNoShadingSphere);
-//    earthAnimator->setRotationSpeed({0.0f, 0.0f, glm::radians(10.0f)});
-//    scene->addAnimator(earthAnimator);
-//    
-//    scene->addDrawable(earthNoShadingSphere);
-//    scene->addDrawable(new Sphere({ -0.5, 1.0, 0.0 }, 0.5, mesh, simple));
-//    scene->addDrawable(new Sphere({ 0.5, 1.0, 0.0 }, 0.5, mesh, simple));
-//    scene->addDrawable(new Sphere({ 1.5, 1.0, 0.0 }, 0.5, mesh, simple));
-//    
-//    scene->addDrawable(new Sphere({ -1.5, -1.0, 0.0 }, 0.5, mesh, simple));
-//    scene->addDrawable(new Sphere({ -0.5, -1.0, 0.0 }, 0.5, mesh, simple));
-//    scene->addDrawable(new Sphere({ 0.5, -1.0, 0.0 }, 0.5, mesh, simple));
-//    scene->addDrawable(new Sphere({ 1.5, -1.0, 0.0 }, 0.5, mesh, simple));    
-//}
-
-//static void createEarthScene1()
-//{
-//	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);    
-//
-//	auto mesh = new SphereMesh(200);
-//	auto material = new EarthMaterial;
-//
-//	auto earthSphere = new Sphere{ {0.0f, 0.0f, 0.0f}, 1.0f, mesh, material };
-//	earthSphere->transform().rotation = glm::vec3{ glm::radians(90.0f), 0.0f, glm::radians(0.0f) };
-//
-//	auto earthAnimator = new SphereAnimator{ earthSphere };
-//	earthAnimator->setRotationSpeed({ 0.0f, 0.0f, glm::radians(0.0f) });
-//
-//	scene->addDrawable(earthSphere);
-//	scene->addAnimator(earthAnimator);
-//}
 
 static void init()
 {

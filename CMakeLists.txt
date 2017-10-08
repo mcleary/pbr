@@ -47,6 +47,8 @@ set(
 	pbr/Axis.h
 	pbr/Axis.cpp
 	pbr/Geometry.h
+    pbr/Grid.h
+    pbr/Grid.cpp
 	pbr/Transform.h
 	pbr/Drawable.h
 	pbr/Drawable.cpp
