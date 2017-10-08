@@ -3,4 +3,7 @@
 	url = git@github.com:mcleary/glfw.git
 [submodule "deps/glm"]
 	path = deps/glm
-	url = https://github.com/mcleary/glm
+	url = git@github.com:mcleary/glm.git
+[submodule "deps/glbinding"]
+	path = deps/glbinding
+	url = git@github.com:mcleary/glbinding.git
