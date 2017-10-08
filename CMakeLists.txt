@@ -1,4 +1,3 @@
-
 cmake_minimum_required (VERSION 3.0)
 
 project (pbr)
@@ -6,9 +5,6 @@ project (pbr)
 if(UNIX)
 
     add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
-
-	execute_process(COMMAND sh BuildDependencies.sh
-				    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
@@ -20,11 +16,9 @@ endif()
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps-install/glfw/lib/cmake/glfw3")
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps-install/glbinding")
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps-install/glm/lib/cmake/glm")
 
-find_package(glfw3 3.2 REQUIRED)
+find_package(glfw3 REQUIRED)
 find_package(glbinding REQUIRED)
-find_package(glm REQUIRED)
 
 include_directories(deps-install/glbinding/include)
 include_directories(deps-install/glm/include)
@@ -100,8 +94,6 @@ if (APPLE)
 	set_source_files_properties(${SHADERS_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/shaders")
 	set_source_files_properties(${TEXTURES_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/textures")
 	set_source_files_properties(${DATA_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/data")
-
-    # set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "macOS version" FORCE)
 endif(APPLE)
 
 source_group(

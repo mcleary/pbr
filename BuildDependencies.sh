@@ -5,7 +5,7 @@ mkdir -p deps-build/glm
 mkdir -p deps-build/glbinding
 
 mkdir -p deps-install/stb
-cp -rfv deps/stb deps-install
+cp -v deps/stb/*.h deps-install/stb
 
 pushd deps-build
 
@@ -22,7 +22,7 @@ make install
 popd
 
 pushd glbinding
-cmake -G "Unix Makefiles" ../../deps/glbinding -DBUILD_SHARED_LIBS:BOOL=OFF -DOPTION_BUILD_GPU_TESTS:BOOL=OFF -DOPTION_BUILD_TESTS:BOOL=OFF -DOPTION_BUILD_TOOLS:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../../deps-install/glbinding
+cmake -G "Unix Makefiles" ../../deps/glbinding -DOPTION_BUILD_GPU_TESTS:BOOL=OFF -DOPTION_BUILD_TESTS:BOOL=OFF -DOPTION_BUILD_TOOLS:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../../deps-install/glbinding
 make -j2
 make install
 popd

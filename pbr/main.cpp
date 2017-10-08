@@ -132,7 +132,7 @@ static void createScene()
 	moonAnimator->WorldRotationSpeed.y = -MoonRotationSpeed;
 
 	auto sunAnimator = std::make_shared<Animator>(scene->light->transform);
-	sunAnimator->WorldRotationSpeed.y = -0.03f;
+	sunAnimator->WorldRotationSpeed.y = -0.01f;
 
 	scene->addAnimator(moonAnimator);
 	scene->addAnimator(sunAnimator);
@@ -306,7 +306,8 @@ int main()
     init();
     
     auto openglVersion = glbinding::ContextInfo::version();
-    windowTitleBase += std::to_string(openglVersion.majorVersion()) + "." + std::to_string(openglVersion.minorVersion());
+    //windowTitleBase += std::to_string(openglVersion.majorVersion()) + "." + std::to_string(openglVersion.minorVersion());
+    windowTitleBase += openglVersion.toString();
     
     FPSTimer fpsTimer;
     Timer frameTimer;

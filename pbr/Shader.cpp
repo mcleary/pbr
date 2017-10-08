@@ -197,7 +197,7 @@ CubeMap::CubeMap(const std::string& cubemapName)
 {
 	std::array<FaceInfo, 6> cubeFaces =
 	{
-		_loadFaceData(cubemapName, "right"),
+        _loadFaceData(cubemapName, "right"),
 		_loadFaceData(cubemapName, "left"),
 		_loadFaceData(cubemapName, "top"),
 		_loadFaceData(cubemapName, "bottom"),
