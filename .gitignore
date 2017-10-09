@@ -1,5 +1,5 @@
-deps-build/
-deps-install/
+deps/
+*.xcuserstate
 
 # Compiled Object files
 *.slo
