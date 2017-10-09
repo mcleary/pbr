@@ -14,16 +14,16 @@ elseif(WINDOWS)
 
 endif()
 
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps-install/glfw/lib/cmake/glfw3")
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps-install/glbinding")
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glfw/lib/cmake/glfw3")
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glbinding")
 
 find_package(glfw3 REQUIRED)
 find_package(glbinding REQUIRED)
 
-include_directories(deps-install/glbinding/include)
-include_directories(deps-install/glm/include)
-include_directories(deps-install/stb)
-include_directories(deps-install/glfw/include)
+include_directories(deps/install/glbinding/include)
+include_directories(deps/install/glm/include)
+include_directories(deps/install/stb)
+include_directories(deps/install/glfw/include)
 
 file(
 	GLOB TEXTURES_SRC
@@ -86,6 +86,7 @@ set(
 )
 
 if (APPLE)
+
 	add_executable(pbr	
 		MACOSX_BUNDLE
 		${CODE_SRC}
@@ -96,7 +97,19 @@ if (APPLE)
 	set_source_files_properties(${SHADERS_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/shaders")
 	set_source_files_properties(${TEXTURES_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/textures")
 	set_source_files_properties(${DATA_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/data")
-endif(APPLE)
+	
+	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12")
+	set_target_properties(pbr PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Pbr")
+
+elseif(WIN32)
+
+	add_executable(pbr
+		${CODE_SRC}
+		${SHADERS_SRC}
+		${TEXTURES_SRC}
+		${DATA_SRC})
+
+endif()
 
 source_group(
 	"shaders" FILES
@@ -117,9 +130,3 @@ target_link_libraries(pbr
 	glbinding::glbinding
 	glfw
 )
-
-if (APPLE)
-	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12")
-	set_target_properties(pbr PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Pbr")
-endif(APPLE)
-
