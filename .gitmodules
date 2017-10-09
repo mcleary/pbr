@@ -1,3 +1,0 @@
-[submodule "deps/stb"]
-	path = deps/stb
-	url = git@github.com:mcleary/stb.git
