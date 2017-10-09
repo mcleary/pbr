@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		46983EDD1F8B6669002F0148 /* libglbinding.3.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 46983EDC1F8B6669002F0148 /* libglbinding.3.0.0.dylib */; };
+		46983EDF1F8B6679002F0148 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46983EDE1F8B6679002F0148 /* libglfw3.a */; };
 		46CD26361F8AD47600AAFE3C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46CD26351F8AD47600AAFE3C /* main.cpp */; };
 		46DC05011F8B5FC900F33309 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46DC04DA1F8B5FBE00F33309 /* Material.cpp */; };
 		46DC05021F8B5FC900F33309 /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46DC04DB1F8B5FBE00F33309 /* Animator.cpp */; };
@@ -42,6 +44,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		46983EDC1F8B6669002F0148 /* libglbinding.3.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglbinding.3.0.0.dylib; path = deps/install/glbinding/lib/libglbinding.3.0.0.dylib; sourceTree = "<group>"; };
+		46983EDE1F8B6679002F0148 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = deps/install/glfw/lib/libglfw3.a; sourceTree = "<group>"; };
 		46CD26321F8AD47600AAFE3C /* pbr */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pbr; sourceTree = BUILT_PRODUCTS_DIR; };
 		46CD26351F8AD47600AAFE3C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		46DC04D81F8B5FBE00F33309 /* LinesMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinesMaterial.h; sourceTree = "<group>"; };
@@ -137,12 +141,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46983EDF1F8B6679002F0148 /* libglfw3.a in Frameworks */,
+				46983EDD1F8B6669002F0148 /* libglbinding.3.0.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		46983EDB1F8B6668002F0148 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				46983EDE1F8B6679002F0148 /* libglfw3.a */,
+				46983EDC1F8B6669002F0148 /* libglbinding.3.0.0.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		46CD26291F8AD47600AAFE3C = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +166,7 @@
 				46DC052E1F8B61A700F33309 /* shaders */,
 				46CD26341F8AD47600AAFE3C /* pbr */,
 				46CD26331F8AD47600AAFE3C /* Products */,
+				46983EDB1F8B6668002F0148 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -408,6 +424,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/deps/install/glm/include";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -457,6 +474,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/deps/install/glm/include";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -467,6 +485,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/deps/install/glbinding/lib",
+					"$(PROJECT_DIR)/deps/install/glfw/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -475,6 +498,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/deps/install/glbinding/lib",
+					"$(PROJECT_DIR)/deps/install/glfw/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
