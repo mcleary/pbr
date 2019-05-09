@@ -6,9 +6,9 @@ if(UNIX)
 
     add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+	set(CMAKE_CXX_STANDARD 14)
 
-elseif(WINDOWS)
+elseif(WIN32)
 
 	execute_process(COMMAND BuildDependencies.bat)
 
@@ -20,10 +20,10 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/ins
 find_package(glfw3 REQUIRED)
 find_package(glbinding REQUIRED)
 
-include_directories(deps/install/glbinding/include)
-include_directories(deps/install/glm/include)
-include_directories(deps/install/stb)
-include_directories(deps/install/glfw/include)
+# include_directories(deps/install/glbinding/include)
+# include_directories(deps/install/glm/include)
+# include_directories(deps/install/stb)
+# include_directories(deps/install/glfw/include)
 
 file(
 	GLOB TEXTURES_SRC
@@ -85,6 +85,8 @@ set(
 	pbr/Moon.cpp
 )
 
+set(CODE_SRC main2.cpp)
+
 if (APPLE)
 
 	add_executable(pbr	
@@ -104,6 +106,7 @@ if (APPLE)
 elseif(WIN32)
 
 	add_executable(pbr
+        .gitignore
 		${CODE_SRC}
 		${SHADERS_SRC}
 		${TEXTURES_SRC}
@@ -126,7 +129,8 @@ source_group(
 	${TEXTURES_SRC}
 )
 
-target_link_libraries(pbr
+target_link_libraries(
+    pbr
 	glbinding::glbinding
 	glfw
 )
