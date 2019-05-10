@@ -1,5 +1,6 @@
-deps/
-*.xcuserstate
+build/
+deps/build/
+deps/source/
 
 # Compiled Object files
 *.slo
@@ -30,7 +31,6 @@ deps/
 *.out
 *.app
 
-build/
 .vscode/
 .vs/
 .idea/

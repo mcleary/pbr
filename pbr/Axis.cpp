@@ -2,7 +2,7 @@
 
 AxisGeometry::AxisGeometry(float scale)
 {
-	std::vector<LineVertex> Lines = 
+	const std::vector<LineVertex> Lines = 
 	{
 		{ { -scale, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
 		{ {  scale, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },

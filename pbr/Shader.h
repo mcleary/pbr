@@ -37,7 +37,7 @@ public:
     Program();
 
     void attach(Shader* shader);
-    void link();
+    void link(const std::string& progName = "");
     
     void setUniform(const std::string& name, const glm::mat4& matrix);
     void setUniform(const std::string& name, const glm::vec3& vector);

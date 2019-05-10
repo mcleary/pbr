@@ -1,6 +1,7 @@
 @echo off
 
-set VS_GEN="Visual Studio 14 2015 Win64"
+set VS_GEN="Visual Studio 15 2017 Win64"
+REM set VS_ARCH="x64"
 
 mkdir deps\source
 mkdir deps\build
@@ -23,17 +24,17 @@ copy -v deps/source/stb/*.h deps/install/stb
 pushd deps\build
 
 pushd glfw
-cmake -G %VS_GEN% ../../source/glfw -DGLFW_BUILD_DOCS:BOOL=OFF -DGLFW_BUILD_EXAMPLES:BOOL=OFF -DGLFW_BUILD_TESTS:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../../install/glfw
+cmake -G %VS_GEN% %VS_ARCH% ../../source/glfw -DGLFW_BUILD_DOCS:BOOL=OFF -DGLFW_BUILD_EXAMPLES:BOOL=OFF -DGLFW_BUILD_TESTS:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../../install/glfw
 cmake --build . --target install --config Release --
 popd
 
 pushd glm
-cmake -G %VS_GEN% ../../source/glm -DCMAKE_INSTALL_PREFIX=../../install/glm
+cmake -G %VS_GEN% %VS_ARCH% ../../source/glm -DCMAKE_INSTALL_PREFIX=../../install/glm -DGLM_TEST_ENABLE:BOOL=OFF
 cmake --build . --target install --config Release --
 popd
 
 pushd glbinding
-cmake -G %VS_GEN% ../../source/glbinding -DOPTION_BUILD_GPU_TESTS:BOOL=OFF -DOPTION_BUILD_TESTS:BOOL=OFF -DOPTION_BUILD_TOOLS:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../../install/glbinding
+cmake -G %VS_GEN% %VS_ARCH% ../../source/glbinding -DOPTION_BUILD_TESTS:BOOL=OFF -DOPTION_BUILD_TOOLS:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../../install/glbinding
 cmake --build . --target install --config Release --
 popd
 

@@ -11,13 +11,13 @@ EarthMaterial::EarthMaterial()
 {
 	program->attach(new Shader{ ShaderType::VERTEX, "shaders/ground_vert.glsl" });
 	program->attach(new Shader{ ShaderType::FRAGMENT, "shaders/ground_frag.glsl" });
-	program->link();
+	program->link("EarthGround");
 
 	EarthTexture			= std::make_shared<Texture>(fullTextureName("earth"));
 	OceanMaskTexture		= std::make_shared<Texture>(fullTextureName("ocean_mask"));
 	OceanIceTexture			= std::make_shared<Texture>(fullTextureName("earth_ocean_color"));
 	EarthNightTexture		= std::make_shared<Texture>(fullTextureName("earth_night"));
-	EarthTopographyTexture	= std::make_shared<Texture>(fullTextureName("topography"));
+	// EarthTopographyTexture	= std::make_shared<Texture>(fullTextureName("topography"));
 	CloudsTexture			= std::make_shared<Texture>(fullTextureName("earth_clouds"));
 }
 
@@ -35,12 +35,12 @@ void EarthMaterial::bind()
 	EarthNightTexture->bind();
 
 	glActiveTexture(GL_TEXTURE3);
-	EarthTopographyTexture->bind();
+	// EarthTopographyTexture->bind();
 
 	glActiveTexture(GL_TEXTURE4);
 	OceanIceTexture->bind();
 
-	glActiveTexture(GL_TEXTURE5);
+	glActiveTexture(GL_TEXTURE5);	
 	CloudsTexture->bind();
 
 	program->setUniform("EarthTexture", 0);
@@ -60,7 +60,7 @@ AtmosphereMaterial::AtmosphereMaterial()
 {
 	program->attach(new Shader{ ShaderType::VERTEX, "shaders/sky_vert.glsl" });
 	program->attach(new Shader{ ShaderType::FRAGMENT, "shaders/sky_frag.glsl" });
-	program->link();
+	program->link("EarthSky");
 }
 
 void AtmosphereMaterial::bind()
@@ -80,6 +80,7 @@ Earth::Earth(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh)
 	EarthSurfaceMaterial = std::make_shared<EarthMaterial>();
 	EarthAtmosphereMaterial = std::make_shared<AtmosphereMaterial>();
 
+	transform.translation = position;
 	transform.scale = glm::vec3{ radius };
 	transform.rotation = glm::vec3{ glm::radians(90.0f), 0.0f, 0.0f };
 

@@ -17,10 +17,10 @@ void compile_info(const GLuint shader)
 
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
-		GLchar * log = new GLchar[maxLength];
-		glGetShaderInfoLog(shader, maxLength, &logLength, log);
+		std::vector<GLchar> log(maxLength);
+		glGetShaderInfoLog(shader, maxLength, &logLength, log.data());
         
-        throw std::runtime_error(std::string("Compiling shader failed.\n") + std::string(log));
+        throw std::runtime_error(std::string("Compiling shader failed.\n") + std::string(log.data()));
 	}
 }
 
@@ -51,7 +51,12 @@ Shader::Shader(ShaderType type, const std::string & sourceFile) :
 	if (file.is_open())
 	{
 		m_ShaderSource.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());		
-	}	
+	}
+	else
+	{
+		std::cerr << "Cannot read file: " << sourceFile << std::endl;
+		exit(1);
+	}
 
 	m_ShaderID = glCreateShader(static_cast<GLenum>(m_ShaderType));
 
@@ -86,7 +91,7 @@ void Program::attach(Shader* shader)
     glAttachShader(m_ProgramID, shader->shaderID());
 }
 
-void Program::link()
+void Program::link(const std::string& progName)
 {
     glLinkProgram(m_ProgramID);
     
@@ -96,8 +101,9 @@ void Program::link()
     }
     catch (const std::runtime_error& e)
     {
-        std::cerr << "Error linking program." << std::endl;
+        std::cerr << "Error linking program " << progName << std::endl;
         std::cerr << "Details: " << e.what() << std::endl;
+		exit(1);
     }
     
 }

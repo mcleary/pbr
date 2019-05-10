@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include "Drawable.h"
 #include "Light.h"

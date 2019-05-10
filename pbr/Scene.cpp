@@ -63,7 +63,7 @@ void Scene::update(float deltaTime)
 {
 	m_CurrentTime += deltaTime;
 
-	for (auto animator : m_Animators)
+	for (std::shared_ptr<Animator> animator : m_Animators)
 	{
 		animator->update(deltaTime);
 	}

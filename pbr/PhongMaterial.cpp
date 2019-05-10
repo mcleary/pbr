@@ -5,7 +5,7 @@ PhongMaterial::PhongMaterial() :
 {
 	program->attach(new Shader{ ShaderType::VERTEX, "shaders/phong_vert.glsl" });
 	program->attach(new Shader{ ShaderType::FRAGMENT, "shaders/phong_frag.glsl" });
-	program->link();
+	program->link("Phong");
 }
 
 void PhongMaterial::bind()

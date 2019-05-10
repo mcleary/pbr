@@ -2,28 +2,20 @@ cmake_minimum_required (VERSION 3.0)
 
 project (pbr)
 
-if(UNIX)
-
-    add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
-
-	set(CMAKE_CXX_STANDARD 14)
-
-elseif(WIN32)
-
-	execute_process(COMMAND BuildDependencies.bat)
-
-endif()
+set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glfw/lib/cmake/glfw3")
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glbinding")
 
 find_package(glfw3 REQUIRED)
 find_package(glbinding REQUIRED)
+find_package(glm REQUIRED)
 
-# include_directories(deps/install/glbinding/include)
-# include_directories(deps/install/glm/include)
-# include_directories(deps/install/stb)
-# include_directories(deps/install/glfw/include)
+include_directories(deps/install/stb)
+
+if(WIN32)	
+	list(APPEND CMAKE_CXX_FLAGS "/MP")	
+endif()
 
 file(
 	GLOB TEXTURES_SRC
@@ -85,34 +77,14 @@ set(
 	pbr/Moon.cpp
 )
 
-set(CODE_SRC main2.cpp)
+# set(CODE_SRC main2.cpp)
 
-if (APPLE)
-
-	add_executable(pbr	
-		MACOSX_BUNDLE
-		${CODE_SRC}
-		${SHADERS_SRC}
-		${TEXTURES_SRC}
-		${DATA_SRC})
-
-	set_source_files_properties(${SHADERS_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/shaders")
-	set_source_files_properties(${TEXTURES_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/textures")
-	set_source_files_properties(${DATA_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/data")
-	
-	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12")
-	set_target_properties(pbr PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Pbr")
-
-elseif(WIN32)
-
-	add_executable(pbr
-        .gitignore
-		${CODE_SRC}
-		${SHADERS_SRC}
-		${TEXTURES_SRC}
-		${DATA_SRC})
-
-endif()
+add_executable(pbr
+    .gitignore
+	${CODE_SRC}
+	${SHADERS_SRC}
+	${TEXTURES_SRC}
+	${DATA_SRC})
 
 source_group(
 	"shaders" FILES
@@ -132,5 +104,7 @@ source_group(
 target_link_libraries(
     pbr
 	glbinding::glbinding
+	glbinding::glbinding-aux
 	glfw
+	glm
 )

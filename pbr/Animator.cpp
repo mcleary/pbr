@@ -1,6 +1,7 @@
 #include "Animator.h"
 
 #include <glm/gtx/matrix_decompose.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 Animator::Animator(Transform& _transform) :
 	transform(_transform)
@@ -9,12 +10,12 @@ Animator::Animator(Transform& _transform) :
 
 void Animator::update(float deltaTime)
 {
-	auto& translation = transform.translation;
-	auto& rotation = transform.rotation;	
+	glm::vec3& translation = transform.translation;
+	glm::quat& rotation = transform.rotation;	
 
-	auto ObjectSpaceRotation = glm::quat(RotationSpeed * deltaTime);
-	auto WorldSpaceRotation = glm::quat(WorldRotationSpeed * deltaTime);
+	glm::quat ObjectSpaceRotation = glm::quat(RotationSpeed * deltaTime);
+	glm::quat WorldSpaceRotation = glm::quat(WorldRotationSpeed * deltaTime);
 
 	rotation *= ObjectSpaceRotation;
-	translation = glm::rotate(WorldSpaceRotation, translation);
+	// translation = glm::rotate(WorldSpaceRotation, translation);	
 }

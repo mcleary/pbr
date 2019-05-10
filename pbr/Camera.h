@@ -10,15 +10,10 @@ public:
     void setViewportSize(int width, int height);
 	
     void mouseButtonEvent(int cursorX, int cursorY);
-    void mouseMotionEvent(float x, float y);
-    void mouseScrollEvent(float x, float y);
+    void mouseMotionEvent(double x, double y);
+    void mouseScrollEvent(double x, double y);
 
 	void keyEvent(int key, int action);
-
-	void keyUpEvent();
-	void keyDownEvent();
-	void keyLeftEvent();
-	void keyRightEvent();
 
 	glm::mat4 viewMatrix();
     glm::mat4 projectionMatrix();

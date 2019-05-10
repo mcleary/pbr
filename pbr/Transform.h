@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glm/ext.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 class Transform
 {
@@ -15,5 +15,5 @@ public:
 
 inline glm::mat4 Transform::asMatrix() const
 {
-    return glm::translate(translation) * glm::toMat4(rotation) * glm::scale(scale);
+	return glm::translate(glm::mat4{ 1.0f }, translation)* glm::toMat4(rotation)* glm::scale(glm::mat4{ 1.0f }, scale);
 }

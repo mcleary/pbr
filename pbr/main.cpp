@@ -1,10 +1,11 @@
-
 #include <iostream>
 
 #include <glbinding/gl/gl.h>
 #include <glbinding/Binding.h>
-#include <glbinding/ContextInfo.h>
 #include <glbinding/Version.h>
+
+#include <glbinding-aux/ContextInfo.h>
+#include <glbinding-aux/types_to_string.h>
 
 using namespace gl;
 #define GLFW_INCLUDE_NONE
@@ -76,7 +77,7 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwGetCursorPos(window, &cursorX, &cursorY);
         
-        scene->camera()->mouseButtonEvent(cursorX, cursorY);
+        scene->camera()->mouseButtonEvent(static_cast<int>(cursorX), static_cast<int>(cursorY));
 	}
 	else
     {
@@ -88,13 +89,13 @@ void mouseMotionCallback(GLFWwindow* window, double x, double y)
 {
 	if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
 	{
-        scene->camera()->mouseMotionEvent(x, y);
+        scene->camera()->mouseMotionEvent(static_cast<float>(x), static_cast<float>(y));
     }
 }
 
 void mouseScrollCallback(GLFWwindow* /*window*/, double x, double y)
 {
-    scene->camera()->mouseScrollEvent(x, y);
+    scene->camera()->mouseScrollEvent(static_cast<float>(x), static_cast<float>(y));
 }
 
 void reshape(GLFWwindow* /*window*/, int width, int height)
@@ -117,9 +118,9 @@ static void createScene()
     const float earthRadius = 6.371f;
     
     const glm::vec3 moonPosition{ 200.4f, 0.0f, 0.0f };
-    const float moonRadius = 10.737;
+    const float moonRadius = 10.737f;
 
-//    auto earth = std::make_shared<Earth>(earthPosition, earthRadius, sphereMesh);
+    auto earth = std::make_shared<Earth>(earthPosition, earthRadius, sphereMesh);
 //    auto moon = std::make_shared<Moon>(moonPosition, moonRadius, sphereMesh);
 	auto axis = std::make_shared<Axis>();
 
@@ -137,7 +138,7 @@ static void createScene()
 
 	// Order is important here. Earth must be the last
 //    scene->addDrawable(moon);
-//    scene->addDrawable(earth);
+    scene->addDrawable(earth);
     scene->addDrawable(axis);
 }
 
@@ -148,16 +149,16 @@ static void init()
 	using namespace glbinding;
 
     cout << "OpenGL Version: " << endl;
-    cout << "\tGL_RENDERER: " << glbinding::ContextInfo::renderer() << endl;
-    cout << "\tGL_VERSION : " << glbinding::ContextInfo::version() << endl;
-    cout << "\tGL_VENDOR  : " << glbinding::ContextInfo::vendor() << endl;
+    cout << "\tGL_RENDERER: " << glbinding::aux::ContextInfo::renderer() << endl;
+    cout << "\tGL_VERSION : " << glbinding::aux::ContextInfo::version().toString() << endl;
+    cout << "\tGL_VENDOR  : " << glbinding::aux::ContextInfo::vendor() << endl;	
 
-	setCallbackMaskExcept(CallbackMask::After, { "glGetError" });
-	setAfterCallback([](const FunctionCall &)
+	Binding::setCallbackMaskExcept(CallbackMask::After, { "glGetError" });		
+	Binding::setAfterCallback([](const FunctionCall &)
 	{
-		const auto error = glGetError();
+		const GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
-			std::cout << "error: " << std::hex << error << std::endl;
+			std::cout << "error: " << error << std::endl;
 	});
 	/*setCallbackMask(CallbackMask::After | CallbackMask::ParametersAndReturnValue);
 	glbinding::setAfterCallback([](const glbinding::FunctionCall & call)
@@ -202,13 +203,6 @@ int main()
 	glfwWindowHint(GLFW_DEPTH_BITS, 32);
     glfwWindowHint(GLFW_SAMPLES, 16);
 
-#ifdef __APPLE__    
-    glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, 1);
-    glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif
-    
     std::string windowTitleBase = "Physically Based Rendering with OpenGL ";	
     
 	if (s_bFullScreen)
@@ -247,15 +241,14 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSwapInterval(s_bEnableVSync);
 
-	glbinding::Binding::initialize(false);
+	glbinding::Binding::initialize(glfwGetProcAddress);
     
     glfwGetFramebufferSize(window, &s_WindowWidth, &s_WindowHeight);
     reshape(window, s_WindowWidth, s_WindowHeight);
 
     init();
     
-    auto openglVersion = glbinding::ContextInfo::version();
-    //windowTitleBase += std::to_string(openglVersion.majorVersion()) + "." + std::to_string(openglVersion.minorVersion());
+    const glbinding::Version openglVersion = glbinding::aux::ContextInfo::version();
     windowTitleBase += openglVersion.toString();
     
     FPSTimer fpsTimer;
@@ -267,7 +260,7 @@ int main()
         draw();
         
         // Update animation
-        scene->update(frameTimer.elapsedSeconds());
+        scene->update(static_cast<float>(frameTimer.elapsedSeconds()));
         
         frameTimer.start();
         
@@ -277,7 +270,7 @@ int main()
         
         if(fpsTimer.update())
         {
-            auto windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsTimer.getFPS());
+            const std::string windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsTimer.getFPS());
             glfwSetWindowTitle(window, windowTitle.data());
         }
     }
