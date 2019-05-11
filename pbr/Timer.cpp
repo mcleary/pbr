@@ -1,62 +1,75 @@
 
 #include "Timer.h"
 
+using namespace std::chrono;
+using namespace std::chrono_literals;
+
 Timer::Timer()
 {
-    start();
+    Start();
 }
 
-void Timer::start()
+void Timer::Start()
 {
-    m_StartTime = std::chrono::system_clock::now();
+    m_StartTime = Clock::now();
     m_bRunning = true;
 }
 
-void Timer::stop()
+void Timer::Stop()
 {
-    m_EndTime = std::chrono::system_clock::now();
+    m_EndTime = Clock::now();
     m_bRunning = false;
 }
 
-double Timer::elapsedMilliseconds()
+Timer::Duration Timer::Elapsed() 
 {
-    std::chrono::time_point<std::chrono::system_clock> endTime;
-    
-    if(m_bRunning)
-    {
-        endTime = std::chrono::system_clock::now();
-    }
-    else
-    {
-        endTime = m_EndTime;
-    }
-    
-    return static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(endTime - m_StartTime).count());
+	TimePoint EndTime;
+
+	if (m_bRunning)
+	{
+		EndTime = Clock::now();
+	}
+	else
+	{
+		EndTime = m_EndTime;
+	}
+
+	return EndTime - m_StartTime;
 }
 
-double Timer::elapsedSeconds()
+float Timer::ElapsedMilliseconds()
 {
-    return elapsedMilliseconds() / 1000.0;
+	return static_cast<float>(duration_cast<milliseconds>(Elapsed()).count());
+}
+
+float Timer::ElapsedSeconds()
+{
+	return static_cast<float>(duration_cast<seconds>(Elapsed()).count());
 }
 
 FPSTimer::FPSTimer() :
     Timer()
 {
+	m_RefreshRate = 1s;
 }
 
-bool FPSTimer::update()
+bool FPSTimer::Update()
 {
     m_FrameCount++;
     
-    if(elapsedMilliseconds() >= m_RefreshRate)
+    if(Elapsed() >= m_RefreshRate)
     {
-        m_CurrentFPS = static_cast<double>(m_FrameCount) / elapsedSeconds();
-        
+        m_CurrentFPS = static_cast<float>(m_FrameCount) / ElapsedSeconds();        
         m_FrameCount = 0;
-        start();
+        Start();
         
         return true;
     }
     
     return false;
+}
+
+float FPSTimer::GetFPS()
+{
+	return m_CurrentFPS;
 }

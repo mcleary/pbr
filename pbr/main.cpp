@@ -114,30 +114,30 @@ static void createScene()
 	auto phongMaterial = std::make_shared<PhongMaterial>();
 	auto sphereMesh = std::make_shared<SphereMesh>(200);
     
-    const glm::vec3 earthPosition{ 0.0f };
-    const float earthRadius = 6.371f;
+    glm::vec3 earthPosition{ 0.0f };
+    float earthRadius = 6.371f;
     
-    const glm::vec3 moonPosition{ 200.4f, 0.0f, 0.0f };
-    const float moonRadius = 10.737f;
+    glm::vec3 moonPosition{ 200.4f, 0.0f, 0.0f };
+    float moonRadius = 10.737f;
 
     auto earth = std::make_shared<Earth>(earthPosition, earthRadius, sphereMesh);
-//    auto moon = std::make_shared<Moon>(moonPosition, moonRadius, sphereMesh);
+    auto moon = std::make_shared<Moon>(moonPosition, moonRadius, sphereMesh);
 	auto axis = std::make_shared<Axis>();
 
-	const float MoonRotationSpeed = 0.3f;
+	float MoonRotationSpeed = 0.3f;
 
-//    auto moonAnimator = std::make_shared<Animator>(moon->transform);
-//    moonAnimator->RotationSpeed.z = MoonRotationSpeed;
+    auto moonAnimator = std::make_shared<Animator>(moon->transform);
+    // moonAnimator->RotationSpeed.z = MoonRotationSpeed;
 //    moonAnimator->WorldRotationSpeed.y = -MoonRotationSpeed;
 
 //    auto sunAnimator = std::make_shared<Animator>(scene->light->transform);
 //    sunAnimator->WorldRotationSpeed.y = -0.00f;
 
-//    scene->addAnimator(moonAnimator);
+    scene->addAnimator(moonAnimator);
 //    scene->addAnimator(sunAnimator);
 
 	// Order is important here. Earth must be the last
-//    scene->addDrawable(moon);
+    scene->addDrawable(moon);
     scene->addDrawable(earth);
     scene->addDrawable(axis);
 }
@@ -260,17 +260,17 @@ int main()
         draw();
         
         // Update animation
-        scene->update(static_cast<float>(frameTimer.elapsedSeconds()));
+        scene->update(static_cast<float>(frameTimer.ElapsedSeconds()));
         
-        frameTimer.start();
+        frameTimer.Start();
         
         // Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
         
-        if(fpsTimer.update())
+        if(fpsTimer.Update())
         {
-            const std::string windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsTimer.getFPS());
+            const std::string windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsTimer.GetFPS());
             glfwSetWindowTitle(window, windowTitle.data());
         }
     }

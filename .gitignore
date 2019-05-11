@@ -1,6 +1,7 @@
 build/
 deps/build/
 deps/source/
+deps/
 
 # Compiled Object files
 *.slo
@@ -34,3 +35,4 @@ deps/source/
 .vscode/
 .vs/
 .idea/
+CMakeSettings.json

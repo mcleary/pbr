@@ -17,5 +17,5 @@ void Animator::update(float deltaTime)
 	glm::quat WorldSpaceRotation = glm::quat(WorldRotationSpeed * deltaTime);
 
 	rotation *= ObjectSpaceRotation;
-	// translation = glm::rotate(WorldSpaceRotation, translation);	
+	translation = glm::rotate(WorldSpaceRotation, translation);	
 }

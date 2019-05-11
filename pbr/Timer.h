@@ -5,18 +5,23 @@
 class Timer
 {
 public:
+	using Clock = std::chrono::high_resolution_clock;
+	using TimePoint = Clock::time_point;
+	using Duration = TimePoint::duration;
+
     explicit Timer();
 
-    void start();
-    void stop();
-    
-    double elapsedMilliseconds();
-    double elapsedSeconds();
+    void Start();
+    void Stop();
+
+	Duration Elapsed();    
+    float ElapsedMilliseconds();
+	float ElapsedSeconds();
     
 private:
-    std::chrono::time_point<std::chrono::system_clock> m_StartTime;
-    std::chrono::time_point<std::chrono::system_clock> m_EndTime;
-    bool                                               m_bRunning = false;
+    TimePoint m_StartTime;
+    TimePoint m_EndTime;
+    bool      m_bRunning = false;
 };
 
 class FPSTimer : public Timer
@@ -24,22 +29,17 @@ class FPSTimer : public Timer
 public:
 	FPSTimer();
     
-    bool update();
+    bool Update();
     
-    double getFPS()
+	float GetFPS();
+    
+    void SetRefreshRate(std::chrono::milliseconds RefreshRate)
     {
-        return m_CurrentFPS;
+        m_RefreshRate = RefreshRate;
     }
     
-    void setRefreshRate(double refreshRate)
-    {
-        m_RefreshRate = refreshRate;
-    }
-    
-private:
-    Timer m_Timer;
-    
-    double m_RefreshRate   = 1000;
-    int    m_FrameCount    = 0;
-    double m_CurrentFPS    = 0;
+private:    
+	std::chrono::milliseconds m_RefreshRate;
+	int   m_FrameCount = 0;
+	float m_CurrentFPS = 0;
 };
