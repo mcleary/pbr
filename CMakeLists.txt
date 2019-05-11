@@ -1,18 +1,21 @@
-
 cmake_minimum_required (VERSION 3.0)
 
 project (pbr)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_STANDARD 14)
 
-add_subdirectory(deps/glfw)
-add_subdirectory(deps/glbinding)
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glfw/lib/cmake/glfw3")
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glbinding")
 
-include_directories(deps/glfw/include)
-include_directories(deps/glbinding/source/glbinding/include)
-include_directories(deps/glm)
-include_directories(deps/stb)
+find_package(glfw3 REQUIRED)
+find_package(glbinding REQUIRED)
+find_package(glm REQUIRED)
 
+include_directories(deps/install/stb)
+
+if(WIN32)	
+	list(APPEND CMAKE_CXX_FLAGS "/MP")	
+endif()
 
 file(
 	GLOB TEXTURES_SRC
@@ -32,61 +35,56 @@ set(
 
 set(
 	CODE_SRC
-	main.cpp
-	Axis.h
-	Axis.cpp
-	Geometry.h
-	Transform.h
-	Drawable.h
-	Drawable.cpp
-	Animator.h
-	Animator.cpp
-	Scene.h
-	Scene.cpp
-	Light.h
-	Light.cpp
-	LinesGeometry.h
-	LinesGeometry.cpp
-	Mesh.h
-	Mesh.cpp
-	SphereMesh.h
-	SphereMesh.cpp
-	Sphere.h
-	Sphere.cpp
-	Shader.h
-	Shader.cpp
-	Material.h
-	Material.cpp
-	MaterialParams.h
-	PhongMaterial.h
-	PhongMaterial.cpp
-	LinesMaterial.h
-	LinesMaterial.cpp	
-	Timer.h
-	Timer.cpp
-	Camera.h
-	Camera.cpp
-	Earth.h
-	Earth.cpp
-	Moon.h
-	Moon.cpp
+	pbr/main.cpp
+	pbr/Axis.h
+	pbr/Axis.cpp
+	pbr/Geometry.h
+    pbr/Grid.h
+    pbr/Grid.cpp
+	pbr/Transform.h
+	pbr/Drawable.h
+	pbr/Drawable.cpp
+	pbr/Animator.h
+	pbr/Animator.cpp
+	pbr/Scene.h
+	pbr/Scene.cpp
+	pbr/Light.h
+	pbr/Light.cpp
+	pbr/LinesGeometry.h
+	pbr/LinesGeometry.cpp
+	pbr/Mesh.h
+	pbr/Mesh.cpp
+	pbr/SphereMesh.h
+	pbr/SphereMesh.cpp
+	pbr/Sphere.h
+	pbr/Sphere.cpp
+	pbr/Shader.h
+	pbr/Shader.cpp
+	pbr/Material.h
+	pbr/Material.cpp
+	pbr/MaterialParams.h
+	pbr/PhongMaterial.h
+	pbr/PhongMaterial.cpp
+	pbr/LinesMaterial.h
+	pbr/LinesMaterial.cpp	
+	pbr/Timer.h
+	pbr/Timer.cpp
+	pbr/Camera.h
+	pbr/Camera.cpp
+	pbr/Earth.h
+	pbr/Earth.cpp
+	pbr/Moon.h
+	pbr/Moon.cpp
 )
 
-add_executable(pbr	
-	MACOSX_BUNDLE
+# set(CODE_SRC main2.cpp)
+
+add_executable(pbr
+    .gitignore
 	${CODE_SRC}
 	${SHADERS_SRC}
 	${TEXTURES_SRC}
-	${DATA_SRC}
-)
-
-if (APPLE)
-	set_source_files_properties(${SHADERS_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/shaders")
-	set_source_files_properties(${TEXTURES_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/textures")
-	set_source_files_properties(${DATA_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/data")
-
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "macOS version" FORCE)
-endif(APPLE)
+	${DATA_SRC})
 
 source_group(
 	"shaders" FILES
@@ -103,11 +101,10 @@ source_group(
 	${TEXTURES_SRC}
 )
 
-target_link_libraries(pbr glfw ${GLFW_LIBRARIES})
-target_link_libraries(pbr glbinding ${GLBINDING_LIBRARIES})
-
-
-if (APPLE)
-	set_target_properties(pbr PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Pbr")
-endif(APPLE)
-
+target_link_libraries(
+    pbr
+	glbinding::glbinding
+	glbinding::glbinding-aux
+	glfw
+	glm
+)

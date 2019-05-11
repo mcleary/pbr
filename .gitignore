@@ -1,3 +1,8 @@
+build/
+deps/build/
+deps/source/
+deps/
+
 # Compiled Object files
 *.slo
 *.lo
@@ -27,7 +32,7 @@
 *.out
 *.app
 
-build/
 .vscode/
-
+.vs/
 .idea/
+CMakeSettings.json
