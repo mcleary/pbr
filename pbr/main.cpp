@@ -105,7 +105,7 @@ void Reshape(GLFWwindow* /*window*/, int width, int height)
 	}    
 }
 
-static void createScene()
+static void CreateScene()
 {
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -126,20 +126,21 @@ static void createScene()
 	EarthAnimator->RotationSpeed.z = 0.0f;	
     
 	auto MoonAnimator = std::make_shared<Animator>(TheMoon->transform);
-    // MoonAnimator->RotationSpeed.z = 1.0f;
-	MoonAnimator->WorldRotationSpeed.y = 1.0f;
-//    moonAnimator->WorldRotationSpeed.y = -MoonRotationSpeed;
+    MoonAnimator->RotationSpeed.z = -0.3f;
+	MoonAnimator->WorldRotationSpeed.y = 0.3f;
 
-//    auto sunAnimator = std::make_shared<Animator>(scene->light->transform);
-//    sunAnimator->WorldRotationSpeed.y = -0.00f;
+    auto SunAnimator = std::make_shared<Animator>(TheScene->light->transform);
+    SunAnimator->WorldRotationSpeed.y = -1.1f;
 
     TheScene->addAnimator(MoonAnimator);
-//    scene->addAnimator(sunAnimator);
+	TheScene->addAnimator(SunAnimator);
 	TheScene->addAnimator(EarthAnimator);
 
 	// Order is important here. Earth must be the last
 	TheScene->addDrawable(TheMoon);
 	TheScene->addDrawable(TheEarth);
+
+	// Debug Axis drawn at the center of the universe
 	TheScene->addDrawable(TheAxis);
 }
 
@@ -159,25 +160,10 @@ static void Init()
 	{
 		const GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
-			std::cout << "error: " << error << std::endl;
+		{ 
+			cout << "Error: " << error << endl;
+		}			
 	});
-	/*setCallbackMask(CallbackMask::After | CallbackMask::ParametersAndReturnValue);
-	glbinding::setAfterCallback([](const glbinding::FunctionCall & call)
-	{
-		std::cout << call.function->name() << "(";
-		for (unsigned i = 0; i < call.parameters.size(); ++i)
-		{
-			std::cout << call.parameters[i]->asString();
-			if (i < call.parameters.size() - 1)
-				std::cout << ", ";
-		}
-		std::cout << ")";
-
-		if (call.returnValue)
-			std::cout << " -> " << call.returnValue->asString();
-
-		std::cout << std::endl;
-	});*/
     
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     
@@ -188,7 +174,7 @@ static void Init()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);   
 	
-	createScene();
+	CreateScene();
 }
 
 int main()

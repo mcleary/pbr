@@ -30,7 +30,7 @@ private:
 	float     m_RotationSpeedFactor = 1000.0f;
 	float     m_ZoomSpeedFactor     = 10.0f;
 
-	float     m_KeySpeed      = 2.0f;
+	float     m_KeySpeed      = 20.0f;
 	bool      m_Up_Pressed    = false;
 	bool	  m_Down_Pressed  = false;
 	bool      m_Left_Pressed  = false;
