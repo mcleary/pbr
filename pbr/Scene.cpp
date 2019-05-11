@@ -23,8 +23,8 @@ std::shared_ptr<Camera> Scene::camera() const
 
 void Scene::draw()
 {
-	auto projectionMatrix = m_Camera->projectionMatrix();
-	auto viewMatrix = m_Camera->viewMatrix();
+	auto projectionMatrix = m_Camera->ProjectionMatrix();
+	auto viewMatrix = m_Camera->ViewMatrix();
 	auto viewProjection = projectionMatrix * viewMatrix;
 
 	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ light->transform.Translation, 1.0f };
@@ -45,9 +45,9 @@ void Scene::draw()
 		drawable->materialParams.set("ModelViewProjection", viewProjection * modelMatrix);
 		drawable->materialParams.set("NormalMatrix", normalMatrix);
 
-		drawable->materialParams.set("CameraWorldPos", m_Camera->eye());
-		drawable->materialParams.set("fCameraHeight", glm::length(m_Camera->eye()));
-		drawable->materialParams.set("fCameraHeight2", glm::length2(m_Camera->eye()));
+		drawable->materialParams.set("CameraWorldPos", m_Camera->Eye());
+		drawable->materialParams.set("fCameraHeight", glm::length(m_Camera->Eye()));
+		drawable->materialParams.set("fCameraHeight2", glm::length2(m_Camera->Eye()));
 
 		auto lightViewDir = viewMatrix * glm::vec4{ light->transform.Translation - drawable->transform.Translation, 0.0f };
 		drawable->materialParams.set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
@@ -68,5 +68,5 @@ void Scene::update(float deltaTime)
 		animator->update(deltaTime);
 	}
 
-	m_Camera->update(deltaTime);
+	m_Camera->Update(deltaTime);
 }

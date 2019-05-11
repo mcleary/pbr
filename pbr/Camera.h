@@ -2,25 +2,23 @@
 
 #include <glm/glm.hpp>
 
-#include "Shader.h"
-
 class Camera
 {
 public:
-    void setViewportSize(int width, int height);
+    void SetViewportSize(int Width, int Height);
 	
-    void mouseButtonEvent(int cursorX, int cursorY);
-    void mouseMotionEvent(double x, double y);
-    void mouseScrollEvent(double x, double y);
+    void MouseButtonEvent(int cursorX, int cursorY);
+    void MouseMotionEvent(double x, double y);
+    void MouseScrollEvent(double x, double y);
 
-	void keyEvent(int key, int action);
+	void KeyEvent(int key, int action);
 
-	glm::mat4 viewMatrix();
-    glm::mat4 projectionMatrix();
+	glm::mat4 ViewMatrix();
+    glm::mat4 ProjectionMatrix();
     
-    glm::vec3& eye() { return m_Eye; }
+    glm::vec3& Eye() { return m_Eye; }
 
-	void update(float deltaTime);
+	void Update(float deltaTime);
 
 private:
 	glm::vec3 m_Eye					= { 0.0f, 0.0f, 20.0f };

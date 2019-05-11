@@ -13,6 +13,9 @@ find_package(glm REQUIRED)
 
 include_directories(deps/install/stb)
 
+add_definitions(-DGLFW_INCLUDE_NONE)
+add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
+
 if(WIN32)	
 	list(APPEND CMAKE_CXX_FLAGS "/MP")	
 endif()

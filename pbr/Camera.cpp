@@ -1,24 +1,21 @@
 #include "Camera.h"
 
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-#include <algorithm>
 
-void Camera::setViewportSize(int width, int height)
+void Camera::SetViewportSize(int Width, int Hight)
 {
-    m_Aspect = width / static_cast<float>(height);
+    m_Aspect = Width / static_cast<float>(Hight);
 }
 
-void Camera::mouseButtonEvent(int cursorX, int cursorY)
+void Camera::MouseButtonEvent(int CursorX, int CursorY)
 {
-    m_CursorPosition = {cursorX, cursorY};
+    m_CursorPosition = {CursorX, CursorY};
 }
 
-void Camera::mouseMotionEvent(double x, double y)
+void Camera::MouseMotionEvent(double x, double y)
 {
     glm::vec2 mouseMotion{x, y};
     glm::vec2 rotation = (mouseMotion - m_CursorPosition) / m_RotationSpeedFactor;
@@ -30,7 +27,7 @@ void Camera::mouseMotionEvent(double x, double y)
     m_Up = rotationMatrix * glm::vec4{ m_Up, 0.0f };
 }
 
-void Camera::mouseScrollEvent(double /*x*/, double y)
+void Camera::MouseScrollEvent(double /*x*/, double y)
 {
     auto zoom =   y / m_ZoomSpeedFactor;
     auto translateDirection = glm::normalize(m_Eye);
@@ -42,11 +39,11 @@ void Camera::mouseScrollEvent(double /*x*/, double y)
     }
 }
 
-void Camera::keyEvent(int key, int action)
+void Camera::KeyEvent(int Key, int Action)
 {
-    if (action == GLFW_PRESS)
+    if (Action == GLFW_PRESS)
     {
-        switch (key)
+        switch (Key)
         {
             case GLFW_KEY_UP:
                 m_Up_Pressed = true;
@@ -82,9 +79,9 @@ void Camera::keyEvent(int key, int action)
                 break;
         }
     }
-    else if (action == GLFW_RELEASE)
+    else if (Action == GLFW_RELEASE)
     {
-        switch (key)
+        switch (Key)
         {
             case GLFW_KEY_UP:
                 m_Up_Pressed = false;
@@ -122,69 +119,69 @@ void Camera::keyEvent(int key, int action)
     }
 }
 
-glm::mat4 Camera::viewMatrix()
+glm::mat4 Camera::ViewMatrix()
 {
     return glm::lookAt(m_Eye, m_Pivot, m_Up);
 }
 
-glm::mat4 Camera::projectionMatrix()
+glm::mat4 Camera::ProjectionMatrix()
 {
     return glm::perspective(45.0f, m_Aspect, 0.01f, 10000.0f);
 }
 
-void Camera::update(float deltaTime)
+void Camera::Update(float deltaTime)
 {
-    glm::vec3 viewDirection = glm::normalize(m_Eye - m_Pivot);
-    glm::vec3 slideDirection = glm::normalize(glm::cross(viewDirection, m_Up));
+    glm::vec3 ViewDirection = glm::normalize(m_Eye - m_Pivot);
+    glm::vec3 SlideDirection = glm::normalize(glm::cross(ViewDirection, m_Up));
     
-    glm::vec3 forwardBackwardTranslation = m_KeySpeed * deltaTime * viewDirection;
-    glm::vec3 leftRightTranslation = m_KeySpeed * deltaTime * slideDirection * 5.0;
-    glm::vec3 upDownTranslation = m_KeySpeed * deltaTime * glm::normalize(m_Up) * 10.0;
+    glm::vec3 ForwardBackwardTranslation = m_KeySpeed * deltaTime * ViewDirection;
+    glm::vec3 LeftRightTranslation = m_KeySpeed * deltaTime * SlideDirection * 5.0;
+    glm::vec3 UpDownTranslation = m_KeySpeed * deltaTime * glm::normalize(m_Up) * 10.0;
     
     if(m_W_Pressed)
     {
-        m_Eye -= forwardBackwardTranslation;
-		m_Pivot -= forwardBackwardTranslation;
+        m_Eye -= ForwardBackwardTranslation;
+		m_Pivot -= ForwardBackwardTranslation;
     }
     if(m_S_Pressed)
     {
-        m_Eye += forwardBackwardTranslation;
-		m_Pivot += forwardBackwardTranslation;
+        m_Eye += ForwardBackwardTranslation;
+		m_Pivot += ForwardBackwardTranslation;
     }
     if(m_A_Pressed)
     {
-        m_Eye += leftRightTranslation;
-        m_Pivot += leftRightTranslation;
+        m_Eye += LeftRightTranslation;
+        m_Pivot += LeftRightTranslation;
     }
     if(m_D_Pressed)
     {
-        m_Eye -= leftRightTranslation;
-        m_Pivot -= leftRightTranslation;
+        m_Eye -= LeftRightTranslation;
+        m_Pivot -= LeftRightTranslation;
     }
     
     if(m_Q_Pressed)
     {
-        m_Up = glm::rotate(glm::radians(m_KeySpeed * deltaTime * 10.0f), viewDirection) * glm::vec4{m_Up, 0.0f};
+        m_Up = glm::rotate(glm::radians(m_KeySpeed * deltaTime * 10.0f), ViewDirection) * glm::vec4{m_Up, 0.0f};
     }
     if(m_E_Pressed)
     {
-        m_Up = glm::rotate(glm::radians(m_KeySpeed * deltaTime * 10.0f), -viewDirection) * glm::vec4{m_Up, 0.0f};
+        m_Up = glm::rotate(glm::radians(m_KeySpeed * deltaTime * 10.0f), -ViewDirection) * glm::vec4{m_Up, 0.0f};
     }
     
     if (m_Up_Pressed)
     {
-        m_Pivot += upDownTranslation;
+        m_Pivot += UpDownTranslation;
     }
     if (m_Down_Pressed)
     {
-        m_Pivot -= upDownTranslation;
+        m_Pivot -= UpDownTranslation;
     }
     if (m_Left_Pressed)
     {
-        m_Pivot += leftRightTranslation;
+        m_Pivot += LeftRightTranslation;
     }
     if (m_Right_Pressed)
     {
-        m_Pivot -= leftRightTranslation;
+        m_Pivot -= LeftRightTranslation;
     }
 }

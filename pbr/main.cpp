@@ -7,13 +7,11 @@
 #include <glbinding-aux/ContextInfo.h>
 #include <glbinding-aux/types_to_string.h>
 
-using namespace gl;
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <glm/ext.hpp>
 
-#include <memory>
+// #include <memory>
 
 #include "Timer.h"
 #include "Scene.h"
@@ -32,6 +30,8 @@ static bool s_bFullScreen = false;
 
 static std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 
+using namespace gl;
+
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -40,7 +40,7 @@ void draw()
 
 void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 {
-	scene->camera()->keyEvent(key, action);
+	scene->camera()->KeyEvent(key, action);
 
 	if (action == GLFW_RELEASE)
 	{
@@ -77,7 +77,7 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwGetCursorPos(window, &cursorX, &cursorY);
         
-        scene->camera()->mouseButtonEvent(static_cast<int>(cursorX), static_cast<int>(cursorY));
+        scene->camera()->MouseButtonEvent(static_cast<int>(cursorX), static_cast<int>(cursorY));
 	}
 	else
     {
@@ -89,20 +89,20 @@ void mouseMotionCallback(GLFWwindow* window, double x, double y)
 {
 	if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
 	{
-        scene->camera()->mouseMotionEvent(static_cast<float>(x), static_cast<float>(y));
+        scene->camera()->MouseMotionEvent(static_cast<float>(x), static_cast<float>(y));
     }
 }
 
 void mouseScrollCallback(GLFWwindow* /*window*/, double x, double y)
 {
-    scene->camera()->mouseScrollEvent(static_cast<float>(x), static_cast<float>(y));
+    scene->camera()->MouseScrollEvent(static_cast<float>(x), static_cast<float>(y));
 }
 
 void reshape(GLFWwindow* /*window*/, int width, int height)
 {
 	if (width > 0 && height > 0)
 	{
-		scene->camera()->setViewportSize(width, height);
+		scene->camera()->SetViewportSize(width, height);
 		glViewport(0, 0, (GLint)width, (GLint)height);
 	}    
 }
