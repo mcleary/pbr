@@ -39,12 +39,12 @@ Timer::Duration Timer::Elapsed()
 
 float Timer::ElapsedMilliseconds()
 {
-	return static_cast<float>(duration_cast<milliseconds>(Elapsed()).count());
+	return static_cast<float>(duration_cast<FloatMilliseconds>(Elapsed()).count());
 }
 
 float Timer::ElapsedSeconds()
-{
-	return static_cast<float>(duration_cast<seconds>(Elapsed()).count());
+{	
+	return static_cast<float>(duration_cast<FloatSeconds>(Elapsed()).count());
 }
 
 FPSTimer::FPSTimer() :

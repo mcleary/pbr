@@ -3,19 +3,21 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
-Animator::Animator(Transform& _transform) :
-	transform(_transform)
+Animator::Animator(Transform& Transform) :
+	TransformRef(Transform)
 {
+	RotationSpeed = glm::vec3{ 0.0f };
+	WorldRotationSpeed = glm::vec3{ 0.0f };
 }
 
-void Animator::update(float deltaTime)
+void Animator::Update(float DeltaTime)
 {
-	glm::vec3& translation = transform.Translation;
-	glm::quat& rotation = transform.Rotation;	
+	glm::vec3& Translation = TransformRef.Translation;
+	glm::quat& Rotation = TransformRef.Rotation;
 
-	glm::quat ObjectSpaceRotation = glm::quat(RotationSpeed * deltaTime);
-	glm::quat WorldSpaceRotation = glm::quat(WorldRotationSpeed * deltaTime);
+	glm::quat ObjectSpaceRotation{ RotationSpeed * DeltaTime };
+	glm::quat WorldSpaceRotation{ WorldRotationSpeed * DeltaTime };
 
-	rotation *= ObjectSpaceRotation;
-	translation = glm::rotate(WorldSpaceRotation, translation);	
+	Rotation *= ObjectSpaceRotation;
+	Translation = glm::rotate(WorldSpaceRotation, Translation);	
 }

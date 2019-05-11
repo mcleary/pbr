@@ -65,7 +65,7 @@ void Scene::update(float deltaTime)
 
 	for (std::shared_ptr<Animator> animator : m_Animators)
 	{
-		animator->update(deltaTime);
+		animator->Update(deltaTime);
 	}
 
 	m_Camera->Update(deltaTime);

@@ -8,6 +8,8 @@ public:
 	using Clock = std::chrono::high_resolution_clock;
 	using TimePoint = Clock::time_point;
 	using Duration = TimePoint::duration;
+	using FloatSeconds = std::chrono::duration<float, std::chrono::seconds::period>;
+	using FloatMilliseconds = std::chrono::duration<float, std::chrono::milliseconds::period>;
 
     explicit Timer();
 

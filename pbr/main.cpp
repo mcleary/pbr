@@ -11,8 +11,6 @@
 
 #include <glm/ext.hpp>
 
-// #include <memory>
-
 #include "Timer.h"
 #include "Scene.h"
 #include "Sphere.h"
@@ -28,23 +26,23 @@ static bool s_bEnableVSync = true;
 static bool s_bWireframe   = false;
 static bool s_bFullScreen = false;
 
-static std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+static auto TheScene = std::make_shared<Scene>();
 
 using namespace gl;
 
-void draw()
+void Draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene->draw();
+	TheScene->draw();
 }
 
-void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
+void KeyCallback(GLFWwindow* /*window*/, int Key, int /*s*/, int Action, int /*mods*/)
 {
-	scene->camera()->KeyEvent(key, action);
+	TheScene->camera()->KeyEvent(Key, Action);
 
-	if (action == GLFW_RELEASE)
+	if (Action == GLFW_RELEASE)
 	{
-		switch (key)
+		switch (Key)
 		{
 		case GLFW_KEY_L:
 			//scene->toggleLightAnimation();
@@ -63,7 +61,7 @@ void key(GLFWwindow* /*window*/, int key, int /*s*/, int action, int /*mods*/)
 	}
 }
 
-void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*/)
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*/)
 {
 	if (button != GLFW_MOUSE_BUTTON_LEFT)
     {
@@ -72,12 +70,12 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*
 
 	if (action == GLFW_PRESS)
 	{
-        double cursorX, cursorY;
+        double x, y;
         
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		glfwGetCursorPos(window, &cursorX, &cursorY);
+		glfwGetCursorPos(window, &x, &y);
         
-        scene->camera()->MouseButtonEvent(static_cast<int>(cursorX), static_cast<int>(cursorY));
+		TheScene->camera()->MouseButtonEvent(static_cast<float>(x), static_cast<float>(y));
 	}
 	else
     {
@@ -85,24 +83,24 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*
     }
 }
 
-void mouseMotionCallback(GLFWwindow* window, double x, double y)
+void MouseMotionCallback(GLFWwindow* window, double x, double y)
 {
 	if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
 	{
-        scene->camera()->MouseMotionEvent(static_cast<float>(x), static_cast<float>(y));
+		TheScene->camera()->MouseMotionEvent(static_cast<float>(x), static_cast<float>(y));
     }
 }
 
-void mouseScrollCallback(GLFWwindow* /*window*/, double x, double y)
+void MouseScrollCallback(GLFWwindow* /*window*/, double x, double y)
 {
-    scene->camera()->MouseScrollEvent(static_cast<float>(x), static_cast<float>(y));
+	TheScene->camera()->MouseScrollEvent(static_cast<float>(x), static_cast<float>(y));
 }
 
-void reshape(GLFWwindow* /*window*/, int width, int height)
+void Reshape(GLFWwindow* /*window*/, int width, int height)
 {
 	if (width > 0 && height > 0)
 	{
-		scene->camera()->SetViewportSize(width, height);
+		TheScene->camera()->SetViewportSize(width, height);
 		glViewport(0, 0, (GLint)width, (GLint)height);
 	}    
 }
@@ -120,29 +118,32 @@ static void createScene()
     glm::vec3 moonPosition{ 200.4f, 0.0f, 0.0f };
     float moonRadius = 10.737f;
 
-    auto earth = std::make_shared<Earth>(earthPosition, earthRadius, sphereMesh);
-    auto moon = std::make_shared<Moon>(moonPosition, moonRadius, sphereMesh);
-	auto axis = std::make_shared<Axis>();
+    auto TheEarth = std::make_shared<Earth>(earthPosition, earthRadius, sphereMesh);
+    auto TheMoon = std::make_shared<Moon>(moonPosition, moonRadius, sphereMesh);
+	auto TheAxis = std::make_shared<Axis>();	
 
-	float MoonRotationSpeed = 0.3f;
-
-    auto moonAnimator = std::make_shared<Animator>(moon->transform);
-    // moonAnimator->RotationSpeed.z = MoonRotationSpeed;
+	auto EarthAnimator = std::make_shared<Animator>(TheEarth->transform);
+	EarthAnimator->RotationSpeed.z = 0.0f;	
+    
+	auto MoonAnimator = std::make_shared<Animator>(TheMoon->transform);
+    // MoonAnimator->RotationSpeed.z = 1.0f;
+	MoonAnimator->WorldRotationSpeed.y = 1.0f;
 //    moonAnimator->WorldRotationSpeed.y = -MoonRotationSpeed;
 
 //    auto sunAnimator = std::make_shared<Animator>(scene->light->transform);
 //    sunAnimator->WorldRotationSpeed.y = -0.00f;
 
-    scene->addAnimator(moonAnimator);
+    TheScene->addAnimator(MoonAnimator);
 //    scene->addAnimator(sunAnimator);
+	TheScene->addAnimator(EarthAnimator);
 
 	// Order is important here. Earth must be the last
-    scene->addDrawable(moon);
-    scene->addDrawable(earth);
-    scene->addDrawable(axis);
+	TheScene->addDrawable(TheMoon);
+	TheScene->addDrawable(TheEarth);
+	TheScene->addDrawable(TheAxis);
 }
 
-static void init()
+static void Init()
 {
     // OpenGL Initialization
     using namespace std;
@@ -192,7 +193,7 @@ static void init()
 
 int main()
 {
-    GLFWwindow* window = nullptr;
+    GLFWwindow* Window = nullptr;
     
     if(!glfwInit())
     {
@@ -203,28 +204,28 @@ int main()
 	glfwWindowHint(GLFW_DEPTH_BITS, 32);
     glfwWindowHint(GLFW_SAMPLES, 16);
 
-    std::string windowTitleBase = "Physically Based Rendering with OpenGL ";	
+    std::string WindowTitleBase = "Physically Based Rendering with OpenGL ";	
     
 	if (s_bFullScreen)
 	{
 		int monitorsCount;
-		GLFWmonitor** monitors = glfwGetMonitors(&monitorsCount);
-		const int activeMonitorIdx = 1;
+		GLFWmonitor** Monitors = glfwGetMonitors(&monitorsCount);
+		const int ActiveMonitorIdx = 1;
 
-		const GLFWvidmode* mode = glfwGetVideoMode(monitors[activeMonitorIdx]);
-		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+		const GLFWvidmode* Mode = glfwGetVideoMode(Monitors[ActiveMonitorIdx]);
+		glfwWindowHint(GLFW_RED_BITS, Mode->redBits);
+		glfwWindowHint(GLFW_GREEN_BITS, Mode->greenBits);
+		glfwWindowHint(GLFW_BLUE_BITS, Mode->blueBits);
+		glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate);
 
-		window = glfwCreateWindow(mode->width, mode->height, windowTitleBase.data(), monitors[activeMonitorIdx], nullptr);
+		Window = glfwCreateWindow(Mode->width, Mode->height, WindowTitleBase.data(), Monitors[ActiveMonitorIdx], nullptr);
 	}
 	else
 	{
-		window = glfwCreateWindow(s_WindowWidth, s_WindowHeight, windowTitleBase.data(), nullptr, nullptr);
+		Window = glfwCreateWindow(s_WindowWidth, s_WindowHeight, WindowTitleBase.data(), nullptr, nullptr);
 	}
     
-    if (!window)
+    if (!Window)
     {
         std::cerr << "Failed to open GLFW window" << std::endl;
         glfwTerminate();
@@ -232,46 +233,46 @@ int main()
     }
     
     // Set callback functions
-    glfwSetFramebufferSizeCallback(window, reshape);
-    glfwSetKeyCallback(window, key);
-	glfwSetMouseButtonCallback(window, mouseButtonCallback);
-	glfwSetCursorPosCallback(window, mouseMotionCallback);
-	glfwSetScrollCallback(window, mouseScrollCallback);
+    glfwSetFramebufferSizeCallback(Window, Reshape);
+    glfwSetKeyCallback(Window, KeyCallback);
+	glfwSetMouseButtonCallback(Window, MouseButtonCallback);
+	glfwSetCursorPosCallback(Window, MouseMotionCallback);
+	glfwSetScrollCallback(Window, MouseScrollCallback);
     
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(Window);
     glfwSwapInterval(s_bEnableVSync);
 
 	glbinding::Binding::initialize(glfwGetProcAddress);
     
-    glfwGetFramebufferSize(window, &s_WindowWidth, &s_WindowHeight);
-    reshape(window, s_WindowWidth, s_WindowHeight);
+    glfwGetFramebufferSize(Window, &s_WindowWidth, &s_WindowHeight);
+    Reshape(Window, s_WindowWidth, s_WindowHeight);
 
-    init();
+    Init();
     
-    const glbinding::Version openglVersion = glbinding::aux::ContextInfo::version();
-    windowTitleBase += openglVersion.toString();
+    const glbinding::Version OpenGLVersion = glbinding::aux::ContextInfo::version();
+    WindowTitleBase += OpenGLVersion.toString();
     
     FPSTimer fpsTimer;
-    Timer frameTimer;
+    Timer FrameTimer;
     
     // Main loop
-    while( !glfwWindowShouldClose(window) )
+    while( !glfwWindowShouldClose(Window) )
     {        
-        draw();
+        Draw();
         
         // Update animation
-        scene->update(static_cast<float>(frameTimer.ElapsedSeconds()));
+        TheScene->update(FrameTimer.ElapsedSeconds());
         
-        frameTimer.Start();
+        FrameTimer.Start();
         
         // Swap buffers
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(Window);
         glfwPollEvents();
         
         if(fpsTimer.Update())
         {
-            const std::string windowTitle = windowTitleBase + " - FPS: " + std::to_string(fpsTimer.GetFPS());
-            glfwSetWindowTitle(window, windowTitle.data());
+            const std::string windowTitle = WindowTitleBase + " - FPS: " + std::to_string(fpsTimer.GetFPS());
+            glfwSetWindowTitle(Window, windowTitle.data());
         }
     }
     

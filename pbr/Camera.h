@@ -7,18 +7,18 @@ class Camera
 public:
     void SetViewportSize(int Width, int Height);
 	
-    void MouseButtonEvent(int cursorX, int cursorY);
-    void MouseMotionEvent(double x, double y);
-    void MouseScrollEvent(double x, double y);
+    void MouseButtonEvent(float x, float y);
+    void MouseMotionEvent(float x, float y);
+    void MouseScrollEvent(float x, float y);
 
-	void KeyEvent(int key, int action);
+	void KeyEvent(int Key, int Action);
 
 	glm::mat4 ViewMatrix();
     glm::mat4 ProjectionMatrix();
     
     glm::vec3& Eye() { return m_Eye; }
 
-	void Update(float deltaTime);
+	void Update(float DeltaTime);
 
 private:
 	glm::vec3 m_Eye					= { 0.0f, 0.0f, 20.0f };
