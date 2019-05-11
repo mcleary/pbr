@@ -6,14 +6,11 @@
 class Transform
 {
 public:
-	glm::mat4 asMatrix() const;
+	explicit Transform();
 
-	glm::vec3 translation;
-	glm::quat rotation;
-	glm::vec3 scale = glm::vec3(1.0);
+	glm::mat4 AsMatrix() const;
+
+	glm::vec3 Translation;
+	glm::quat Rotation;
+	glm::vec3 Scale;
 };
-
-inline glm::mat4 Transform::asMatrix() const
-{
-	return glm::translate(glm::mat4{ 1.0f }, translation)* glm::toMat4(rotation)* glm::scale(glm::mat4{ 1.0f }, scale);
-}

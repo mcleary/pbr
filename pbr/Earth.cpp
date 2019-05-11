@@ -80,9 +80,9 @@ Earth::Earth(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh)
 	EarthSurfaceMaterial = std::make_shared<EarthMaterial>();
 	EarthAtmosphereMaterial = std::make_shared<AtmosphereMaterial>();
 
-	transform.translation = position;
-	transform.scale = glm::vec3{ radius };
-	transform.rotation = glm::vec3{ glm::radians(90.0f), 0.0f, 0.0f };
+	transform.Translation = position;
+	transform.Scale = glm::vec3{ radius };
+	transform.Rotation = glm::vec3{ glm::radians(90.0f), 0.0f, 0.0f };
 
 	InnerRadius = radius;
 	OuterRadius = InnerRadius * 1.025f;

@@ -10,8 +10,8 @@ Animator::Animator(Transform& _transform) :
 
 void Animator::update(float deltaTime)
 {
-	glm::vec3& translation = transform.translation;
-	glm::quat& rotation = transform.rotation;	
+	glm::vec3& translation = transform.Translation;
+	glm::quat& rotation = transform.Rotation;	
 
 	glm::quat ObjectSpaceRotation = glm::quat(RotationSpeed * deltaTime);
 	glm::quat WorldSpaceRotation = glm::quat(WorldRotationSpeed * deltaTime);

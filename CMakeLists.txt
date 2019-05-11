@@ -42,6 +42,7 @@ set(
     pbr/Grid.h
     pbr/Grid.cpp
 	pbr/Transform.h
+	pbr/Transform.cpp
 	pbr/Drawable.h
 	pbr/Drawable.cpp
 	pbr/Animator.h

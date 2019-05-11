@@ -27,7 +27,7 @@ void Scene::draw()
 	auto viewMatrix = m_Camera->viewMatrix();
 	auto viewProjection = projectionMatrix * viewMatrix;
 
-	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ light->transform.translation, 1.0f };
+	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ light->transform.Translation, 1.0f };
 
 	for (auto drawable : m_Drawables)
 	{
@@ -49,11 +49,11 @@ void Scene::draw()
 		drawable->materialParams.set("fCameraHeight", glm::length(m_Camera->eye()));
 		drawable->materialParams.set("fCameraHeight2", glm::length2(m_Camera->eye()));
 
-		auto lightViewDir = viewMatrix * glm::vec4{ light->transform.translation - drawable->transform.translation, 0.0f };
+		auto lightViewDir = viewMatrix * glm::vec4{ light->transform.Translation - drawable->transform.Translation, 0.0f };
 		drawable->materialParams.set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
-		drawable->materialParams.set("LightWorldPos", light->transform.translation);
+		drawable->materialParams.set("LightWorldPos", light->transform.Translation);
 		drawable->materialParams.set("LightDir", glm::normalize(glm::vec3{ lightViewDir }));
-		drawable->materialParams.set("LightWorldDir", glm::normalize(light->transform.translation - drawable->transform.translation));
+		drawable->materialParams.set("LightWorldDir", glm::normalize(light->transform.Translation - drawable->transform.Translation));
 
 		drawable->draw();
 	}

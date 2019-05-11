@@ -39,9 +39,9 @@ Moon::Moon(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mesh)
 	MoonMat = std::make_shared<MoonMaterial>();
 	Radius = radius;
 
-	transform.scale = glm::vec3{ radius };
-	transform.translation = position;
-	transform.rotation = glm::vec3{ glm::radians(90.0f), 0.0f, 0.0f };
+	transform.Scale = glm::vec3{ radius };
+	transform.Translation = position;
+	transform.Rotation = glm::vec3{ glm::radians(90.0f), 0.0f, 0.0f };
 }
 
 void Moon::draw()

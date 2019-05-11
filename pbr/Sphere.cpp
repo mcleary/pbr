@@ -6,8 +6,8 @@ Sphere::Sphere(glm::vec3 position, float radius, std::shared_ptr<SphereMesh> mes
 	this->radius = radius;
 	this->material = material;
 
-	transform.translation = position;
-	transform.scale = glm::vec3{ this->radius };
+	transform.Translation = position;
+	transform.Scale = glm::vec3{ this->radius };
 }
 
 void Sphere::draw()

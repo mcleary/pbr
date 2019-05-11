@@ -13,5 +13,5 @@ Drawable::Drawable() :
 
 glm::mat4 Drawable::modelMatrix() const
 {
-	return transform.asMatrix();
+	return transform.AsMatrix();
 }
