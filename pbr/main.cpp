@@ -33,7 +33,7 @@ using namespace gl;
 void Draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	TheScene->draw();
+	TheScene->Draw();
 }
 
 void KeyCallback(GLFWwindow* /*window*/, int Key, int /*s*/, int Action, int /*mods*/)
@@ -112,14 +112,14 @@ static void CreateScene()
 	auto phongMaterial = std::make_shared<PhongMaterial>();
 	auto sphereMesh = std::make_shared<SphereMesh>(200);
     
-    glm::vec3 earthPosition{ 0.0f };
-    float earthRadius = 6.371f;
+    glm::vec3 EarthPosition{ 0.0f };
+    float EarthRadius = 6.371f;
     
-    glm::vec3 moonPosition{ 200.4f, 0.0f, 0.0f };
-    float moonRadius = 10.737f;
+    glm::vec3 MoonPosition{ 384.4f, 0.0f, 0.0f };
+    float MoonRadius = 1.737f;
 
-    auto TheEarth = std::make_shared<Earth>(earthPosition, earthRadius, sphereMesh);
-    auto TheMoon = std::make_shared<Moon>(moonPosition, moonRadius, sphereMesh);
+    auto TheEarth = std::make_shared<Earth>(EarthPosition, EarthRadius, sphereMesh);
+    auto TheMoon = std::make_shared<Moon>(MoonPosition, MoonRadius, sphereMesh);
 	auto TheAxis = std::make_shared<Axis>();	
 
 	auto EarthAnimator = std::make_shared<Animator>(TheEarth->transform);
@@ -129,19 +129,19 @@ static void CreateScene()
     MoonAnimator->RotationSpeed.z = -0.3f;
 	MoonAnimator->WorldRotationSpeed.y = 0.3f;
 
-    auto SunAnimator = std::make_shared<Animator>(TheScene->light->transform);
-    SunAnimator->WorldRotationSpeed.y = -1.1f;
+    auto SunAnimator = std::make_shared<Animator>(TheScene->TheLight->transform);
+    SunAnimator->WorldRotationSpeed.y = -0.1f;
 
-    TheScene->addAnimator(MoonAnimator);
-	TheScene->addAnimator(SunAnimator);
-	TheScene->addAnimator(EarthAnimator);
+    TheScene->AddAnimator(MoonAnimator);
+	TheScene->AddAnimator(SunAnimator);
+	TheScene->AddAnimator(EarthAnimator);
 
 	// Order is important here. Earth must be the last
-	TheScene->addDrawable(TheMoon);
-	TheScene->addDrawable(TheEarth);
+	TheScene->AddDrawable(TheMoon);
+	TheScene->AddDrawable(TheEarth);
 
 	// Debug Axis drawn at the center of the universe
-	TheScene->addDrawable(TheAxis);
+	TheScene->AddDrawable(TheAxis);
 }
 
 static void Init()
@@ -247,7 +247,7 @@ int main()
         Draw();
         
         // Update animation
-        TheScene->update(FrameTimer.ElapsedSeconds());
+        TheScene->Update(FrameTimer.ElapsedSeconds());
         
         FrameTimer.Start();
         

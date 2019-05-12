@@ -5,7 +5,7 @@
 class Light 
 {
 public:	
-	explicit Light(glm::vec3 position);
+	explicit Light(glm::vec3 Position);
 
 	Transform transform;
 };

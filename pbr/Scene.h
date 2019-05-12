@@ -17,15 +17,15 @@ public:
 
 	explicit Scene();
 
-	void addDrawable(std::shared_ptr<Drawable> drawable);
-	void addAnimator(std::shared_ptr<Animator> animator);
+	void AddDrawable(std::shared_ptr<Drawable> drawable);
+	void AddAnimator(std::shared_ptr<Animator> animator);
 
 	std::shared_ptr<Camera> camera() const;
 
-	void draw();
-	void update(float deltaTime);
+	void Draw();
+	void Update(float deltaTime);
 
-	std::shared_ptr<Light> light;
+	std::shared_ptr<Light> TheLight;
 
 private:
 	std::vector<std::shared_ptr<Drawable>> m_Drawables;	

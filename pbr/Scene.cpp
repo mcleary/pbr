@@ -2,16 +2,16 @@
 
 Scene::Scene()
 {
-	light = std::make_shared<Light>(glm::vec3{ 0.0f, 0.0f, 3000.0f });
+	TheLight = std::make_shared<Light>(glm::vec3{ 0.0f, 0.0f, 3000.0f });
 	m_Camera = std::make_shared<Camera>();
 }
 
-void Scene::addDrawable(std::shared_ptr<Drawable> drawable)
+void Scene::AddDrawable(std::shared_ptr<Drawable> drawable)
 {
 	m_Drawables.push_back(drawable);
 }
 
-void Scene::addAnimator(std::shared_ptr<Animator> animator)
+void Scene::AddAnimator(std::shared_ptr<Animator> animator)
 {
 	m_Animators.push_back(animator);
 }
@@ -21,13 +21,13 @@ std::shared_ptr<Camera> Scene::camera() const
 	return m_Camera;
 }
 
-void Scene::draw()
+void Scene::Draw()
 {
 	auto projectionMatrix = m_Camera->ProjectionMatrix();
 	auto viewMatrix = m_Camera->ViewMatrix();
 	auto viewProjection = projectionMatrix * viewMatrix;
 
-	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ light->transform.Translation, 1.0f };
+	glm::vec4 lightViewPos = viewMatrix * glm::vec4{ TheLight->transform.Translation, 1.0f };
 
 	for (auto drawable : m_Drawables)
 	{
@@ -49,17 +49,17 @@ void Scene::draw()
 		drawable->materialParams.set("fCameraHeight", glm::length(m_Camera->Eye()));
 		drawable->materialParams.set("fCameraHeight2", glm::length2(m_Camera->Eye()));
 
-		auto lightViewDir = viewMatrix * glm::vec4{ light->transform.Translation - drawable->transform.Translation, 0.0f };
+		auto lightViewDir = viewMatrix * glm::vec4{ TheLight->transform.Translation - drawable->transform.Translation, 0.0f };
 		drawable->materialParams.set("LightPos", glm::vec3{ lightViewPos } / lightViewPos.w);
-		drawable->materialParams.set("LightWorldPos", light->transform.Translation);
+		drawable->materialParams.set("LightWorldPos", TheLight->transform.Translation);
 		drawable->materialParams.set("LightDir", glm::normalize(glm::vec3{ lightViewDir }));
-		drawable->materialParams.set("LightWorldDir", glm::normalize(light->transform.Translation - drawable->transform.Translation));
+		drawable->materialParams.set("LightWorldDir", glm::normalize(TheLight->transform.Translation - drawable->transform.Translation));
 
 		drawable->draw();
 	}
 }
 
-void Scene::update(float deltaTime)
+void Scene::Update(float deltaTime)
 {
 	m_CurrentTime += deltaTime;
 

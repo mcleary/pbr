@@ -1,6 +1,6 @@
 #include "Light.h"
 
-Light::Light(glm::vec3 position)
+Light::Light(glm::vec3 Position)
 {
-	transform.Translation = position;
+	transform.Translation = Position;
 }
