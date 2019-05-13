@@ -12,14 +12,14 @@ mkdir deps\build\glm
 mkdir deps\build\glbinding
 
 pushd deps\source
-git clone https://github.com/nothings/stb --depth 1
-git clone https://github.com/g-truc/glm --depth 1
-git clone https://github.com/cginternals/glbinding --depth 1
-git clone https://github.com/glfw/glfw --depth 1
+git clone https://github.com/nothings/stb --depth 1 --branch master
+git clone https://github.com/g-truc/glm --depth 1 --branch 0.9.9.5
+git clone https://github.com/cginternals/glbinding --depth 1 --branch v3.1.0
+git clone https://github.com/glfw/glfw --depth 1 --branch 3.3
 popd
 
 mkdir deps\install\stb
-copy -v deps/source/stb/*.h deps/install/stb
+copy deps/source/stb/*.h deps/install/stb
 
 pushd deps\build
 
@@ -34,8 +34,8 @@ cmake --build . --target install --config Release --
 popd
 
 pushd glbinding
-cmake -G %VS_GEN% %VS_ARCH% ../../source/glbinding -DOPTION_BUILD_TESTS:BOOL=OFF -DOPTION_BUILD_TOOLS:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../../install/glbinding
-cmake --build . --target install --config Release --
+cmake -G %VS_GEN% %VS_ARCH% ../../source/glbinding -DOPTION_BUILD_EXAMPLES:BOOL=OFF -DOPTION_BUILD_TESTS:BOOL=OFF -DBUILD_SHARED_LIBS:BOOL=OFF -DOPTION_BUILD_TOOLS:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../../install/glbinding
+cmake --build . --target install --config Debug --
 popd
 
 popd

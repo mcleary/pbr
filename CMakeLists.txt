@@ -78,31 +78,40 @@ set(
 	pbr/Earth.h
 	pbr/Earth.cpp
 	pbr/Moon.h
-	pbr/Moon.cpp
+ 	pbr/Moon.cpp
 )
 
-# set(CODE_SRC main2.cpp)
+set(
+    SCRIPTS_SRC
+    BuildDependencies.bat
+)
 
 add_executable(pbr
     .gitignore
 	${CODE_SRC}
 	${SHADERS_SRC}
 	${TEXTURES_SRC}
-	${DATA_SRC})
-
-source_group(
-	"shaders" FILES
-	${SHADERS_SRC}
-)
-
-source_group(
-	"data" FILES
 	${DATA_SRC}
+    ${SCRIPTS_SRC})
+
+source_group(
+	"Assets\\Shaders" 
+    FILES ${SHADERS_SRC}
 )
 
 source_group(
-	"textures" FILES
-	${TEXTURES_SRC}
+	"Assets\\Data" 
+    FILES ${DATA_SRC}
+)
+
+source_group(
+	"Assets\\Textures" 
+    FILES ${TEXTURES_SRC}
+)
+
+source_group(
+    "Scripts" 
+    FILES ${SCRIPTS_SRC}
 )
 
 target_link_libraries(
