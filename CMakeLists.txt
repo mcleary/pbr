@@ -4,7 +4,12 @@ project (pbr)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glfw/lib/cmake/glfw3")
+if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    conan_basic_setup()
+endif()
+
+# set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glfw/lib/cmake/glfw3")
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glbinding")
 
 find_package(glfw3 REQUIRED)
@@ -16,9 +21,9 @@ include_directories(deps/install/stb)
 add_definitions(-DGLFW_INCLUDE_NONE)
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 
-if(WIN32)	
-	list(APPEND CMAKE_CXX_FLAGS "/MP")	
-endif()
+# if(WIN32)	
+#	list(APPEND CMAKE_CXX_FLAGS "/MP")	
+# endif()
 
 file(
 	GLOB TEXTURES_SRC
@@ -114,9 +119,10 @@ source_group(
 
 target_link_libraries(
     pbr
-    PRIVATE
+    PUBLIC 
 	glbinding::glbinding
 	glbinding::glbinding-aux
-	glfw
-	glm
+	glfw	
 )
+
+target_include_directories(pbr PRIVATE ${GLM_INCLUDE_DIRS})
