@@ -114,6 +114,7 @@ source_group(
 
 target_link_libraries(
     pbr
+    PRIVATE
 	glbinding::glbinding
 	glbinding::glbinding-aux
 	glfw
