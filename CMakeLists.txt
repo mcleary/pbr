@@ -9,21 +9,12 @@ if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     conan_basic_setup()
 endif()
 
-# set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glfw/lib/cmake/glfw3")
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/deps/install/glbinding")
-
 find_package(glfw3 REQUIRED)
 find_package(glbinding REQUIRED)
 find_package(glm REQUIRED)
 
-include_directories(deps/install/stb)
-
 add_definitions(-DGLFW_INCLUDE_NONE)
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
-
-# if(WIN32)	
-#	list(APPEND CMAKE_CXX_FLAGS "/MP")	
-# endif()
 
 file(
 	GLOB TEXTURES_SRC
@@ -84,11 +75,6 @@ set(
  	pbr/Moon.cpp
 )
 
-set(
-    SCRIPTS_SRC
-    BuildDependencies.bat
-)
-
 add_executable(pbr
     .gitignore
 	${CODE_SRC}
@@ -110,11 +96,6 @@ source_group(
 source_group(
 	"Assets\\Textures" 
     FILES ${TEXTURES_SRC}
-)
-
-source_group(
-    "Scripts" 
-    FILES ${SCRIPTS_SRC}
 )
 
 target_link_libraries(
